@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FaScroll } from "react-icons/fa6";
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import ButtonAction from '../../../app/components/bottons/button_action';
 import Header from '../../../app/components/header';
 import type { PageProps } from '../../../app/components/interface/router_interface';
 import { UserDropdown } from '../../../app/components/user_dropdown';
@@ -14,7 +15,6 @@ import SelectTitleTrimestral from './components/select_title_trimestral';
 import TrimestralTable from './components/trimestral_table';
 import { TrimestralJson } from './json/trimestral_json';
 import { SectionRinght } from './sections/section_ringht';
-import { button1, button2 } from './utils/conts';
 
 
 const TrimestralPage: React.FC<PageProps> = (PageProps) => {
@@ -99,17 +99,25 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 					{
 						comentariosTrimestral.length === 2
 							? <Row>
-								<button style={button1} onClick={handleScrollTop}>
-									<FaScroll style={{ fontSize: "18px", color: "#bfa16c" }} />
-									Texto 1
-								</button>
-								<button
-									style={button2}
+								<ButtonAction
+									children={
+										<Row alignItems='center'>
+											<FaScroll style={{ fontSize: "18px" }} />
+											<div>Texto 1</div>
+										</Row>
+									}
+									onClick={handleScrollTop}
+								/>
+								<ButtonAction
+									children={
+										<Row alignItems='center'>
+											<FaScroll style={{ fontSize: "18px" }} />
+											<div>Texto 2</div>
+										</Row>
+									}
 									onClick={handleScrollBottom}
-								>
-									<FaScroll style={{ fontSize: "18px", color: "#7b8fa1" }} />
-									Texto 2
-								</button>
+
+								/>
 							</Row>
 							: null
 					}
@@ -179,7 +187,13 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 					flexDirection: 'column',
 					gap: '8px',
 				}}>
-					<SectionRinght year={anio} quarter={quarter} metadataArchivos={metadataArchivos} />
+					<SectionRinght
+						year={anio}
+						quarter={quarter}
+						metadataArchivos={metadataArchivos}
+						hoja={hoja}
+						pageProps={PageProps}
+					/>
 				</section>
 			</Row>
 		</Container>

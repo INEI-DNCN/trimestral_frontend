@@ -49,8 +49,8 @@ const StyledWrapper = styled.div`
     font-weight: bold;
     text-transform: uppercase;
     color: #0000;
-    -webkit-text-stroke:1px #FF2C9C;
-    --g: conic-gradient(#FF2C9C 0 0) no-repeat text;
+    -webkit-text-stroke:1px #3b82f6;
+    --g: conic-gradient(#3b82f6 0 0) no-repeat text;
     background:
       var(--g) 0,
       var(--g) 1ch,

@@ -13,20 +13,22 @@ export const themes = {
     background: '#ffffff',
     backgroundBase: '#F5F6F8',
     borderColor: '#e4e4e4',
-    menu:{
-      backgroundSub:"#ffffff",
-      backgroundActive :'#e2e6ea',
+    menu: {
+      backgroundSub: "#ffffff",
+      backgroundActive: '#e2e6ea',
     },
+    tableHeader: '#e2e8f0',
   },
   dark: {
     text: '#f8f9fa',
     background: '#343a40',
     backgroundBase: '#2C2F36',
     borderColor: '#2d3136',
-    menu:{
-      backgroundSub:"#212529",
-      backgroundActive :'#495057',
-    }
+    menu: {
+      backgroundSub: "#212529",
+      backgroundActive: '#495057',
+    },
+    tableHeader: '#1f242b',
   }
 };
 
@@ -41,10 +43,10 @@ export const ThemeContext = createContext<{
   setToggled: (v: boolean) => void;
 }>({
   theme: 'light',
-  setTheme: () => {},
+  setTheme: () => { },
   themes,
   toggled: false,
-  setToggled: () => {},
+  setToggled: () => { },
 });
 
 export const useThemeContext = () => useContext(ThemeContext);

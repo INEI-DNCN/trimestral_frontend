@@ -13,25 +13,23 @@ interface Props {
 }
 
 
-const FileDownloadLink = styled.a`
-	width: 30px;
-	height: 30px;
+export const FileDownloadLink = styled.a<{ $color: string }>`
+	width: 34px;
+	height: 34px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: #167595;
-	color: #fff;
-	border-radius: 8px;
+	border-radius: 10px;
+	font-size: 1rem;
 	font-weight: 500;
+	color: ${({ $color }) => $color + "cc"};
 	text-decoration: none;
-	transition: background 0.2s;
-	font-size: 0.98rem;
-	box-shadow: 0 2px 8px #16759522;
+	transition: background 0.2s ease-in-out, transform 0.15s ease-in-out;
+
 	&:hover {
-		background: #0d4f73;
-		color: #fff;
+		transform: scale(1.05);
+		color: #3b82f6 ;
 	}
-	white-space: nowrap;
 `;
 
 
@@ -67,13 +65,13 @@ export const CardSection: React.FC<Props> = ({ year, quarter, data }) => {
 		<StyledCard
 			$bgColor={themes[theme].background}
 		>
-			<Row justifyContent="space-between">
+			<Row justifyContent="space-between" alignItems="center">
 				<Column>
 					<Row >
 						{getFileIcon(data.tipo)}
 						<div style={{
 							fontSize: '0.8rem',
-							fontWeight: '700',
+							// fontWeight: '700',
 							color: themes[theme].text
 						}}>
 							{limpiarNombreArchivo(data.nombre)}
@@ -81,8 +79,8 @@ export const CardSection: React.FC<Props> = ({ year, quarter, data }) => {
 					</Row>
 				</Column>
 				<FileDownloadLink
+					$color={themes[theme].text}
 					href={`http://192.168.201.212:8080/${year + "_" + quarter}/Informatico/1.Informe_Tecnico/${data.nombre}`}
-					target="_blank"
 					rel="noopener noreferrer"
 				>
 					<HiDownload style={{ fontSize: 20 }} />
