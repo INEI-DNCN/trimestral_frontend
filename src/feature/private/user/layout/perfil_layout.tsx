@@ -1,27 +1,28 @@
+import { Typography } from "@mui/material";
+import { jwtDecode } from "jwt-decode";
+import { Calendar, Mail, Shield, User as UserIcon } from "lucide-react";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ButtonAction from "../../../../app/components/bottons/button_action";
-import { useThemeContext } from "../../../../core/theme/ThemeContext";
-import { type User } from "../user_slice";
-import { User as UserIcon, Mail, Calendar, Shield, ArrowLeft } from "lucide-react";
-import { Column, Container, Row } from "../../../../app/style_components/witgets_style_components";
-import { useNavigate } from "react-router-dom";
-import { Typography } from "@mui/material";
-import { SidebarSwitchMode } from "../../../../core/sidebar/private/sidebar_switch_mode";
-import { getToken } from "../../../../app/utils/utils_localstorage";
-import { jwtDecode } from "jwt-decode";
+import ButtonCancel from "../../../../app/components/bottons/button_cancel";
 import { DialogAction } from "../../../../app/components/enum/enum";
 import type { PageProps } from "../../../../app/components/interface/router_interface";
+import { Column, Container, Row } from "../../../../app/style_components/witgets_style_components";
+import { formatDate } from "../../../../app/utils/util";
+import { getToken } from "../../../../app/utils/utils_localstorage";
+import { SidebarSwitchMode } from "../../../../core/sidebar/private/sidebar_switch_mode";
+import type { RootState } from "../../../../core/store/store";
+import { useThemeContext } from "../../../../core/theme/ThemeContext";
 import UserForm from "../components/user_form";
 import UserFormPassword from "../components/user_form_password";
+import { type User } from "../user_slice";
 import { getOneUser } from "../user_source";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "../../../../core/store/store";
-import { formatDate } from "../../../../app/utils/util";
 
-const ProfileLayout : React.FC<PageProps> = (PageProps) => {
-  const dispatch:any = useDispatch()
-  const { theme, setTheme , themes } = useThemeContext();
+const ProfileLayout: React.FC<PageProps> = (PageProps) => {
+  const dispatch: any = useDispatch()
+  const { theme, setTheme, themes } = useThemeContext();
   const navigate = useNavigate();
 
   const colors = themes[theme];
@@ -31,18 +32,18 @@ const ProfileLayout : React.FC<PageProps> = (PageProps) => {
     setTheme(newTheme);
     localStorage.setItem("sidebarTheme", newTheme);
   };
-  const { oneUser } = useSelector((state: RootState) => state.user )
+  const { oneUser } = useSelector((state: RootState) => state.user)
 
   useEffect(() => {
     const token = getToken();
     const decoded = jwtDecode<{ id: string }>(token!);
-    dispatch(getOneUser({id:decoded.id }));
+    dispatch(getOneUser({ id: decoded.id }));
   }, []);
 
   const handleActions = (action: DialogAction, user?: User) => {
     const dialogContentMap: Record<any, any> = {
-      [DialogAction.update]: <UserForm onSnackbar={PageProps.onSnackbar}  user={user} handleClose={PageProps.handleCloseDialog} />,
-      [DialogAction.password]: <UserFormPassword  onSnackbar={PageProps.onSnackbar}  user={user} handleClose={PageProps.handleCloseDialog}/>,
+      [DialogAction.update]: <UserForm onSnackbar={PageProps.onSnackbar} user={user} handleClose={PageProps.handleCloseDialog} />,
+      [DialogAction.password]: <UserFormPassword onSnackbar={PageProps.onSnackbar} user={user} handleClose={PageProps.handleCloseDialog} />,
     };
 
     PageProps.onDialog({ children: dialogContentMap[action], maxWidth: "sm", title: action });
@@ -53,16 +54,10 @@ const ProfileLayout : React.FC<PageProps> = (PageProps) => {
   return (
     <Container style={{ width: "100vw", padding: "20px 30%", background: colors.backgroundBase }}>
       <header>
-        <Row style={{ marginBottom: "1rem", justifyContent: "space-between", alignItems: "center" }}>
-          <ButtonAction
-            startIcon={<ArrowLeft size={20} />}
-            onClick={() => navigate(-1)}
-          >
-            Atras
-          </ButtonAction>
+        <Row style={{ justifyContent: "center", alignItems: "center" }}>
           <Typography
             variant="h5"
-            sx={{ fontWeight: 600, color: themes[theme].text, mb: 0.25 }}
+            sx={{ fontWeight: 600, color: themes[theme].text }}
           >
             Perfil
           </Typography>
@@ -93,7 +88,7 @@ const ProfileLayout : React.FC<PageProps> = (PageProps) => {
             <Item>
               <IconBox><Calendar size={18} /></IconBox>
               <Field>
-                <Label>Fecha de Nacimiento: { formatDate(oneUser?.birthday)}</Label>
+                <Label>Fecha de Nacimiento: {formatDate(oneUser?.birthday)}</Label>
               </Field>
             </Item>
           </SectionCard>
@@ -123,8 +118,9 @@ const ProfileLayout : React.FC<PageProps> = (PageProps) => {
           </SectionCard>
 
           <ActionArea>
-            <ButtonAction onClick={() => handleActions(DialogAction.password, oneUser?? {})} >Cambiar Contraseña</ButtonAction>
-            <ButtonAction onClick={() => handleActions(DialogAction.update, oneUser?? {})} >Actualizar</ButtonAction>
+            <ButtonCancel onClick={() => navigate(-1)} >Salir</ButtonCancel>
+            <ButtonAction onClick={() => handleActions(DialogAction.password, oneUser ?? {})} >Cambiar Contraseña</ButtonAction>
+            <ButtonAction onClick={() => handleActions(DialogAction.update, oneUser ?? {})} >Actualizar</ButtonAction>
           </ActionArea>
         </Column>
       </article>

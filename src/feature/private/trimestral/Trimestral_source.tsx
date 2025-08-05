@@ -79,8 +79,6 @@ export const UpdateDocumentsSource = async () => {
 			`scrips/update-excel`,
 			{ params: { id: 1, usuario: "Julio" } }
 		);
-		console.log("SAli")
-		console.log(response)
 		return response;
 	} catch (error) {
 		console.error("Error en UpdateDocumentsSource:", error);

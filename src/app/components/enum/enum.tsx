@@ -1,4 +1,4 @@
-export enum RoleType{
+export enum RoleType {
 	Admin = 'Admin',
 	Jefe = 'Jefe',
 	Operador = 'Operador'
@@ -9,7 +9,7 @@ export enum Stado {
 	cree = 'cree',
 }
 
-export enum actions{
+export enum actions {
 	none = 'none',
 	create = 'Nuevo registro',
 	update = 'actualizar',
@@ -32,9 +32,10 @@ export enum DialogAction {
 	filter = 'Filtros',
 	validate = 'Validar',
 	modulo = 'modulo',
+	loadin = 'Loadig',
 }
 
-export enum StateMessage{
+export enum StateMessage {
 	error = 'error',
 	warning = 'warning',
 	info = 'info',

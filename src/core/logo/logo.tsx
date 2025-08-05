@@ -1,11 +1,11 @@
-import { Activity } from "lucide-react";
+import { Layers2 } from "lucide-react";
 import styled from "styled-components";
 
 const Logo: React.FC = () => {
 
 	return (
 		<Wrapper $bg={'#1f1f1f'} >
-			<Activity strokeWidth={2} size={20} />
+			<Layers2 strokeWidth={2} size={20} />
 		</Wrapper>
 	);
 };

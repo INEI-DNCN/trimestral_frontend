@@ -85,7 +85,7 @@ const LoginPage: React.FC<PageProps> = (PageProps) => {
 									textAlign: 'center',
 								}}
 							>
-								Acceso Institucional Autorizado
+								Sistema de Procesamiento de Cuantas Nacionales - SPCN
 							</div>
 						</Column>
 
@@ -106,7 +106,7 @@ const LoginPage: React.FC<PageProps> = (PageProps) => {
 									error={errors.password}
 									onKeyUp={() => trigger('password')}
 								/>
-								<ButtonAction type="submit" style={{ marginTop: '1rem' }}>
+								<ButtonAction type="submit" >
 									{isLoading ? 'Verificando...' : 'Acceder al Sistema'}
 								</ButtonAction>
 							</Column>

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import WrapperLoading from "../../../app/components/wrapper_loading";
+import { Row } from "../../../app/style_components/witgets_style_components";
 import { API2 } from "../../../app/utils/utils_api";
 import { deleteToken, getToken } from "../../../app/utils/utils_localstorage";
 
@@ -54,7 +56,7 @@ export default function AccessControlRoute({
 	redirectIfAuthenticated = false,
 	redirectTo = "/login",
 }: Props) {
-	const [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(false);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [currentToken, setCurrentToken] = useState<string | null>(null);
 
@@ -66,7 +68,7 @@ export default function AccessControlRoute({
 			setIsLoading(false);
 			return;
 		}
-
+		setIsLoading(true);
 		const isValid = await validateTokenWithBackend(token);
 
 		if (!isValid) {
@@ -75,7 +77,6 @@ export default function AccessControlRoute({
 		} else {
 			setIsAuthenticated(true);
 		}
-
 		setIsLoading(false);
 	};
 
@@ -84,22 +85,24 @@ export default function AccessControlRoute({
 		setCurrentToken(getToken());
 	}, []);
 
-	// Polling para detectar cambios en el token
 	useEffect(() => {
 		const interval = setInterval(() => {
 			const token = getToken();
 			if (token !== currentToken) {
 				setCurrentToken(token);
+
 				setIsLoading(true);
 				validateTokenLogic();
 			}
-		}, 500); // Verificar cada 500ms
+		}, 500);
 
 		return () => clearInterval(interval);
 	}, [currentToken]);
 
 	if (isLoading) {
-		return <div>Validando sesión...</div>; // O tu componente de loading
+		return <Row alignItems="center" justifyContent="center" style={{ minHeight: '100vh', minWidth: '100vw' }}>
+			<WrapperLoading text="Validando sesión..." />
+		</Row>;
 	}
 
 	if (redirectIfAuthenticated && isAuthenticated) {

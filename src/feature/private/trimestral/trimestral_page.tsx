@@ -11,7 +11,7 @@ import { Column, Container, Row } from '../../../app/style_components/witgets_st
 import { formatItem } from '../../../app/utils/util';
 import { getComentarioTrimestralSource, getIndicadoresSource, getMetadatosArchivosSource, getQuartersComentariosOfYearsSource, getTitleTrimestralSource, getTitleTrimestralYearSource, getYearsComentariosSource, updateComentario } from '../trimestral/Trimestral_source';
 import EditText from './components/editor_text';
-import SelectTitleTrimestral from './components/select_title_trimestral';
+import TrimestralSelectTitle from './components/trimestral_select_title';
 import TrimestralTable from './components/trimestral_table';
 import { TrimestralJson } from './json/trimestral_json';
 import { SectionRinght } from './sections/section_ringht';
@@ -132,9 +132,7 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 				}}
 				>
 					<Column gap='0px' style={{ width: '100%', height: '100%', padding: '0px 0px', boxSizing: 'border-box' }}>
-
-
-						<SelectTitleTrimestral
+						<TrimestralSelectTitle
 							handleChange={handleChangeTitles}
 							item={titles}
 							items={[

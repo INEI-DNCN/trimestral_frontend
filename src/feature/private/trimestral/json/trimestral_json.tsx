@@ -60,11 +60,4 @@ export const TrimestralJson = (year: number, quarter: any) => {
 	return structure
 }
 
-// export const SintesisJSONCPExcel = (year: string) =>{
-// 	const [headersBase, _] = generateHeaders(TrimestralJson(year), 0, 6, 7);
-// 	const headersAll = convertHeaders(headersBase);
-// 	return headersAll
-// }
-
-
 

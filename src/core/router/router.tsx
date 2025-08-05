@@ -1,9 +1,9 @@
 import type { AlertColor } from "@mui/material";
 import { useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import DialogFilter from "../../app/components/dialog_filter";
 import { StateMessage } from "../../app/components/enum/enum";
 import type { OnDialogParams, PageProps } from "../../app/components/interface/router_interface";
+import WrapperDialog from "../../app/components/wrapper_dialog";
 import LoginPage from "../../feature/login/login_page";
 import ProfileLayout from "../../feature/private/user/layout/perfil_layout";
 import HomePublicPage from "../../feature/public/home/home_page";
@@ -24,7 +24,7 @@ function Routers() {
 	const [openDialog, setOpenDialog] = useState(false);
 	const [childrenDialog, setChildrenDialog] = useState<any>({});
 	const [maxWidthDialog, setMaxWidthDialog] = useState<'sm' | 'md' | 'sm' | 'lg' | 'xs' | 'xl'>('sm');
-	const [titleDialog, setTitleDialog] = useState('');
+	const [titleDialog, setTitleDialog] = useState<string | undefined>('');
 
 	const handleCloseDialog = () => setOpenDialog(false)
 
@@ -39,8 +39,8 @@ function Routers() {
 	};
 
 	const onDialog = ({ maxWidth, children, title }: OnDialogParams) => {
-		setMaxWidthDialog(maxWidth)
 		setChildrenDialog(children)
+		setMaxWidthDialog(maxWidth)
 		setTitleDialog(title)
 		setOpenDialog(true);
 	};
@@ -132,7 +132,7 @@ function Routers() {
 				message={message}
 				severity={snackbarStado}
 			/>
-			<DialogFilter
+			<WrapperDialog
 				title={titleDialog}
 				maxWidth={maxWidthDialog}
 				open={openDialog}

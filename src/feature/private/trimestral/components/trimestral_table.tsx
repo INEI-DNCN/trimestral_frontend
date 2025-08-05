@@ -206,7 +206,6 @@ const TrimestralTable: React.FC<Props> = ({
 						</TableRow>
 					))}
 				</TableHead>
-
 				<TableBody>
 					{data.map((row, rowIndex) => (
 						<TableRow

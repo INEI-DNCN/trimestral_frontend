@@ -1,15 +1,14 @@
-import { useState } from "react";
 import { FaPython } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import { styled } from "styled-components";
 import ButtonAction from "../../../../app/components/bottons/button_action";
-import { StateMessage } from "../../../../app/components/enum/enum";
+import { DialogAction, StateMessage } from "../../../../app/components/enum/enum";
 import type { PageProps } from "../../../../app/components/interface/router_interface";
+import WrapperLoading from "../../../../app/components/wrapper_loading";
 import { Column, Row } from "../../../../app/style_components/witgets_style_components";
 import { useThemeContext } from "../../../../core/theme/ThemeContext";
-import { CardSection } from "../components/card/card";
-import DialogLoading from "../components/dialog_loading";
 import { getIndicadoresSource, getMetadatosArchivosSource, ProcessDocumentSource, UpdateDocumentsSource } from "../Trimestral_source";
+import { TrimestralCard } from "../components/Trimestral_card";
 interface Props {
 	year: string;
 	quarter: string;
@@ -20,18 +19,25 @@ interface Props {
 
 export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos, hoja, pageProps }) => {
 	const { theme, themes } = useThemeContext();
-	const [openDialogLoading, setOpenDialogLoading] = useState(false);
 	const dispatch: any = useDispatch()
 
 	interface InfoMessageProps {
 		tipo: 'excel' | 'word' | 'otro';
 	}
 
+	function getColorByType(type: string): string {
+		switch (type.toLowerCase()) {
+			case "word":
+				return "#2f80ed";
+			case "excel":
+				return "#27ae60";
+			default:
+				return "#6B7280";
+		}
+	}
+
 	const FechaInfo = styled.div<InfoMessageProps>`
-		color: ${({ tipo }) =>
-			tipo === 'excel' ? '#2e7d32' :
-				tipo === 'word' ? '#1565c0' :
-					'#6a1b9a'};
+		color: ${({ tipo }) => getColorByType(tipo)};
 			font-weight: 400;
 			font-size: 0.75rem;
 			margin-bottom: 4px;
@@ -54,36 +60,33 @@ export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos
 		return `${dia}/${mes}/${anio} ${horas}:${minutos} ${ampm}`;
 	}
 
-	const procesar = async (fn: () => Promise<any>) => {
+	const procesar = async (fn: () => Promise<any>, tipo: 'Word' | 'Excel') => {
 		try {
-			console.log('Ingrese')
-			setOpenDialogLoading(true)
+
+			pageProps.onDialog({ children: <WrapperLoading color={getColorByType(tipo)} text={"Actualizando " + tipo} />, maxWidth: "sm", title: DialogAction.loadin });
 			const response = await fn();
 			pageProps.onSnackbar(response.data, StateMessage.success)
 			dispatch(getIndicadoresSource(2025, "II", hoja));
 			dispatch(getMetadatosArchivosSource());
-			setOpenDialogLoading(false)
+			pageProps.handleCloseDialog()
 		} catch (error: any) {
 			pageProps.onSnackbar(error.response.data, StateMessage.warning)
-			console.error("Error al procesar", error);
-			setOpenDialogLoading(false)
+			pageProps.handleCloseDialog()
 		}
 	};
 
 	return (
-		<Column style={{
-			height: "100%",
-		}}>
+		<Column style={{ height: "100%" }}>
 			<Column>
 				<ButtonAction
-					backgroundColor="#27ae60"
+					backgroundColor={getColorByType('excel')}
 					children={
 						<Row alignItems='center'>
 							<FaPython style={{ fontSize: "18px" }} />
 							<div>Actualizar Excel</div>
 						</Row>
 					}
-					onClick={() => procesar(UpdateDocumentsSource)}
+					onClick={() => procesar(UpdateDocumentsSource, "Excel")}
 				/>
 				<FechaInfo tipo="excel">
 					{formatearFecha(metadataArchivos.find((data: any) => data.tipo === "xlsm")?.ultima_actualizacion)}
@@ -92,7 +95,7 @@ export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos
 			{metadataArchivos
 				.filter((data: any) => data.tipo === "xlsm")
 				.map((data: any, index: any) => (
-					<CardSection
+					<TrimestralCard
 						key={index}
 						year={year}
 						quarter={quarter}
@@ -102,14 +105,14 @@ export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos
 				))}
 			<Column>
 				<ButtonAction
-					backgroundColor="#2f80ed"
+					backgroundColor={getColorByType('word')}
 					children={
 						<Row alignItems='center'>
 							<FaPython style={{ fontSize: "18px" }} />
 							<div>Actualizar Word</div>
 						</Row>
 					}
-					onClick={() => procesar(ProcessDocumentSource)}
+					onClick={() => procesar(ProcessDocumentSource, "Word")}
 				/>
 				<FechaInfo tipo="word">
 					{formatearFecha(metadataArchivos.find((data: any) => data.tipo === "docx")?.ultima_actualizacion)}
@@ -118,7 +121,7 @@ export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos
 			{metadataArchivos
 				.filter((data: any) => data.tipo === "docx")
 				.map((data: any, index: any) => (
-					<CardSection
+					<TrimestralCard
 						key={index}
 						year={year}
 						quarter={quarter}
@@ -126,7 +129,6 @@ export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos
 						data={data}
 					/>
 				))}
-			<DialogLoading open={openDialogLoading} />
 		</Column>
 
 	);

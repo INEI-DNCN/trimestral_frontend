@@ -16,7 +16,7 @@ interface SelectSimpleProps {
 	disabled?: boolean;
 }
 
-export default function SelectTitleTrimestral({
+export default function TrimestralSelectTitle({
 	width = "100%",
 	item,
 	handleChange,

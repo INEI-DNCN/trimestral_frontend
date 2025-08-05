@@ -2,8 +2,8 @@ import type { JSX } from "react";
 import { FaFileAlt, FaFileExcel, FaFileWord } from "react-icons/fa";
 import { HiDownload } from "react-icons/hi";
 import { styled } from "styled-components";
-import { Column, Row } from "../../../../../app/style_components/witgets_style_components";
-import { useThemeContext } from "../../../../../core/theme/ThemeContext";
+import { Column, Row } from "../../../../app/style_components/witgets_style_components";
+import { useThemeContext } from "../../../../core/theme/ThemeContext";
 
 interface Props {
 	year: string;
@@ -33,7 +33,7 @@ export const FileDownloadLink = styled.a<{ $color: string }>`
 `;
 
 
-export const CardSection: React.FC<Props> = ({ year, quarter, data }) => {
+export const TrimestralCard: React.FC<Props> = ({ year, quarter, data }) => {
 
 
 	const getFileIcon = (filename: string): JSX.Element => {

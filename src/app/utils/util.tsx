@@ -1,17 +1,17 @@
-export const delay = (ms:any) => new Promise(resolve => setTimeout(resolve, ms));
+export const sleep = (ms: any) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
 export const hexToRgba = (hex: string, alpha: number): string => {
-	const [r, g, b] = hex.match(/\w\w/g)!.map(x => parseInt(x, 16));
-	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  const [r, g, b] = hex.match(/\w\w/g)!.map(x => parseInt(x, 16));
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
 
 export const formatDate = (isoDate: string): string => {
   const date = new Date(isoDate);
   const year = date.getFullYear();
-  const month = `${date.getMonth() + 1}`.padStart(2, '0'); // Meses inician en 0
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
   const day = `${date.getDate()}`.padStart(2, '0');
   return `${year}/${month}/${day}`;
 };
@@ -76,11 +76,9 @@ export const formatItem = ({
 };
 
 
-export function hexToARGB( hexColor:any, alpha = 'FF') {
+export function hexToARGB(hexColor: any, alpha = 'FF') {
   // Remueve el # si lo tiene
   const cleanHex = hexColor.replace('#', '');
   return alpha + cleanHex.toUpperCase();
 }
-
-
 

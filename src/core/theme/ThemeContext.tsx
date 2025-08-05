@@ -6,7 +6,7 @@ export const themes = {
     primaryHover: '#2563eb',
     danger: '#e74c3c',
     success: '#10b981',
-    disabled: '#6c757d',
+    disabled: '#6B7280',
   },
   light: {
     text: '#212529',
