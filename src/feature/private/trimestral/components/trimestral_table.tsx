@@ -35,37 +35,7 @@ const TrimestralTable: React.FC<Props> = ({
 	const currentTheme = themes[theme];
 
 	if (!data.length) {
-		return (
-			<div
-				style={{
-					width: "100%",
-					height: "100%",
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-					borderRadius: "16px",
-					flexDirection: "column",
-					backgroundColor: currentTheme.backgroundBase,
-				}}
-			>
-				<div
-					style={{
-						marginTop: "18px",
-						fontSize: "1.25rem",
-						fontWeight: 600,
-						textAlign: "center",
-						color: currentTheme.text,
-						background: currentTheme.menu.backgroundActive,
-						padding: "10px 28px",
-						borderRadius: "8px",
-						boxShadow: "0 1px 4px #0001",
-						letterSpacing: "0.5px",
-					}}
-				>
-					Sin Datos Disponibles
-				</div>
-			</div>
-		);
+		return (<div></div>);
 	}
 
 	const keys = data.length

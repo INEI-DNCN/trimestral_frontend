@@ -1,5 +1,5 @@
 import type { SelectChangeEvent } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FaScroll } from "react-icons/fa6";
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -9,7 +9,7 @@ import type { PageProps } from '../../../app/components/interface/router_interfa
 import { UserDropdown } from '../../../app/components/user_dropdown';
 import { Column, Container, Row } from '../../../app/style_components/witgets_style_components';
 import { formatItem } from '../../../app/utils/util';
-import { getComentarioTrimestralSource, getIndicadoresSource, getMetadatosArchivosSource, getQuartersComentariosOfYearsSource, getTitleTrimestralSource, getTitleTrimestralYearSource, getYearsComentariosSource, updateComentario } from '../trimestral/Trimestral_source';
+import { getComentarioTrimestralSource, getIndicadoresSource, getMetadatosArchivosSource, getTitleTrimestralSource, updateComentario } from '../trimestral/Trimestral_source';
 import EditText from './components/editor_text';
 import TrimestralSelectTitle from './components/trimestral_select_title';
 import TrimestralTable from './components/trimestral_table';
@@ -38,16 +38,22 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 		setTitles(event.target.value as string);
 	};
 
+	useLayoutEffect(() => {
+		dispatch(getTitleTrimestralSource());
+		dispatch(getMetadatosArchivosSource());
+	}, []);
+
+	const initialized = useRef(false);
 
 	useEffect(() => {
-		dispatch(getTitleTrimestralSource());
-		dispatch(getTitleTrimestralYearSource());
-		dispatch(getYearsComentariosSource());
-		dispatch(getQuartersComentariosOfYearsSource(anio));
-		dispatch(getComentarioTrimestralSource(titles, anio, quarter));
-		dispatch(getIndicadoresSource(anio, quarter, hoja));
-		dispatch(getMetadatosArchivosSource());
-	}, [,])
+		if (!initialized.current && titleTrimestral.length > 0) {
+			initialized.current = true;
+			console.log(titleTrimestral[0]);
+			setTitles(titleTrimestral[0].id);
+			dispatch(getComentarioTrimestralSource(titleTrimestral[0].id, anio, quarter));
+			dispatch(getIndicadoresSource(anio, quarter, titleTrimestral[0].id_hoja));
+		}
+	}, [titleTrimestral]);
 
 	useEffect(() => {
 		if (comentariosTrimestral) {
