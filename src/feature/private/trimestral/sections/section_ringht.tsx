@@ -8,7 +8,7 @@ import WrapperLoading from "../../../../app/components/wrapper_loading";
 import { Column, Row } from "../../../../app/style_components/witgets_style_components";
 import { useThemeContext } from "../../../../core/theme/ThemeContext";
 import { getIndicadoresSource, getMetadatosArchivosSource, ProcessDocumentSource, UpdateDocumentsSource } from "../Trimestral_source";
-import { TrimestralCard } from "../components/Trimestral_card";
+import { TrimestralCard } from "../components/trimestral_card";
 interface Props {
 	year: string;
 	quarter: string;

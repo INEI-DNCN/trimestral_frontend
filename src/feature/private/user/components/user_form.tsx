@@ -1,16 +1,15 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
 import { StateMessage } from '../../../../app/components/enum/enum';
 import { Column, Row } from '../../../../app/style_components/witgets_style_components';
 
 import InputField from '../../../../app/components/Input_field';
 import ButtonAction from '../../../../app/components/bottons/button_action';
 import ButtonCancel from '../../../../app/components/bottons/button_cancel';
-import type { User } from '../user_slice';
-import type { Meta } from '../../../../app/components/interface/pagination_response_interface';
-import { createUserSource, getUserPagination, updateUserSource } from '../user_source';
 import DatePickerField from '../../../../app/components/data_picker_field';
+import type { Meta } from '../../../../app/components/interface/pagination_response_interface';
+import type { User } from '../user_slice';
+import { updateUserSource } from '../user_source';
 
 interface Props {
 	user?: User;
@@ -19,8 +18,7 @@ interface Props {
 	onSnackbar: (message: string, type?: StateMessage) => void;
 }
 
-const UserForm: React.FC<Props> = ({ user, meta , handleClose, onSnackbar }) => {
-	const dispatch: any = useDispatch();
+const UserForm: React.FC<Props> = ({ user, handleClose, onSnackbar }) => {
 
 	const {
 		control,
@@ -42,15 +40,15 @@ const UserForm: React.FC<Props> = ({ user, meta , handleClose, onSnackbar }) => 
 
 	// Cargar datos si se va a editar
 	useEffect(() => {
-			if (!user) return;
-			reset({
-				dni: user.dni || '',
-				name: user.name || '',
-				firtName: user.firtName || '',
-				lastName: user.lastName || '',
-				email: user.email || '',
-				birthday: user.birthday || '',
-			});
+		if (!user) return;
+		reset({
+			dni: user.dni || '',
+			name: user.name || '',
+			firtName: user.firtName || '',
+			lastName: user.lastName || '',
+			email: user.email || '',
+			birthday: user.birthday || '',
+		});
 	}, [user, reset]);
 
 	const onSubmit = async (e: any) => {
@@ -67,10 +65,9 @@ const UserForm: React.FC<Props> = ({ user, meta , handleClose, onSnackbar }) => 
 
 		try {
 			user
-			? await updateUserSource(data)
-			: await createUserSource(data);
+				? await updateUserSource(data)
+				: null;
 			onSnackbar(user ? 'Actualización completada exitosamente' : 'Registro creado con éxito');
-			dispatch(getUserPagination({page: meta?.currentPage}));
 			handleClose();
 		} catch (error: any) {
 			if (error.response?.status === 400) {
@@ -122,8 +119,8 @@ const UserForm: React.FC<Props> = ({ user, meta , handleClose, onSnackbar }) => 
 					register={register("email", {
 						required: "Correo requerido",
 						pattern: {
-						value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-						message: "Correo inválido",
+							value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+							message: "Correo inválido",
 						},
 					})}
 					error={errors.email}

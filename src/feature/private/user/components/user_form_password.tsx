@@ -1,14 +1,13 @@
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
 import { StateMessage } from '../../../../app/components/enum/enum';
 import { Column, Row } from '../../../../app/style_components/witgets_style_components';
 
 import InputField from '../../../../app/components/Input_field';
 import ButtonAction from '../../../../app/components/bottons/button_action';
 import ButtonCancel from '../../../../app/components/bottons/button_cancel';
-import type { User } from '../user_slice';
 import type { Meta } from '../../../../app/components/interface/pagination_response_interface';
-import { getUserPagination, updateUserSource } from '../user_source';
+import type { User } from '../user_slice';
+import { updateUserSource } from '../user_source';
 
 interface Props {
 	user?: User;
@@ -17,8 +16,7 @@ interface Props {
 	onSnackbar: (message: string, type?: StateMessage) => void;
 }
 
-const UserFormPassword: React.FC<Props> = ({ user, meta , handleClose, onSnackbar }) => {
-	const dispatch: any = useDispatch();
+const UserFormPassword: React.FC<Props> = ({ user, handleClose, onSnackbar }) => {
 
 	const {
 		register,
@@ -41,7 +39,6 @@ const UserFormPassword: React.FC<Props> = ({ user, meta , handleClose, onSnackba
 		try {
 			await updateUserSource(data)
 			onSnackbar('Contraseña modificada con éxito.');
-			dispatch(getUserPagination({page: meta?.currentPage}));
 			handleClose();
 		} catch (error: any) {
 			if (error.response?.status === 400) {

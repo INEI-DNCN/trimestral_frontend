@@ -68,7 +68,7 @@ const ProfileLayout: React.FC<PageProps> = (PageProps) => {
         <Column gap="1rem">
           <SectionCard $bgColor={colors.background}>
             <SectionTitle $color={colors.text}>Información Personal</SectionTitle>
-
+            <SectionTitle $color={colors.text}>Información Personal</SectionTitle>
             <Item>
               <IconBox><Shield size={18} /></IconBox>
               <Field>
