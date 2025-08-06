@@ -48,7 +48,6 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 	useEffect(() => {
 		if (!initialized.current && titleTrimestral.length > 0) {
 			initialized.current = true;
-			console.log(titleTrimestral[0]);
 			setTitles(titleTrimestral[0].id);
 			dispatch(getComentarioTrimestralSource(titleTrimestral[0].id, anio, quarter));
 			dispatch(getIndicadoresSource(anio, quarter, titleTrimestral[0].id_hoja));

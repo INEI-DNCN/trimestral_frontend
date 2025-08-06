@@ -21,7 +21,6 @@ export const getTitleTrimestralSource = () => async (dispatch: any) => {
 		if (token) {
 			decoded = jwtDecode<UserPayload>(token);
 		}
-		console.log(decoded)
 		const responseAuth = await API2.get(`groups-users/user/${decoded?.id}`);
 		const response = await API.get(`titulo`);
 
