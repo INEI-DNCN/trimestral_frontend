@@ -32,6 +32,7 @@ export interface User {
 	lastName: string;
 	email: string;
 	birthday: string;
+	password?: string
 }
 
 export interface UserPayload {
