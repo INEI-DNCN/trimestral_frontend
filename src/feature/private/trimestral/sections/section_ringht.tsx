@@ -1,11 +1,12 @@
 import { FaPython } from "react-icons/fa6";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { styled } from "styled-components";
 import ButtonAction from "../../../../app/components/bottons/button_action";
 import { DialogAction, StateMessage } from "../../../../app/components/enum/enum";
 import type { PageProps } from "../../../../app/components/interface/router_interface";
 import WrapperLoading from "../../../../app/components/wrapper_loading";
 import { Column, Row } from "../../../../app/style_components/witgets_style_components";
+import type { RootState } from "../../../../core/store/store";
 import { useThemeContext } from "../../../../core/theme/ThemeContext";
 import { getIndicadoresSource, getMetadatosArchivosSource, ProcessDocumentSource, UpdateDocumentsSource } from "../Trimestral_source";
 import { TrimestralCard } from "../components/trimestral_card";
@@ -60,6 +61,8 @@ export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos
 		return `${dia}/${mes}/${anio} ${horas}:${minutos} ${ampm}`;
 	}
 
+	const { oneUser } = useSelector((state: RootState) => state.perfil)
+
 	const procesar = async (fn: () => Promise<any>, tipo: 'Word' | 'Excel') => {
 		try {
 
@@ -78,16 +81,18 @@ export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos
 	return (
 		<Column style={{ height: "100%" }}>
 			<Column>
-				<ButtonAction
-					backgroundColor={getColorByType('excel')}
-					children={
-						<Row alignItems='center'>
-							<FaPython style={{ fontSize: "18px" }} />
-							<div>Actualizar Excel</div>
-						</Row>
-					}
-					onClick={() => procesar(UpdateDocumentsSource, "Excel")}
-				/>
+				{
+					oneUser.role.name == 'Editor' ? <ButtonAction
+						backgroundColor={getColorByType('excel')}
+						children={
+							<Row alignItems='center'>
+								<FaPython style={{ fontSize: "18px" }} />
+								<div>Actualizar Excel</div>
+							</Row>
+						}
+						onClick={() => procesar(UpdateDocumentsSource, "Excel")}
+					/> : null
+				}
 				<FechaInfo tipo="excel">
 					{formatearFecha(metadataArchivos.find((data: any) => data.tipo === "xlsm")?.ultima_actualizacion)}
 				</FechaInfo>
@@ -104,16 +109,19 @@ export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos
 					/>
 				))}
 			<Column>
-				<ButtonAction
-					backgroundColor={getColorByType('word')}
-					children={
-						<Row alignItems='center'>
-							<FaPython style={{ fontSize: "18px" }} />
-							<div>Actualizar Word</div>
-						</Row>
-					}
-					onClick={() => procesar(ProcessDocumentSource, "Word")}
-				/>
+				{
+					oneUser.role.name == 'Editor' ? (<ButtonAction
+						backgroundColor={getColorByType('word')}
+						children={
+							<Row alignItems='center'>
+								<FaPython style={{ fontSize: "18px" }} />
+								<div>Actualizar Word</div>
+							</Row>
+						}
+						onClick={() => procesar(ProcessDocumentSource, "Word")}
+					/>) : null
+				}
+
 				<FechaInfo tipo="word">
 					{formatearFecha(metadataArchivos.find((data: any) => data.tipo === "docx")?.ultima_actualizacion)}
 				</FechaInfo >

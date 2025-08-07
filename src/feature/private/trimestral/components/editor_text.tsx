@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { formatDate, timeAgo } from "../../../../app/utils/util";
 import IconClose from "../../../../assets/images/icon_close";
 import { EditIcon } from "../../../../assets/images/icons_edit";
 import IconsSave from "../../../../assets/images/icons_save";
+import type { RootState } from "../../../../core/store/store";
 import { useThemeContext } from "../../../../core/theme/ThemeContext";
 
 const Toolbar: React.FC<{
@@ -67,6 +69,8 @@ const EditText: React.FC<Props> = ({ initialContent, onContentChange, onSave }) 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const editorRef = useRef<HTMLDivElement | null>(null);
+
+  const { oneUser } = useSelector((state: RootState) => state.perfil)
 
   useEffect(() => {
     if (editorRef.current && !isEditing) {
@@ -154,7 +158,7 @@ const EditText: React.FC<Props> = ({ initialContent, onContentChange, onSave }) 
         onBlur={handleContentChange}
         onKeyUp={handleContentChange}
       />
-      {!isEditing && isHovered && (
+      {!isEditing && isHovered && oneUser.role.name === 'Editor' && (
         <button onClick={toggleEditing} style={floatingButtonStyle}>
           <EditIcon />
         </button>

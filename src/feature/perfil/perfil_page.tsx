@@ -28,7 +28,6 @@ const ProfilePage: React.FC<PageProps> = (PageProps) => {
     localStorage.setItem("sidebarTheme", newTheme);
   };
   const { oneUser } = useSelector((state: RootState) => state.perfil)
-  console.log(oneUser)
 
   const handleActions = (action: DialogAction, user?: User) => {
     const dialogContentMap: Record<any, any> = {
