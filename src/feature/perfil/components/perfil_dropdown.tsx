@@ -1,13 +1,16 @@
 // UserDropdown.tsx
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { LogOut, User2 } from "lucide-react";
-import { useThemeContext } from "../../core/theme/ThemeContext";
-import { deleteToken, getToken } from "../utils/utils_localstorage";
 import { jwtDecode } from "jwt-decode";
-import { logoutSource } from "../../feature/login/login_source";
+import { LogOut, User2 } from "lucide-react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import type { UserPayload } from "../../feature/private/user/user_slice";
+import styled from "styled-components";
+import { deleteToken, getToken } from "../../../app/utils/utils_localstorage";
+import type { RootState } from "../../../core/store/store";
+import { useThemeContext } from "../../../core/theme/ThemeContext";
+import { logoutSource } from "../../login/login_source";
+import type { UserPayload } from "../perfil_slice";
+import { getOneUser } from "../perfil_source";
 
 const DropdownContainer = styled.div`
 	position: relative;
@@ -70,20 +73,23 @@ const Divider = styled.div<{ $theme: any }>`
 	margin: 0.25rem 0;
 `;
 
+
 export const UserDropdown = () => {
 	const { theme, themes } = useThemeContext();
+	const dispatch: any = useDispatch()
 	const currentTheme = themes[theme];
 	const navigate = useNavigate();
 	const [isOpen, setIsOpen] = React.useState(false);
-	const [user, setUser] = useState<UserPayload | null>(null);
 	const toggleDropdown = () => setIsOpen(!isOpen);
+
+	const { oneUser } = useSelector((state: RootState) => state.perfil)
 
 	useEffect(() => {
 		const token = getToken();
 		if (token) {
 			try {
 				const decoded = jwtDecode<UserPayload>(token);
-				setUser(decoded);
+				dispatch(getOneUser({ id: decoded.id }));
 			} catch (err) {
 				console.error("Error al decodificar token", err);
 			}
@@ -101,27 +107,25 @@ export const UserDropdown = () => {
 		}
 	};
 
-
-
 	return (
 		<DropdownContainer>
-		<TriggerButton onClick={toggleDropdown} $theme={currentTheme}>
-			<User2 size={18} />
-			{user?.name +" "+ user?.firtName +" "+ user?.lastName }
-		</TriggerButton>
-		{isOpen && (
-			<DropdownContent $theme={currentTheme}>
-			<DropdownItem $theme={currentTheme} onClick={()=>navigate("/perfil")}>
-				<User2 size={16} />
-				Editar Perfil
-			</DropdownItem>
-			<Divider $theme={currentTheme} />
-			<DropdownItem $theme={currentTheme} onClick={handleLogout}>
-				<LogOut size={16} />
-				Cerrar Sesión
-			</DropdownItem>
-			</DropdownContent>
-		)}
+			<TriggerButton onClick={toggleDropdown} $theme={currentTheme}>
+				<User2 size={18} />
+				{oneUser?.user?.name + " " + oneUser?.user?.firtName + " " + oneUser?.user?.lastName}
+			</TriggerButton>
+			{isOpen && (
+				<DropdownContent $theme={currentTheme}>
+					<DropdownItem $theme={currentTheme} onClick={() => navigate("/perfil")}>
+						<User2 size={16} />
+						Editar Perfil
+					</DropdownItem>
+					<Divider $theme={currentTheme} />
+					<DropdownItem $theme={currentTheme} onClick={handleLogout}>
+						<LogOut size={16} />
+						Cerrar Sesión
+					</DropdownItem>
+				</DropdownContent>
+			)}
 		</DropdownContainer>
 	);
 };

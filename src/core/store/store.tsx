@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
+import perfilReducer from '../../feature/perfil/perfil_slice'
 import trimestralReducer from '../../feature/private/trimestral/trimestral_slice'
-import userReducer from '../../feature/private/user/user_slice'
 import generalReducer from './sllices/general_slice'
 
 
@@ -9,7 +9,7 @@ import generalReducer from './sllices/general_slice'
 const store = configureStore({
 	reducer: {
 		general: generalReducer,
-		user: userReducer,
+		perfil: perfilReducer,
 		trimestral: trimestralReducer
 	}
 })

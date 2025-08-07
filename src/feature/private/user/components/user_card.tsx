@@ -11,7 +11,7 @@ import ButtonToggleStatus from "../../../../app/components/bottons/button_toggle
 import StatusIndicator from "../../../../app/components/status_indicator"
 import { Column, Row } from "../../../../app/style_components/witgets_style_components"
 import { useThemeContext } from "../../../../core/theme/ThemeContext"
-import type { User } from "../user_slice"
+import type { User } from "../../../perfil/perfil_slice"
 
 const UserCard: React.FC<{
 	user: User

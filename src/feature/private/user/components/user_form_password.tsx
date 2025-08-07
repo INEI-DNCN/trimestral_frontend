@@ -6,8 +6,8 @@ import InputField from '../../../../app/components/Input_field';
 import ButtonAction from '../../../../app/components/bottons/button_action';
 import ButtonCancel from '../../../../app/components/bottons/button_cancel';
 import type { Meta } from '../../../../app/components/interface/pagination_response_interface';
-import type { User } from '../user_slice';
-import { updateUserSource } from '../user_source';
+import type { User } from '../../../perfil/perfil_slice';
+import { updateUserSource } from '../../../perfil/perfil_source';
 
 interface Props {
 	user?: User;

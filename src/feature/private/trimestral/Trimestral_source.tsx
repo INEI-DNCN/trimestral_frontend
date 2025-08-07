@@ -2,7 +2,7 @@
 import { jwtDecode } from "jwt-decode";
 import { API, API2 } from "../../../app/utils/utils_api";
 import { getToken } from "../../../app/utils/utils_localstorage";
-import type { UserPayload } from "../user/user_slice";
+import type { UserPayload } from "../../perfil/perfil_slice";
 import { getComentariosTrimestralYearSlice, getIndicadoresSlice, getMetadataArchivosSlice, getTitleTrimestralSlice } from "./trimestral_slice";
 
 export const getMetadatosArchivosSource = () => async (dispatch: any) => {
@@ -20,16 +20,16 @@ export const getTitleTrimestralSource = () => async (dispatch: any) => {
 		let decoded;
 		if (token) {
 			decoded = jwtDecode<UserPayload>(token);
+			const responseAuth = await API2.get(`groups-users/user/${decoded?.id}`);
+			const response = await API.get(`titulo`);
+
+			const groupNames = responseAuth.data.map((entry: any) => entry.group.name);
+			const matchedTemas = response.data.filter((tema: any) =>
+				groupNames.includes(tema.nombre)
+			);
+
+			dispatch(getTitleTrimestralSlice(matchedTemas));
 		}
-		const responseAuth = await API2.get(`groups-users/user/${decoded?.id}`);
-		const response = await API.get(`titulo`);
-
-		const groupNames = responseAuth.data.map((entry: any) => entry.group.name);
-		const matchedTemas = response.data.filter((tema: any) =>
-			groupNames.includes(tema.nombre)
-		);
-
-		dispatch(getTitleTrimestralSlice(matchedTemas));
 	} catch (error) {
 		console.error("Error en getSource:", error);
 	}

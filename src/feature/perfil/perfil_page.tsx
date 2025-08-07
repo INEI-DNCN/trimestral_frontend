@@ -1,27 +1,22 @@
 import { Typography } from "@mui/material";
-import { jwtDecode } from "jwt-decode";
 import { Calendar, Mail, Shield, User as UserIcon } from "lucide-react";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import ButtonAction from "../../../../app/components/bottons/button_action";
-import ButtonCancel from "../../../../app/components/bottons/button_cancel";
-import { DialogAction } from "../../../../app/components/enum/enum";
-import type { PageProps } from "../../../../app/components/interface/router_interface";
-import { Column, Container, Row } from "../../../../app/style_components/witgets_style_components";
-import { formatDate } from "../../../../app/utils/util";
-import { getToken } from "../../../../app/utils/utils_localstorage";
-import { SidebarSwitchMode } from "../../../../core/sidebar/private/sidebar_switch_mode";
-import type { RootState } from "../../../../core/store/store";
-import { useThemeContext } from "../../../../core/theme/ThemeContext";
-import UserForm from "../components/user_form";
-import UserFormPassword from "../components/user_form_password";
-import { type User } from "../user_slice";
-import { getOneUser } from "../user_source";
+import ButtonAction from "../../app/components/bottons/button_action";
+import ButtonCancel from "../../app/components/bottons/button_cancel";
+import { DialogAction } from "../../app/components/enum/enum";
+import type { PageProps } from "../../app/components/interface/router_interface";
+import { Column, Container, Row } from "../../app/style_components/witgets_style_components";
+import { formatDate } from "../../app/utils/util";
+import { SidebarSwitchMode } from "../../core/sidebar/private/sidebar_switch_mode";
+import type { RootState } from "../../core/store/store";
+import { useThemeContext } from "../../core/theme/ThemeContext";
+import UserForm from "../private/user/components/user_form";
+import UserFormPassword from "../private/user/components/user_form_password";
+import { type User } from "./perfil_slice";
 
-const ProfileLayout: React.FC<PageProps> = (PageProps) => {
-  const dispatch: any = useDispatch()
+const ProfilePage: React.FC<PageProps> = (PageProps) => {
   const { theme, setTheme, themes } = useThemeContext();
   const navigate = useNavigate();
 
@@ -32,13 +27,8 @@ const ProfileLayout: React.FC<PageProps> = (PageProps) => {
     setTheme(newTheme);
     localStorage.setItem("sidebarTheme", newTheme);
   };
-  const { oneUser } = useSelector((state: RootState) => state.user)
-
-  useEffect(() => {
-    const token = getToken();
-    const decoded = jwtDecode<{ id: string }>(token!);
-    dispatch(getOneUser({ id: decoded.id }));
-  }, []);
+  const { oneUser } = useSelector((state: RootState) => state.perfil)
+  console.log(oneUser)
 
   const handleActions = (action: DialogAction, user?: User) => {
     const dialogContentMap: Record<any, any> = {
@@ -68,12 +58,11 @@ const ProfileLayout: React.FC<PageProps> = (PageProps) => {
         <Column gap="1rem">
           <SectionCard $bgColor={colors.background}>
             <SectionTitle $color={colors.text}>Información Personal</SectionTitle>
-            <SectionTitle $color={colors.text}>Información Personal</SectionTitle>
             <Item>
               <IconBox><Shield size={18} /></IconBox>
               <Field>
                 <Label>
-                  DNI: {oneUser?.dni}
+                  DNI: {oneUser?.user?.dni}
                 </Label>
               </Field>
             </Item>
@@ -81,16 +70,24 @@ const ProfileLayout: React.FC<PageProps> = (PageProps) => {
             <Item>
               <IconBox><UserIcon size={18} /></IconBox>
               <Field>
-                <Label>Nombres y Apellidos: {oneUser?.name + " " + oneUser?.firtName + " " + oneUser?.lastName}</Label>
+                <Label>Nombres y Apellidos: {oneUser?.user?.name + " " + oneUser?.user?.firtName + " " + oneUser?.user?.lastName}</Label>
               </Field>
             </Item>
 
             <Item>
               <IconBox><Calendar size={18} /></IconBox>
               <Field>
-                <Label>Fecha de Nacimiento: {formatDate(oneUser?.birthday)}</Label>
+                <Label>Fecha de Nacimiento: {formatDate(oneUser?.user?.birthday)}</Label>
               </Field>
             </Item>
+
+            <Item>
+              <IconBox><Calendar size={18} /></IconBox>
+              <Field>
+                <Label> Rol: {oneUser?.role.name}</Label>
+              </Field>
+            </Item>
+
           </SectionCard>
 
           <SectionCard $bgColor={colors.background}>
@@ -98,7 +95,7 @@ const ProfileLayout: React.FC<PageProps> = (PageProps) => {
             <Item>
               <IconBox><Mail size={18} /></IconBox>
               <Field>
-                <Label>Correo Electrónico: {oneUser?.email}</Label>
+                <Label>Correo Electrónico: {oneUser?.user?.email}</Label>
               </Field>
             </Item>
           </SectionCard>
@@ -119,8 +116,8 @@ const ProfileLayout: React.FC<PageProps> = (PageProps) => {
 
           <ActionArea>
             <ButtonCancel onClick={() => navigate(-1)} >Salir</ButtonCancel>
-            <ButtonAction onClick={() => handleActions(DialogAction.password, oneUser ?? {})} >Cambiar Contraseña</ButtonAction>
-            <ButtonAction onClick={() => handleActions(DialogAction.update, oneUser ?? {})} >Actualizar</ButtonAction>
+            <ButtonAction onClick={() => handleActions(DialogAction.password, oneUser.user ?? {})} >Cambiar Contraseña</ButtonAction>
+            <ButtonAction onClick={() => handleActions(DialogAction.update, oneUser.user ?? {})} >Actualizar</ButtonAction>
           </ActionArea>
         </Column>
       </article>
@@ -128,7 +125,7 @@ const ProfileLayout: React.FC<PageProps> = (PageProps) => {
   );
 };
 
-export default ProfileLayout;
+export default ProfilePage;
 
 const SectionCard = styled.section<{ $bgColor: string }>`
   background-color: ${({ $bgColor }) => $bgColor};

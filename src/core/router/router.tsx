@@ -5,7 +5,7 @@ import { StateMessage } from "../../app/components/enum/enum";
 import type { OnDialogParams, PageProps } from "../../app/components/interface/router_interface";
 import WrapperDialog from "../../app/components/wrapper_dialog";
 import LoginPage from "../../feature/login/login_page";
-import ProfileLayout from "../../feature/private/user/layout/perfil_layout";
+import ProfilePage from "../../feature/perfil/perfil_page";
 import HomePublicPage from "../../feature/public/home/home_page";
 import SidebarPublic from "../../feature/public/sidebar_public/sidebar_public";
 import NotFoundPage from '../404/404_page';
@@ -13,9 +13,6 @@ import { menuItems } from "../sidebar/private/sidebar_config";
 import SidebarPrivate from "../sidebar/private/sidebar_private";
 import { CustomSnackbar } from "../snackbar/custom_snackbar";
 import AccessControlRoute from "./validations-router/access_control_route";
-
-
-
 
 function Routers() {
 	const [message, setMessage] = useState('');
@@ -107,7 +104,7 @@ function Routers() {
 				}
 				/>
 				<Route path="perfil" element={<AccessControlRoute children={
-					<ProfileLayout onSnackbar={onSnackbar}
+					<ProfilePage onSnackbar={onSnackbar}
 						onDialog={onDialog}
 						handleCloseDialog={handleCloseDialog}
 						items={{ label: "Perfil", path: "Perfil" }} />} />}
