@@ -17,7 +17,9 @@ export const themes = {
       backgroundSub: "#ffffff",
       backgroundActive: '#e2e6ea',
     },
-    tableHeader: '#e2e8f0',
+    table: {
+      header: '#e2e8f0',
+    }
   },
   dark: {
     text: '#f8f9fa',
@@ -28,7 +30,9 @@ export const themes = {
       backgroundSub: "#212529",
       backgroundActive: '#495057',
     },
-    tableHeader: '#1f242b',
+    table: {
+      header: '#1f242b',
+    }
   }
 };
 
@@ -41,12 +45,14 @@ export const ThemeContext = createContext<{
   themes: typeof themes;
   toggled: boolean;
   setToggled: (v: boolean) => void;
+  currentTheme: typeof themes.light | typeof themes.dark;
 }>({
   theme: 'light',
   setTheme: () => { },
   themes,
   toggled: false,
   setToggled: () => { },
+  currentTheme: themes.light
 });
 
 export const useThemeContext = () => useContext(ThemeContext);
@@ -65,6 +71,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       themes,
       toggled,
       setToggled,
+      currentTheme: themes[theme]
     }}>
       {children}
     </ThemeContext.Provider>

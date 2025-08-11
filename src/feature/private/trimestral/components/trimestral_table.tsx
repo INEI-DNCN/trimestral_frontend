@@ -158,7 +158,7 @@ const TrimestralTable: React.FC<Props> = ({
 										position: "sticky",
 										top: `${getCellTop(rowIndex, cellIndex)}px`,
 										zIndex: 100 + rowIndex,
-										backgroundColor: currentTheme.tableHeader,
+										backgroundColor: currentTheme.table.header,
 										color: currentTheme.text,
 										fontWeight: 600,
 										textAlign: "center",

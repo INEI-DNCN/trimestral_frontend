@@ -1,20 +1,21 @@
 // src/components/sidebar/SidebarPublicComponent.tsx
+import { Typography } from "@mui/material";
 import { useState } from "react";
 import {
-  Sidebar,
   Menu,
   MenuItem,
+  Sidebar,
   SubMenu,
   menuClasses,
   type MenuItemStyles
 } from "react-pro-sidebar";
-import { useLocation, useNavigate, Outlet } from "react-router-dom";
-import { Typography } from "@mui/material";
-import { SidebarHeader } from "./sidebar_header";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import CardSwagger from "../../../app/components/card/card_swagger";
 import { hexToRgba } from "../../../app/utils/util";
 import { useThemeContext } from "../../theme/ThemeContext";
 import { menuItems } from "./sidebar_config";
-import styled from "styled-components";
+import { SidebarHeader } from "./sidebar_header";
 
 const SidebarPrivate: React.FC = () => {
   const [collapsed, setCollapsed] = useState(() => JSON.parse(localStorage.getItem("sidebarCollapsed") || "false"));
@@ -67,7 +68,7 @@ const SidebarPrivate: React.FC = () => {
     button: ({ active }) => ({
       [`&.${menuClasses.disabled}`]: { color: themes.colors.disabled },
       "&:hover": {
-        backgroundColor: hexToRgba(themes.colors.primary , hasImage ? 0.8 : 1),
+        backgroundColor: hexToRgba(themes.colors.primary, hasImage ? 0.8 : 1),
         color: "#fff",
       },
       backgroundColor: active ? hexToRgba(themes[theme].menu.backgroundActive, hasImage ? 0.8 : 1) : undefined,
@@ -141,6 +142,7 @@ const SidebarPrivate: React.FC = () => {
             {renderMenuItems(menuItems)}
           </Menu>
         </WrapperMenu>
+        <CardSwagger />
       </Sidebar>
       <SidebarContent $theme={themes[theme]}>
         <Outlet />

@@ -1,8 +1,6 @@
 import styled from "styled-components";
 import { themes } from "../../core/theme/ThemeContext";
 
-
-
 type FlexJustify = 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
 type FlexAlign = 'stretch' | 'flex-start' | 'flex-end' | 'center' | 'baseline';
 type TextAlign = 'left' | 'right' | 'center' | 'justify';
@@ -31,36 +29,43 @@ type MarginProps = {
 export const Row = styled.div.withConfig({
 	shouldForwardProp: (prop) =>
 		![
-		'justifyContent',
-		'alignItems',
-		'gap',
-		'flex',
-		'p',
-		'px',
-		'py',
-		'pt',
-		'pb',
-		'pl',
-		'pr',
-		'm',
-		'mx',
-		'my',
-		'mt',
-		'mb',
-		'ml',
-		'mr',
+			'justifyContent',
+			'alignItems',
+			'gap',
+			'flex',
+			'p',
+			'px',
+			'py',
+			'pt',
+			'pb',
+			'pl',
+			'pr',
+			'm',
+			'mx',
+			'my',
+			'mt',
+			'mb',
+			'ml',
+			'mr',
+			'width',  // ← nuevo
+			'height', // ← nuevo
 		].includes(prop),
-	})<{
+}) <{
 	justifyContent?: FlexJustify;
 	alignItems?: FlexAlign;
 	gap?: string;
 	flex?: string;
-	} & PaddingProps & MarginProps>`
+	width?: string;  // ← nuevo
+	height?: string; // ← nuevo
+} & PaddingProps & MarginProps>`
 	display: flex;
 	justify-content: ${(props) => props.justifyContent || 'auto'};
 	align-items: ${(props) => props.alignItems || 'auto'};
 	flex: ${(props) => props.flex ?? 'initial'};
 	gap: ${(props) => props.gap || '8px'};
+
+	width: ${(props) => props.width || 'auto'};
+	height: ${(props) => props.height || 'auto'};
 
 	/* Padding */
 	padding-top: ${(props) =>
@@ -85,82 +90,78 @@ export const Row = styled.div.withConfig({
 
 // Helper: convierte el valor a píxeles usando escala de 8px
 const getSpacingValue = (value?: number): string => {
-  return value !== undefined ? `${value * 8}px` : '0px';
+	return value !== undefined ? `${value * 8}px` : '0px';
 };
-
-export const RowFrom = styled.form<{justifyContent?:any,alignItems?:any, gap?:any}>`
-	display: flex;
-	align-items: center;
-	justify-content: ${(props) => props.justifyContent || 'start'};
-	gap: ${(props) => props.gap || '8px'};
-	width: 100%;
-`;
 
 export const Column = styled.div.withConfig({
 	shouldForwardProp: (prop) =>
 		![
-		'justifyContent',
-		'alignItems',
-		'gap',
-		'width',
-		'textAlign',
-		'flex',
-		'p',
-		'px',
-		'py',
-		'pt',
-		'pb',
-		'pl',
-		'pr',
-		'm',
-		'mx',
-		'my',
-		'mt',
-		'mb',
-		'ml',
-		'mr',
+			'justifyContent',
+			'alignItems',
+			'gap',
+			'width',
+			'textAlign',
+			'flex',
+			'p',
+			'px',
+			'py',
+			'pt',
+			'pb',
+			'pl',
+			'pr',
+			'm',
+			'mx',
+			'my',
+			'mt',
+			'mb',
+			'ml',
+			'mr',
+			'width',  // ← nuevo
+			'height', // ← nuevo
 		].includes(prop),
-	})<{
-		justifyContent?: FlexJustify;
-		gap?: string;
-		alignItems?: FlexAlign;
-		width?: string;
-		textAlign?: TextAlign;
-		flex?: string;
-	} & PaddingProps & MarginProps>`
+}) <{
+	justifyContent?: FlexJustify;
+	gap?: string;
+	alignItems?: FlexAlign;
+	width?: string;
+	textAlign?: TextAlign;
+	flex?: string;
+	height?: string; // ← nuevo
+} & PaddingProps & MarginProps>`
 		display: flex;
 		flex-direction: column;
 		flex: ${(props) => props.flex ?? 'initial'};
 		gap: ${(props) => props.gap ?? '8px'};
 		align-items: ${(props) => props.alignItems ?? 'stretch'};
-		width: ${(props) => props.width ?? 'auto'};
 		text-align: ${(props) => props.textAlign ?? 'left'};
 		justify-content: ${(props) => props.justifyContent || 'auto'};
 
+		width: ${(props) => props.width ?? 'auto'};
+		height: ${(props) => props.height || 'auto'};
 		/* Padding */
 		padding-top: ${(props) =>
-			getSpacingValue(props.pt ?? props.py ?? props.p)};
+		getSpacingValue(props.pt ?? props.py ?? props.p)};
 		padding-bottom: ${(props) =>
-			getSpacingValue(props.pb ?? props.py ?? props.p)};
+		getSpacingValue(props.pb ?? props.py ?? props.p)};
 		padding-left: ${(props) =>
-			getSpacingValue(props.pl ?? props.px ?? props.p)};
+		getSpacingValue(props.pl ?? props.px ?? props.p)};
 		padding-right: ${(props) =>
-			getSpacingValue(props.pr ?? props.px ?? props.p)};
+		getSpacingValue(props.pr ?? props.px ?? props.p)};
 
 		/* Margin */
 		margin-top: ${(props) =>
-			getSpacingValue(props.mt ?? props.my ?? props.m)};
+		getSpacingValue(props.mt ?? props.my ?? props.m)};
 		margin-bottom: ${(props) =>
-			getSpacingValue(props.mb ?? props.my ?? props.m)};
+		getSpacingValue(props.mb ?? props.my ?? props.m)};
 		margin-left: ${(props) =>
-			getSpacingValue(props.ml ?? props.mx ?? props.m)};
+		getSpacingValue(props.ml ?? props.mx ?? props.m)};
 		margin-right: ${(props) =>
-			getSpacingValue(props.mr ?? props.mx ?? props.m)};
+		getSpacingValue(props.mr ?? props.mx ?? props.m)};
 	`;
 
 
 
-export const Container = styled.main<{ }>`
+export const Container = styled.main<{}>`
 	width: 100%;
 	height: 100vh;
 	display: flex;
@@ -172,6 +173,7 @@ export const Container = styled.main<{ }>`
 	header{
 		display: flex;
 		flex-direction: column;
+		padding: 20px 20px 0px 20px;
 	}
 	article{
 		flex: 1;
