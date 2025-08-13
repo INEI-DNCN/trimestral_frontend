@@ -10,10 +10,13 @@ import type { comentarioDTO } from "../trimestral_slice";
 import TrimestralForm from "./trimestarl_form";
 
 interface Props {
-	comment: comentarioDTO
+	comment: comentarioDTO;
+	titleTrimestralID: any;
+	year: string;
+	quarter: string;
 }
 
-export const TrimestralComment: React.FC<Props> = ({ comment }) => {
+export const TrimestralComment: React.FC<Props> = ({ comment, titleTrimestralID, year, quarter }) => {
 
 	const { onDialog } = useUI()
 	const { currentTheme } = useThemeContext();
@@ -22,7 +25,12 @@ export const TrimestralComment: React.FC<Props> = ({ comment }) => {
 	const [isHovered, setIsHovered] = useState<boolean>(false);
 	const handleActions = (action: DialogAction, group?: comentarioDTO) => {
 		const dialogContentMap: Record<any, any> = {
-			[DialogAction.update]: <TrimestralForm action={DialogAction.update} coment={group} />,
+			[DialogAction.update]: <TrimestralForm
+				action={DialogAction.update}
+				titleTrimestralID={titleTrimestralID}
+				year={year} quarter={quarter}
+				coment={group}
+			/>,
 		};
 		onDialog({ children: dialogContentMap[action], maxWidth: "md", title: action });
 	};

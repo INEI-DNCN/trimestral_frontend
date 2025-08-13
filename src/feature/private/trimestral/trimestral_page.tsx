@@ -30,6 +30,7 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 	const { dispatch } = useUI()
 
 	const { titleTrimestral, comentariosTrimestral, metadataArchivos, indicadores } = useSelector((state: any) => state.trimestral)
+
 	const handleChangeTitles = (event: SelectChangeEvent) => {
 		dispatch(getComentarioTrimestralSource(parseInt(event.target.value as string), anio, quarter));
 		dispatch(getIndicadoresSource(anio, quarter, titleTrimestral.find((element: any) => element.id === parseInt(event.target.value as string))?.id_hoja));
@@ -139,7 +140,12 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 						/>
 						<ScrollableContainer ref={scrollableRef}>
 							<Column gap='20px' style={{ padding: '0px ', paddingTop: '13px ' }}>
-								<TrimestralComment comment={editorContent1} />
+								<TrimestralComment
+									titleTrimestralID={titles}
+									quarter={quarter}
+									year={anio}
+									comment={editorContent1}
+								/>
 								<div
 									style={{
 										width: '100%',
@@ -158,7 +164,12 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 								</div>
 								{
 									titles === 1 || titles === 5 ?
-										<TrimestralComment comment={editorContent2} />
+										<TrimestralComment
+											titleTrimestralID={titles}
+											quarter={quarter}
+											year={anio}
+											comment={editorContent2}
+										/>
 										: null
 								}
 								<div style={{ height: '200px' }}></div>

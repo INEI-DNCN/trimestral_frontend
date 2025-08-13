@@ -12,18 +12,20 @@ import { Column, Row } from '../../../../core/styled_ui/styled_ui';
 import { themes } from '../../../../core/theme/ThemeContext';
 import { useUI } from '../../../../core/theme/ui_context';
 import type { comentarioDTO } from '../trimestral_slice';
-import { updateComentario } from '../Trimestral_source';
+import { getComentarioTrimestralSource, updateComentario } from '../Trimestral_source';
 
 interface Props {
-	action: DialogAction,
+	action: DialogAction;
 	coment?: comentarioDTO;
+	titleTrimestralID: any;
+	year: string;
+	quarter: string;
 }
 
 
-const TrimestralForm: React.FC<Props> = ({ action, coment }) => {
+const TrimestralForm: React.FC<Props> = ({ action, coment, titleTrimestralID, year, quarter }) => {
 
 	const { onSnackbar, handleCloseDialog, dispatch } = useUI()
-	// const { groupsPagination } = useSelector((state: RootState) => state.group)
 
 	const {
 		handleSubmit,
@@ -64,8 +66,10 @@ const TrimestralForm: React.FC<Props> = ({ action, coment }) => {
 			};
 
 			const handler = actionMap[action];
+
 			if (handler) {
 				await handler(data);
+				dispatch(getComentarioTrimestralSource(titleTrimestralID, year, quarter));
 			} else {
 				console.warn(`No handler defined for action: ${action}`);
 			}
