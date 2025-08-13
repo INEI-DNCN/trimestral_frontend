@@ -1,7 +1,7 @@
 // components/users/StatusSummary.tsx
-import React from 'react';
 import { Divider, Typography } from '@mui/material';
-import { Column, Row } from '../style_components/witgets_style_components';
+import React from 'react';
+import { Column, Row } from '../../core/styled_ui/styled_ui';
 import { useThemeContext } from '../../core/theme/ThemeContext';
 
 interface Props {

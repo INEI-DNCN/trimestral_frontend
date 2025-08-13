@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { themes } from "../../core/theme/ThemeContext";
+import { themes } from "../theme/ThemeContext";
 
 type FlexJustify = 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
 type FlexAlign = 'stretch' | 'flex-start' | 'flex-end' | 'center' | 'baseline';
@@ -204,6 +204,22 @@ export const Container = styled.main<{}>`
 		}
 	}
 
+`;
+
+export const CardStyled = styled.div<{ $background: string, $color: string }>`
+	background: ${(props) => props.$background};
+	color: ${(props) => props.$color};
+	border-radius: 12px;
+	padding: 20px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+	border: 1px solid rgba(0, 0, 0, 0.05);
+	transition: all 0.2s ease;
+
+	&:hover {
+		box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+		transform: translateY(-2px);
+		border-color: rgba(0, 0, 0, 0.08);
+	}
 `;
 
 

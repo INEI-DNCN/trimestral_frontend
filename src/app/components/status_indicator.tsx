@@ -1,7 +1,7 @@
-import React from "react";
 import { Box, Typography } from "@mui/material";
+import React from "react";
 import styled from "styled-components";
-import { Column, Row } from "../style_components/witgets_style_components";
+import { Column, Row } from "../../core/styled_ui/styled_ui";
 
 interface Props {
 	isActive?: boolean;
@@ -10,12 +10,12 @@ interface Props {
 const StatusIndicator: React.FC<Props> = ({ isActive }) => {
 	return (
 		<Column alignItems="flex-start" justifyContent="center">
-		<Row alignItems="center">
-			<StatusDot $status={!!isActive} />
-			<StatusText $status={!!isActive}>
-			{isActive ? "Activo" : "Inactivo"}
-			</StatusText>
-		</Row>
+			<Row alignItems="center">
+				<StatusDot $status={!!isActive} />
+				<StatusText $status={!!isActive}>
+					{isActive ? "Activo" : "Inactivo"}
+				</StatusText>
+			</Row>
 		</Column>
 	);
 };
@@ -24,7 +24,7 @@ export default StatusIndicator;
 
 // Estilos
 
-const StatusDot = styled(Box)<{ $status: boolean }>`
+const StatusDot = styled(Box) <{ $status: boolean }>`
 	width: 6px;
 	height: 6px;
 	border-radius: 50%;
@@ -32,7 +32,7 @@ const StatusDot = styled(Box)<{ $status: boolean }>`
 	margin-right: 0.25rem;
 `;
 
-const StatusText = styled(Typography)<{ $status: boolean }>`
+const StatusText = styled(Typography) <{ $status: boolean }>`
 	&& {
 		font-size: 0.75rem;
 		color: ${(props) => (props.$status ? "#059669" : "#dc2626")};

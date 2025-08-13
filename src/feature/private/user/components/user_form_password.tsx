@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { StateMessage } from '../../../../app/components/enum/enum';
-import { Column, Row } from '../../../../app/style_components/witgets_style_components';
+import { Column, Row } from '../../../../core/styled_ui/styled_ui';
 
 import ButtonAction from '../../../../app/components/bottons/button_action';
 import ButtonCancel from '../../../../app/components/bottons/button_cancel';

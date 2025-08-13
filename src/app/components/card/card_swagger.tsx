@@ -1,6 +1,6 @@
 import styled from "styled-components";
+import { Column, Row } from "../../../core/styled_ui/styled_ui";
 import { useThemeContext } from "../../../core/theme/ThemeContext";
-import { Column, Row } from "../../style_components/witgets_style_components";
 
 // Logo oficial Swagger como componente SVG
 const SwaggerIcon = ({ size = 40 }) => (

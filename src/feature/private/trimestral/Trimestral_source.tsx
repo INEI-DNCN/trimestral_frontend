@@ -49,7 +49,6 @@ export const getComentarioTrimestralSource = (id_titulo: number, anio: string, t
 };
 
 export const updateComentario = async (contenido: comentarioDTO) => {
-	console.log(contenido)
 	try {
 		const response = await API.put(`comentarios/${contenido.id}`, {
 			contenido: contenido.contenido,

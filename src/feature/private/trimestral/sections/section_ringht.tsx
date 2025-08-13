@@ -1,13 +1,14 @@
 import { FaPython } from "react-icons/fa6";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { styled } from "styled-components";
 import ButtonAction from "../../../../app/components/bottons/button_action";
 import { DialogAction, StateMessage } from "../../../../app/components/enum/enum";
 import type { PageProps } from "../../../../app/components/interface/router_interface";
 import WrapperLoading from "../../../../app/components/wrapper_loading";
-import { Column, Row } from "../../../../app/style_components/witgets_style_components";
 import type { RootState } from "../../../../core/store/store";
+import { Column, Row } from "../../../../core/styled_ui/styled_ui";
 import { useThemeContext } from "../../../../core/theme/ThemeContext";
+import { useUI } from "../../../../core/theme/ui_context";
 import { getIndicadoresSource, getMetadatosArchivosSource, ProcessDocumentSource, UpdateDocumentsSource } from "../Trimestral_source";
 import { TrimestralCard } from "../components/trimestral_card";
 interface Props {
@@ -18,9 +19,9 @@ interface Props {
 	pageProps: PageProps
 }
 
-export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos, hoja, pageProps }) => {
+export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos, hoja }) => {
 	const { theme, themes } = useThemeContext();
-	const dispatch: any = useDispatch()
+	const { dispatch, onSnackbar, onDialog, handleCloseDialog } = useUI()
 
 	interface InfoMessageProps {
 		tipo: 'excel' | 'word' | 'otro';
@@ -66,15 +67,15 @@ export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos
 	const procesar = async (fn: () => Promise<any>, tipo: 'Word' | 'Excel') => {
 		try {
 
-			pageProps.onDialog({ children: <WrapperLoading color={getColorByType(tipo)} text={"Actualizando " + tipo} />, maxWidth: "sm", title: DialogAction.loadin });
+			onDialog({ children: <WrapperLoading color={getColorByType(tipo)} text={"Actualizando " + tipo} />, maxWidth: "sm", title: DialogAction.loadin });
 			const response = await fn();
-			pageProps.onSnackbar(response.data, StateMessage.success)
+			onSnackbar(response.data, StateMessage.success)
 			dispatch(getIndicadoresSource(2025, "II", hoja));
 			dispatch(getMetadatosArchivosSource());
-			pageProps.handleCloseDialog()
+			handleCloseDialog()
 		} catch (error: any) {
-			pageProps.onSnackbar(error.response.data, StateMessage.warning)
-			pageProps.handleCloseDialog()
+			onSnackbar(error.response.data, StateMessage.warning)
+			handleCloseDialog()
 		}
 	};
 

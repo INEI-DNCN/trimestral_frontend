@@ -2,7 +2,8 @@ import type { JSX } from "react";
 import { FaFileAlt, FaFileExcel, FaFileWord } from "react-icons/fa";
 import { HiDownload } from "react-icons/hi";
 import { styled } from "styled-components";
-import { Column, Row } from "../../../../app/style_components/witgets_style_components";
+import { CardUI } from "../../../../app/components/card/card";
+import { Column, Row } from "../../../../core/styled_ui/styled_ui";
 import { useThemeContext } from "../../../../core/theme/ThemeContext";
 
 interface Props {
@@ -62,9 +63,7 @@ export const TrimestralCard: React.FC<Props> = ({ year, quarter, data }) => {
 	const { theme, themes } = useThemeContext();
 
 	return (
-		<StyledCard
-			$bgColor={themes[theme].background}
-		>
+		<CardUI children={
 			<Row justifyContent="space-between" alignItems="center">
 				<Column>
 					<Row >
@@ -86,21 +85,6 @@ export const TrimestralCard: React.FC<Props> = ({ year, quarter, data }) => {
 					<HiDownload style={{ fontSize: 20 }} />
 				</FileDownloadLink>
 			</Row>
-		</StyledCard>
+		} />
 	);
 };
-
-const StyledCard = styled.div<{ $bgColor: string }>`
-	background: ${(props) => props.$bgColor};
-	border-radius: 12px;
-	padding: 16px;
-	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-	border: 1px solid rgba(0, 0, 0, 0.05);
-	transition: all 0.2s ease;
-
-	&:hover {
-		box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
-		transform: translateY(-2px);
-		border-color: rgba(0, 0, 0, 0.08);
-	}
-`;

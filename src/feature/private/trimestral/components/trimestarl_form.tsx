@@ -8,7 +8,7 @@ import type { RootState } from '../../../../core/store/store';
 
 import { useEffect } from 'react';
 import InputField from '../../../../app/components/wrapper_field';
-import { Column, Row } from '../../../../app/style_components/witgets_style_components';
+import { Column, Row } from '../../../../core/styled_ui/styled_ui';
 import { themes } from '../../../../core/theme/ThemeContext';
 import { useUI } from '../../../../core/theme/ui_context';
 import type { comentarioDTO } from '../trimestral_slice';
@@ -58,8 +58,6 @@ const TrimestralForm: React.FC<Props> = ({ action, coment }) => {
 			contenido: e.comentario
 		};
 
-		console.log("data", data);
-
 		try {
 			const actionMap: any = {
 				[DialogAction.update]: updateComentario,
@@ -97,7 +95,7 @@ const TrimestralForm: React.FC<Props> = ({ action, coment }) => {
 				<InputField
 					multiline={true}
 					disabled={action === DialogAction.delete}
-					label="Nombre"
+					label="Comentario"
 					register={register('comentario', {
 						required: 'Campo requerido',
 					})}

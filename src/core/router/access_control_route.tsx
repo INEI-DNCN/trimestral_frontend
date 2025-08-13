@@ -6,8 +6,8 @@ import { StateMessage } from "../../app/components/enum/enum";
 import WrapperLoading from "../../app/components/wrapper_loading";
 import { deleteToken, getToken } from "../../app/utils/utils_localstorage";
 
-import { Row } from "../../app/style_components/witgets_style_components";
 import { validateSource } from "../../feature/login/login_source";
+import { Row } from "../styled_ui/styled_ui";
 import { useUI } from "../theme/ui_context";
 
 interface Props {
