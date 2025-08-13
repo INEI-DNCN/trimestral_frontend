@@ -29,7 +29,6 @@ const Toolbar: React.FC<{
     );
   };
 
-// ✅ Estilo para la barra de herramientas
 const toolbarStyle: React.CSSProperties = {
   marginBottom: "3px",
   display: "flex",

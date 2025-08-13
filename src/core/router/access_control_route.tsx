@@ -1,9 +1,14 @@
+import type { AxiosError, AxiosResponse } from "axios";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import WrapperLoading from "../../../app/components/wrapper_loading";
-import { Row } from "../../../app/style_components/witgets_style_components";
-import { API2 } from "../../../app/utils/utils_api";
-import { deleteToken, getToken } from "../../../app/utils/utils_localstorage";
+import { StateMessage } from "../../app/components/enum/enum";
+import WrapperLoading from "../../app/components/wrapper_loading";
+import { deleteToken, getToken } from "../../app/utils/utils_localstorage";
+
+import { Row } from "../../app/style_components/witgets_style_components";
+import { validateSource } from "../../feature/login/login_source";
+import { useUI } from "../theme/ui_context";
 
 interface Props {
 	children: any;
@@ -32,33 +37,16 @@ interface ValidationResponse {
 	};
 }
 
-const validateTokenWithBackend = async (token: string): Promise<boolean> => {
-	try {
-		const response = await API2.post(`auth/validate`, {
-			token,
-			clientId: import.meta.env.VITE_CLIENTE_ID
-		});
-
-		if (response.status !== 200) {
-			return false;
-		}
-
-		const data: ValidationResponse = response.data;
-		return data.isValid;
-	} catch (error) {
-		console.error('Error validating token:', error);
-		return false;
-	}
-};
-
 export default function AccessControlRoute({
 	children,
 	redirectIfAuthenticated = false,
 	redirectTo = "/login",
 }: Props) {
+
 	const [isLoading, setIsLoading] = useState(false);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [currentToken, setCurrentToken] = useState<string | null>(null);
+	const { onSnackbar } = useUI()
 
 	const validateTokenLogic = async () => {
 		const token = getToken();
@@ -69,7 +57,26 @@ export default function AccessControlRoute({
 			return;
 		}
 		setIsLoading(true);
-		const isValid = await validateTokenWithBackend(token);
+
+		let isValid
+		try {
+			const response: AxiosResponse = await validateSource(token)
+			if (response.status !== 200) {
+
+				return false;
+			}
+			const data: ValidationResponse = response.data;
+			isValid = data.isValid
+		} catch (error: unknown) {
+			if (axios.isAxiosError(error)) {
+				const serverError = error as AxiosError<{ message: string }>;
+				onSnackbar(serverError.response?.data.message || "Error desconocido", StateMessage.error);
+				deleteToken()
+			} else {
+				onSnackbar("Error inesperado");
+			}
+			return false;
+		}
 
 		if (!isValid) {
 			deleteToken();
@@ -98,6 +105,7 @@ export default function AccessControlRoute({
 
 		return () => clearInterval(interval);
 	}, [currentToken]);
+
 
 	if (isLoading) {
 		return <Row alignItems="center" justifyContent="center" style={{ minHeight: '100vh', minWidth: '100vw' }}>

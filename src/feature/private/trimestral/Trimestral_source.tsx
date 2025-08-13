@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import { API, API2 } from "../../../app/utils/utils_api";
 import { getToken } from "../../../app/utils/utils_localstorage";
 import type { UserPayload } from "../../perfil/perfil_slice";
-import { getComentariosTrimestralYearSlice, getIndicadoresSlice, getMetadataArchivosSlice, getTitleTrimestralSlice } from "./trimestral_slice";
+import { getComentariosTrimestralYearSlice, getIndicadoresSlice, getMetadataArchivosSlice, getTitleTrimestralSlice, type comentarioDTO } from "./trimestral_slice";
 
 export const getMetadatosArchivosSource = () => async (dispatch: any) => {
 	try {
@@ -48,10 +48,11 @@ export const getComentarioTrimestralSource = (id_titulo: number, anio: string, t
 	}
 };
 
-export const updateComentario = async (id: string, contenido: string) => {
+export const updateComentario = async (contenido: comentarioDTO) => {
+	console.log(contenido)
 	try {
-		const response = await API.put(`comentarios/${id}`, {
-			contenido: contenido,
+		const response = await API.put(`comentarios/${contenido.id}`, {
+			contenido: contenido.contenido,
 		});
 		return response.data;
 	} catch (error) {

@@ -16,3 +16,11 @@ export async function logoutSource() {
 		throw error;
 	}
 }
+
+export async function validateSource(token: string) {
+
+	return await API2.post(`auth/validate`, {
+		token,
+		clientId: import.meta.env.VITE_CLIENTE_ID
+	});
+}

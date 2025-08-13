@@ -1,8 +1,5 @@
 export interface PageProps {
 	items: any; // puedes tipar mejor si conoces la estructura del menú
-	onSnackbar: any;
-	onDialog: (params: OnDialogParams) => void;
-	handleCloseDialog: () => void;
 	basePath?: string;
 }
 

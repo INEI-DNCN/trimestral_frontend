@@ -2,21 +2,23 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
-import InputField from "../../app/components/Input_field";
 import ButtonAction from "../../app/components/bottons/button_action";
 import { StateMessage } from "../../app/components/enum/enum";
 import type { PageProps } from "../../app/components/interface/router_interface";
+import InputField from "../../app/components/wrapper_field";
 import { Column, Row } from "../../app/style_components/witgets_style_components";
 import { setToken } from "../../app/utils/utils_localstorage";
 import Logo from "../../core/logo/logo";
 import { useThemeContext } from "../../core/theme/ThemeContext";
+import { useUI } from "../../core/theme/ui_context";
 import { signupSource } from "./login_source";
 
 
-const LoginPage: React.FC<PageProps> = (PageProps) => {
+const LoginPage: React.FC<PageProps> = () => {
 
 	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
+	const { onSnackbar } = useUI()
 
 	const {
 		register,
@@ -40,7 +42,7 @@ const LoginPage: React.FC<PageProps> = (PageProps) => {
 		try {
 			const response = await signupSource(data);
 			const token = response?.data.accessToken;
-			PageProps.onSnackbar("Acceso concedido", StateMessage.success);
+			onSnackbar("Acceso concedido", StateMessage.success);
 			setToken(token);
 
 			// Pequeño delay para permitir que AccessControlRoute detecte el cambio
@@ -48,7 +50,7 @@ const LoginPage: React.FC<PageProps> = (PageProps) => {
 				navigate("/private/trimestral");
 			}, 100);
 		} catch (error: any) {
-			PageProps.onSnackbar(error.response?.data?.message || "Error desconocido", StateMessage.warning);
+			onSnackbar(error.response?.data?.message || "Error desconocido", StateMessage.warning);
 		} finally {
 			setIsLoading(false);
 		}

@@ -3,11 +3,11 @@ import { useForm } from 'react-hook-form';
 import { StateMessage } from '../../../../app/components/enum/enum';
 import { Column, Row } from '../../../../app/style_components/witgets_style_components';
 
-import InputField from '../../../../app/components/Input_field';
 import ButtonAction from '../../../../app/components/bottons/button_action';
 import ButtonCancel from '../../../../app/components/bottons/button_cancel';
 import DatePickerField from '../../../../app/components/data_picker_field';
 import type { Meta } from '../../../../app/components/interface/pagination_response_interface';
+import InputField from '../../../../app/components/wrapper_field';
 import type { User } from '../../../perfil/perfil_slice';
 import { updateUserSource } from '../../../perfil/perfil_source';
 

@@ -13,6 +13,7 @@ interface Props {
 	register: UseFormRegisterReturn;
 	onKeyUp?: () => void;
 	disabled?: boolean; // 👈 nueva prop
+	multiline?: boolean; // 👈 nueva prop
 }
 
 const InputField: React.FC<Props> = ({
@@ -23,12 +24,13 @@ const InputField: React.FC<Props> = ({
 	size = 'small',
 	register,
 	disabled,
+	multiline = false,
 	onKeyUp,
 }) => {
-	const { theme, themes } = useThemeContext();
+	const { theme, currentTheme } = useThemeContext();
 
-	const background = themes[theme].backgroundBase;
-	const color = themes[theme].text;
+	const background = currentTheme.backgroundBase;
+	const color = currentTheme.text;
 	const hoverBg = theme === 'dark' ? '#3a3f45' : '#f1f5f9';
 	const focusBg = theme === 'dark' ? '#343a40' : '#ffffff';
 	const focusRing = theme === 'dark'
@@ -46,6 +48,7 @@ const InputField: React.FC<Props> = ({
 			<TextField
 				label={label}
 				type={type}
+				multiline={multiline}
 				size={size}
 				fullWidth
 				disabled={disabled}

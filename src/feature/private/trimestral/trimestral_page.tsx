@@ -1,20 +1,26 @@
 import type { SelectChangeEvent } from '@mui/material';
+import { EditIcon } from 'lucide-react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FaScroll } from "react-icons/fa6";
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import ButtonAction from '../../../app/components/bottons/button_action';
+import { DialogAction } from '../../../app/components/enum/enum';
 import Header from '../../../app/components/header';
 import type { PageProps } from '../../../app/components/interface/router_interface';
 import { Column, Container, Row } from '../../../app/style_components/witgets_style_components';
 import { formatItem } from '../../../app/utils/util';
+import { useUI } from '../../../core/theme/ui_context';
 import { UserDropdown } from '../../perfil/components/perfil_dropdown';
-import { getComentarioTrimestralSource, getIndicadoresSource, getMetadatosArchivosSource, getTitleTrimestralSource, updateComentario } from '../trimestral/Trimestral_source';
+import { getComentarioTrimestralSource, getIndicadoresSource, getMetadatosArchivosSource, getTitleTrimestralSource } from '../trimestral/Trimestral_source';
 import EditText from './components/editor_text';
+import TrimestralForm from './components/trimestarl_form';
+import { TrimestralComment } from './components/trimestral_comment';
 import TrimestralSelectTitle from './components/trimestral_select_title';
 import TrimestralTable from './components/trimestral_table';
 import { TrimestralJson } from './json/trimestral_json';
 import { SectionRinght } from './sections/section_ringht';
+import type { comentarioDTO } from './trimestral_slice';
 
 
 const TrimestralPage: React.FC<PageProps> = (PageProps) => {
@@ -26,11 +32,12 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 	const [editorContent1, setEditorContent1] = useState<any>({});
 	const [editorContent2, setEditorContent2] = useState<any>({});
 
+	const { dispatch, onDialog } = useUI()
 
-	const dispatch: any = useDispatch()
+
 
 	const { titleTrimestral, comentariosTrimestral, metadataArchivos, indicadores } = useSelector((state: any) => state.trimestral)
-
+	console.log(comentariosTrimestral)
 	const handleChangeTitles = (event: SelectChangeEvent) => {
 		dispatch(getComentarioTrimestralSource(parseInt(event.target.value as string), anio, quarter));
 		dispatch(getIndicadoresSource(anio, quarter, titleTrimestral.find((element: any) => element.id === parseInt(event.target.value as string))?.id_hoja));
@@ -72,7 +79,7 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 	const handleSave = async (editorContent: any) => {
 		if (editorContent?.id) {
 			try {
-				await updateComentario(editorContent.id, editorContent.contenido);
+				// await updateComentario(editorContent.id, editorContent.contenido);
 				// onSnackbar()
 			} catch (error) {
 			}
@@ -91,6 +98,15 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 		if (scrollableRef.current) {
 			scrollableRef.current.scrollTo({ top: scrollableRef.current.scrollHeight, behavior: "smooth" });
 		}
+	};
+
+	const handleActions = (action: DialogAction, group?: comentarioDTO) => {
+
+		const dialogContentMap: Record<any, any> = {
+			[DialogAction.update]: <TrimestralForm action={DialogAction.update} coment={group} />,
+		};
+
+		onDialog({ children: dialogContentMap[action], maxWidth: "md", title: action });
 	};
 
 	return (
@@ -149,6 +165,14 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 						/>
 						<ScrollableContainer ref={scrollableRef}>
 							<Column gap='20px' style={{ padding: '0px ', paddingTop: '13px ' }}>
+								<ButtonAction
+									type="submit"
+									startIcon={<EditIcon size={20} />}
+									onClick={() => handleActions(DialogAction.update, editorContent1)}
+								>
+									Actualizar
+								</ButtonAction>
+								<TrimestralComment comment={editorContent1} />
 								<EditText
 									initialContent={editorContent1}
 									onContentChange={(content) => setEditorContent1({ ...editorContent1, contenido: content })}
@@ -172,6 +196,7 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 								</div>
 								{
 									titles === 1 || titles === 5 ?
+
 										<EditText
 											initialContent={editorContent2}
 											onContentChange={(content) => setEditorContent2({ ...editorContent2, contenido: content })}
