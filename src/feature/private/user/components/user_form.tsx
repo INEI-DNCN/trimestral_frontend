@@ -6,20 +6,18 @@ import { Column, Row } from '../../../../core/styled_ui/styled_ui';
 import ButtonAction from '../../../../app/components/bottons/button_action';
 import ButtonCancel from '../../../../app/components/bottons/button_cancel';
 import DatePickerField from '../../../../app/components/data_picker_field';
-import type { Meta } from '../../../../app/components/interface/pagination_response_interface';
 import InputField from '../../../../app/components/wrapper_field';
+import { useUI } from '../../../../core/theme/ui_context';
 import type { User } from '../../../perfil/perfil_slice';
 import { updateUserSource } from '../../../perfil/perfil_source';
 
 interface Props {
 	user?: User;
-	meta?: Meta;
-	handleClose: () => void;
-	onSnackbar: (message: string, type?: StateMessage) => void;
 }
 
-const UserForm: React.FC<Props> = ({ user, handleClose, onSnackbar }) => {
+const UserForm: React.FC<Props> = ({ user }) => {
 
+	const { onSnackbar, handleCloseDialog } = useUI()
 	const {
 		control,
 		register,
@@ -68,7 +66,7 @@ const UserForm: React.FC<Props> = ({ user, handleClose, onSnackbar }) => {
 				? await updateUserSource(data)
 				: null;
 			onSnackbar(user ? 'Actualización completada exitosamente' : 'Registro creado con éxito');
-			handleClose();
+			handleCloseDialog();
 		} catch (error: any) {
 			if (error.response?.status === 400) {
 				onSnackbar(error.response.data.message, StateMessage.warning);
@@ -132,7 +130,7 @@ const UserForm: React.FC<Props> = ({ user, handleClose, onSnackbar }) => {
 					error={errors.birthday}
 				/>
 				<Row justifyContent="flex-end" mt={2}>
-					<ButtonCancel onClick={handleClose}>Cancelar</ButtonCancel>
+					<ButtonCancel onClick={handleCloseDialog}>Cancelar</ButtonCancel>
 					<ButtonAction type="submit">Aplicar</ButtonAction>
 				</Row>
 			</Column>

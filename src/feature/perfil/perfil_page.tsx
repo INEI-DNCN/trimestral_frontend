@@ -1,7 +1,6 @@
 import { Typography } from "@mui/material";
 import { Calendar, Mail, Shield, User as UserIcon } from "lucide-react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ButtonAction from "../../app/components/bottons/button_action";
 import ButtonCancel from "../../app/components/bottons/button_cancel";
@@ -12,13 +11,14 @@ import { SidebarSwitchMode } from "../../core/sidebar/private/sidebar_switch_mod
 import type { RootState } from "../../core/store/store";
 import { Column, Container, Row } from "../../core/styled_ui/styled_ui";
 import { useThemeContext } from "../../core/theme/ThemeContext";
+import { useUI } from "../../core/theme/ui_context";
 import UserForm from "../private/user/components/user_form";
 import UserFormPassword from "../private/user/components/user_form_password";
 import { type User } from "./perfil_slice";
 
-const ProfilePage: React.FC<PageProps> = (PageProps) => {
+const ProfilePage: React.FC<PageProps> = () => {
   const { theme, setTheme, themes } = useThemeContext();
-  const navigate = useNavigate();
+  const { navigate, onDialog } = useUI()
 
   const colors = themes[theme];
 
@@ -31,11 +31,11 @@ const ProfilePage: React.FC<PageProps> = (PageProps) => {
 
   const handleActions = (action: DialogAction, user?: User) => {
     const dialogContentMap: Record<any, any> = {
-      [DialogAction.update]: <UserForm onSnackbar={PageProps.onSnackbar} user={user} handleClose={PageProps.handleCloseDialog} />,
-      [DialogAction.password]: <UserFormPassword onSnackbar={PageProps.onSnackbar} user={user} handleClose={PageProps.handleCloseDialog} />,
+      [DialogAction.update]: <UserForm user={user} />,
+      [DialogAction.password]: <UserFormPassword user={user} />,
     };
 
-    PageProps.onDialog({ children: dialogContentMap[action], maxWidth: "sm", title: action });
+    onDialog({ children: dialogContentMap[action], maxWidth: "sm", title: action });
   };
 
 
