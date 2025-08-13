@@ -38,8 +38,6 @@ const ProfilePage: React.FC<PageProps> = () => {
     onDialog({ children: dialogContentMap[action], maxWidth: "sm", title: action });
   };
 
-
-
   return (
     <Container style={{ width: "100vw", padding: "20px 30%", background: colors.backgroundBase }}>
       <header>
