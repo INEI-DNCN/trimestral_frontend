@@ -100,6 +100,7 @@ export const UserDropdown = () => {
 		try {
 			await logoutSource();
 			deleteToken()
+			localStorage.removeItem("sidebarActiveMenu");
 			navigate("/login");
 		} catch (error) {
 			console.error('Error en logout:', error);

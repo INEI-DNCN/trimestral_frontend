@@ -41,6 +41,7 @@ const LoginPage: React.FC<PageProps> = () => {
 		}
 		try {
 			const response = await signupSource(data);
+			localStorage.setItem("sidebarActiveMenu", 'trimestral');
 			const token = response?.data.accessToken;
 			onSnackbar("Acceso concedido", StateMessage.success);
 			setToken(token);
@@ -48,7 +49,7 @@ const LoginPage: React.FC<PageProps> = () => {
 			// Pequeño delay para permitir que AccessControlRoute detecte el cambio
 			setTimeout(() => {
 				navigate("/private/trimestral");
-			}, 100);
+			}, 1000);
 		} catch (error: any) {
 			onSnackbar(error.response?.data?.message || "Error desconocido", StateMessage.warning);
 		} finally {
