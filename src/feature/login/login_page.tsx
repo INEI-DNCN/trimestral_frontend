@@ -51,7 +51,7 @@ const LoginPage: React.FC<PageProps> = () => {
 				console.log(value)
 				if (value === "trimestral") {
 					console.log("ingrese")
-					// navigate("/private/trimestral");
+					navigate("/private/trimestral");
 				} else {
 
 					setTimeout(checkSidebarAndNavigate, 100);
