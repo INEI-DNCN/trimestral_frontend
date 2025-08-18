@@ -169,9 +169,7 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 										structureHeadeJson={TrimestralJson(anio, quarter)}
 										columnWidths={{ "Actividad": "150px" }}
 										columnAligns={{ "Actividad": "left" }}
-									>
-
-									</TrimestralTable>
+									/>
 								</div>
 								{
 									titles === 1 || titles === 5 ?

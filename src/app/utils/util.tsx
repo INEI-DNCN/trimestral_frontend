@@ -41,8 +41,7 @@ export const formatItem = ({
   originalItem,
   decimal = 1,
   keysDecimals = {},
-}: FormatItemOptions): any => {
-  // Creamos una copia del objeto para evitar modificar el original (por si es inmutable)
+}: FormatItemOptions): Record<string, any> => {
   const newItem: Record<string, any> = { ...originalItem };
 
   Object.keys(originalItem).forEach((key) => {
@@ -50,23 +49,29 @@ export const formatItem = ({
       const valor = originalItem[key];
       const decimales = keysDecimals[key] ?? decimal;
 
-      // Redondeo absoluto, alejándose de cero
-      function roundUpAbsolute(value: any, decimals = 1) {
+      // Redondeo clásico con corrección de precisión
+      function roundToDecimals(value: number, decimals = 1) {
         const factor = Math.pow(10, decimals);
-        const absValue = Math.abs(value);
-        const rounded = Math.round((absValue + Number.EPSILON) * factor) / factor;
-        return value < 0 ? -rounded : rounded;
+        return Math.round((value + Number.EPSILON) * factor) / factor;
       }
 
-      const rounded = roundUpAbsolute(valor, decimales);
+      const rounded = roundToDecimals(valor, decimales);
 
       // Formateo del número
       let valorStr = rounded.toFixed(decimales).replace(".", ",");
-      valorStr = valorStr.replace(/,0+$/, "");
-      valorStr = valorStr.replace(/^(-?\d+)(,\d+)?$/, (_, intPart, decPart) => {
-        intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-        return decPart ? intPart + decPart : intPart;
-      });
+
+      // 🔧 Quitar ceros innecesarios, pero mantener al menos 1 decimal
+      valorStr = valorStr.replace(/,(\d*?)0+$/, ",$1"); // quita ceros extra
+      valorStr = valorStr.replace(/,$/, ",0");          // asegura al menos 1 decimal
+
+      // Separador de miles con espacio
+      valorStr = valorStr.replace(
+        /^(-?\d+)(,\d+)?$/,
+        (_, intPart, decPart) => {
+          intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+          return decPart ? intPart + decPart : intPart;
+        }
+      );
 
       newItem[key] = valorStr;
     }
