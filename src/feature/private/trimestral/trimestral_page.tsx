@@ -15,7 +15,6 @@ import { TrimestralComment } from './components/trimestral_comment';
 import TrimestralSelectTitle from './components/trimestral_select_title';
 import TrimestralTable from './components/trimestral_table';
 import { TrimestralJson } from './json/trimestral_json';
-import { SectionRinght } from './sections/section_ringht';
 
 
 const TrimestralPage: React.FC<PageProps> = (PageProps) => {
@@ -122,7 +121,7 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 			</header>
 			<Row style={{ width: '100%', height: '100%', marginTop: '10px' }}>
 				<section style={{
-					width: '80%',
+					width: '100%',
 					height: 'calc(100vh - 100px)',
 					overflow: 'hidden',
 				}}
@@ -177,8 +176,8 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 						</ScrollableContainer>
 					</Column>
 				</section>
-				<section style={{
-					width: '20%',
+				{/* <section style={{
+					width: '0%',
 					height: '100%',
 					display: 'flex',
 					flexDirection: 'column',
@@ -191,7 +190,7 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 						hoja={hoja}
 						pageProps={PageProps}
 					/>
-				</section>
+				</section> */}
 			</Row>
 		</Container>
 	)
