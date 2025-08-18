@@ -56,7 +56,7 @@ function Routers() {
 				<Route path="login" element={
 					<AccessControlRoute
 						redirectIfAuthenticated={true}
-						redirectTo={`/private/${localStorage.getItem("sidebarActiveMenu")}`}
+						redirectTo={`/private/${localStorage.getItem("sidebarActiveMenu") || "trimestral"}`}
 						children={<LoginPage
 							items={{ label: "Login", path: "Login" }} />} />
 				}

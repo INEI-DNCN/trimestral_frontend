@@ -43,14 +43,15 @@ const LoginPage: React.FC<PageProps> = () => {
 			const response = await signupSource(data);
 			localStorage.setItem("sidebarActiveMenu", 'trimestral');
 			const token = response?.data.accessToken;
-			onSnackbar("Acceso concedido", StateMessage.success);
 			setToken(token);
+			onSnackbar("Acceso concedido", StateMessage.success);
 
 			const checkSidebarAndNavigate = () => {
 				const value = localStorage.getItem("sidebarActiveMenu");
 				console.log(value)
 				if (value === "trimestral") {
-					navigate("/private/trimestral");
+					console.log("ingrese")
+					// navigate("/private/trimestral");
 				} else {
 
 					setTimeout(checkSidebarAndNavigate, 100);

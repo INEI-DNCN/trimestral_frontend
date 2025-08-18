@@ -76,9 +76,6 @@ export const TrimestralComment: React.FC<Props> = ({ comment, titleTrimestralID,
 	);
 };
 
-
-
-
 const floatingButtonStyle: React.CSSProperties = {
 	position: "absolute",
 	top: "20px",
