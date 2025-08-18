@@ -1,4 +1,5 @@
 import type { SelectChangeEvent } from '@mui/material';
+import { PanelRightOpen } from 'lucide-react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FaScroll } from "react-icons/fa6";
 import { useSelector } from 'react-redux';
@@ -15,6 +16,7 @@ import { TrimestralComment } from './components/trimestral_comment';
 import TrimestralSelectTitle from './components/trimestral_select_title';
 import TrimestralTable from './components/trimestral_table';
 import { TrimestralJson } from './json/trimestral_json';
+import { SectionRinght } from './sections/section_ringht';
 
 
 const TrimestralPage: React.FC<PageProps> = (PageProps) => {
@@ -25,10 +27,11 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 	const [titles, setTitles] = useState<any>(1);
 	const [editorContent1, setEditorContent1] = useState<any>({});
 	const [editorContent2, setEditorContent2] = useState<any>({});
+	const [showRightBar, setShowRightBar] = useState(true);
 
 	const { dispatch } = useUI()
 
-	const { titleTrimestral, comentariosTrimestral, indicadores } = useSelector((state: any) => state.trimestral)
+	const { titleTrimestral, comentariosTrimestral, metadataArchivos, indicadores } = useSelector((state: any) => state.trimestral)
 
 	const handleChangeTitles = (event: SelectChangeEvent) => {
 		dispatch(getComentarioTrimestralSource(parseInt(event.target.value as string), anio, quarter));
@@ -112,17 +115,25 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 										</Row>
 									}
 									onClick={handleScrollBottom}
-
 								/>
 							</Row>
 							: null
 					}
+					<ButtonAction
+						children={
+							<Row alignItems='center'>
+								<PanelRightOpen style={{ fontSize: "18px" }} />
+								<div>{showRightBar ? "Ocultar Barra derecha" : "Mostrar Barra derecha"}</div>
+							</Row>
+						}
+						onClick={() => setShowRightBar(prev => !prev)}
+					/>
 					<UserDropdown />
 				</Row>
 			</header>
 			<Row style={{ width: '100%', height: '100%', marginTop: '10px' }}>
 				<section style={{
-					width: '100%',
+					width: showRightBar ? '80%' : '100%',
 					height: 'calc(100vh - 100px)',
 					overflow: 'hidden',
 				}}
@@ -177,21 +188,23 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 						</ScrollableContainer>
 					</Column>
 				</section>
-				{/* <section style={{
-					width: '0%',
-					height: '100%',
-					display: 'flex',
-					flexDirection: 'column',
-					gap: '8px',
-				}}>
-					<SectionRinght
-						year={anio}
-						quarter={quarter}
-						metadataArchivos={metadataArchivos}
-						hoja={hoja}
-						pageProps={PageProps}
-					/>
-				</section> */}
+				{showRightBar && (
+					<section style={{
+						width: '20%',
+						height: '100%',
+						display: 'flex',
+						flexDirection: 'column',
+						gap: '8px',
+					}}>
+						<SectionRinght
+							year={anio}
+							quarter={quarter}
+							metadataArchivos={metadataArchivos}
+							hoja={hoja}
+							pageProps={PageProps}
+						/>
+					</section>
+				)}
 			</Row>
 		</Container>
 	)
