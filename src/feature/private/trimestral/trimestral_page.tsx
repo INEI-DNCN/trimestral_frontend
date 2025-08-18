@@ -123,7 +123,7 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 						children={
 							<Row alignItems='center'>
 								<PanelRightOpen style={{ fontSize: "18px" }} />
-								<div>{showRightBar ? "Ocultar Barra derecha" : "Mostrar Barra derecha"}</div>
+								<div>{showRightBar ? "Ocultar" : "Mostrar"}</div>
 							</Row>
 						}
 						onClick={() => setShowRightBar(prev => !prev)}
