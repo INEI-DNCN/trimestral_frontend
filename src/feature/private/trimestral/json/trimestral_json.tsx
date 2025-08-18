@@ -49,11 +49,11 @@ export const TrimestralJson = (year: number, quarter: any) => {
 	const structure = [
 		{ value: "Actividad" },
 		{
-			value: `${year - 2} / ${year - 1}`,
+			value: `${year - 1} / ${year - 2}`,
 			children: yearPast
 		},
 		{
-			value: `${year - 1} / ${year}`,
+			value: `${year} / ${year - 1}`,
 			children: yearCurrent
 		},
 	];
