@@ -28,12 +28,13 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 
 	const { dispatch } = useUI()
 
-	const { titleTrimestral, comentariosTrimestral, metadataArchivos, indicadores } = useSelector((state: any) => state.trimestral)
+	const { titleTrimestral, comentariosTrimestral, indicadores } = useSelector((state: any) => state.trimestral)
 
 	const handleChangeTitles = (event: SelectChangeEvent) => {
 		dispatch(getComentarioTrimestralSource(parseInt(event.target.value as string), anio, quarter));
 		dispatch(getIndicadoresSource(anio, quarter, titleTrimestral.find((element: any) => element.id === parseInt(event.target.value as string))?.id_hoja));
 		setHoja(titleTrimestral.find((element: any) => element.id === parseInt(event.target.value as string))?.id_hoja)
+		console.log(hoja)
 		setTitles(event.target.value as string);
 	};
 
