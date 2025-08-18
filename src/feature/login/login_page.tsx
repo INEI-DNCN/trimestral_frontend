@@ -46,10 +46,17 @@ const LoginPage: React.FC<PageProps> = () => {
 			onSnackbar("Acceso concedido", StateMessage.success);
 			setToken(token);
 
-			// Pequeño delay para permitir que AccessControlRoute detecte el cambio
-			setTimeout(() => {
-				navigate("/private/trimestral");
-			}, 1000);
+			const checkSidebarAndNavigate = () => {
+				const value = localStorage.getItem("sidebarActiveMenu");
+				if (value === "trimestral") {
+					navigate("/private/trimestral");
+				} else {
+
+					setTimeout(checkSidebarAndNavigate, 100);
+				}
+			};
+
+			checkSidebarAndNavigate();
 		} catch (error: any) {
 			onSnackbar(error.response?.data?.message || "Error desconocido", StateMessage.warning);
 		} finally {
