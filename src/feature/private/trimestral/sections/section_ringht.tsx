@@ -57,7 +57,7 @@ export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos
 		const minutos = fecha.getMinutes().toString().padStart(2, '0');
 		const ampm = horas >= 12 ? 'pm' : 'am';
 		horas = horas % 12;
-		horas = horas ? horas : 12; // el 0 se convierte en 12
+		horas = horas ? horas : 12;
 
 		return `${dia}/${mes}/${anio} ${horas}:${minutos} ${ampm}`;
 	}

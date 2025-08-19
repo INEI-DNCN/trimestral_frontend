@@ -68,8 +68,9 @@ export const UpdateDocumentsSource = async () => {
 		if (token) {
 			decoded = jwtDecode<UserPayload>(token);
 		}
-		const username = `${decoded?.name + "_" + decoded?.firtName + "_" + decoded?.lastName}`
-
+		const username = `${decoded?.name || ''} ${decoded?.firtName || ''} ${decoded?.lastName || ''}`
+			.trim()
+			.replace(/\s+/g, '_');
 		const response = await API.get(
 			`scrips/update-excel`,
 			{ params: { id: 1, usuario: username } }
@@ -88,7 +89,11 @@ export const ProcessDocumentSource = async () => {
 	if (token) {
 		decoded = jwtDecode<UserPayload>(token);
 	}
-	const username = `${decoded?.name + "_" + decoded?.firtName + "_" + decoded?.lastName}`
+	const username = `${decoded?.name || ''} ${decoded?.firtName || ''} ${decoded?.lastName || ''}`
+		.trim()
+		.replace(/\s+/g, '_');
+
+	console.log(username)
 	try {
 		const response = await API.get('scrips/generar-documento',
 			{ params: { id: 2, usuario: username } }
