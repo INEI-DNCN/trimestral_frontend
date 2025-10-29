@@ -22,7 +22,7 @@ import { SectionRinght } from './sections/section_ringht';
 const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 
 	const [anio, __] = useState<any>(2025);
-	const [quarter, _] = useState<any>("II");
+	const [quarter, _] = useState<any>("III");
 	const [hoja, setHoja] = useState<any>("Cdro1");
 	const [titles, setTitles] = useState<any>(1);
 	const [editorContent1, setEditorContent1] = useState<any>({});
@@ -92,7 +92,7 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 			<header>
 				<Row style={{ marginBottom: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
 					<Header
-						title={"PBI " + PageProps.items?.label + ' 2025 - II'}
+						title={"PBI " + PageProps.items?.label + ' ' + anio + '_' + quarter}
 						subtitle={'Informe Técnico'}
 					/>
 					{
