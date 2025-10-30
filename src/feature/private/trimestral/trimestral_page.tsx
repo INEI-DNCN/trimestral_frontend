@@ -27,7 +27,7 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 	const [titles, setTitles] = useState<any>(1);
 	const [editorContent1, setEditorContent1] = useState<any>({});
 	const [editorContent2, setEditorContent2] = useState<any>({});
-	const [showRightBar, setShowRightBar] = useState(true);
+	const [showRightBar, setShowRightBar] = useState(false);
 
 	const { dispatch } = useUI()
 
