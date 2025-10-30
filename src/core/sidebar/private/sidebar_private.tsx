@@ -142,7 +142,7 @@ const SidebarPrivate: React.FC = () => {
             {renderMenuItems(menuItems)}
           </Menu>
         </WrapperMenu>
-        <CardSwagger />
+        {!collapsed && (<CardSwagger />)}
       </Sidebar>
       <SidebarContent $theme={themes[theme]}>
         <Outlet />
