@@ -6,6 +6,7 @@ import { Column, Row } from '../../../../core/styled_ui/styled_ui';
 import ButtonAction from '../../../../app/components/bottons/button_action';
 import ButtonCancel from '../../../../app/components/bottons/button_cancel';
 import DatePickerField from '../../../../app/components/data_picker_field';
+import type { Meta } from '../../../../app/components/interface/pagination_response_interface';
 import InputField from '../../../../app/components/wrapper_field';
 import { useUI } from '../../../../core/theme/ui_context';
 import type { User } from '../../../perfil/perfil_slice';
@@ -13,11 +14,14 @@ import { updateUserSource } from '../../../perfil/perfil_source';
 
 interface Props {
 	user?: User;
+	meta?: Meta;
 }
 
 const UserForm: React.FC<Props> = ({ user }) => {
 
+
 	const { onSnackbar, handleCloseDialog } = useUI()
+
 	const {
 		control,
 		register,
@@ -27,9 +31,10 @@ const UserForm: React.FC<Props> = ({ user }) => {
 		reset,
 	} = useForm({
 		defaultValues: {
+			username: '',
 			dni: '',
 			name: '',
-			firtName: '',
+			firstName: '',
 			lastName: '',
 			email: '',
 			birthday: '',
@@ -40,12 +45,13 @@ const UserForm: React.FC<Props> = ({ user }) => {
 	useEffect(() => {
 		if (!user) return;
 		reset({
-			dni: user.dni || '',
-			name: user.name || '',
-			firtName: user.firtName || '',
-			lastName: user.lastName || '',
-			email: user.email || '',
-			birthday: user.birthday || '',
+			username: user.username,
+			dni: user.personal?.dni || '',
+			name: user.personal?.name || '',
+			firstName: user.personal?.firstName || '',
+			lastName: user.personal?.lastName || '',
+			email: user.personal?.email || '',
+			birthday: user.personal?.birthday || '',
 		});
 	}, [user, reset]);
 
@@ -53,18 +59,21 @@ const UserForm: React.FC<Props> = ({ user }) => {
 
 		const data: User = {
 			id: user?.id,
-			dni: e.dni,
-			name: e.name,
-			firtName: e.firtName,
-			lastName: e.lastName,
-			email: e.email,
-			birthday: e.birthday,
+			username: e.username,
+			personal: {
+				dni: e.dni,
+				name: e.name,
+				firstName: e.firstName,
+				lastName: e.lastName,
+				email: e.email,
+				birthday: e.birthday,
+			}
 		};
 
 		try {
 			user
 				? await updateUserSource(data)
-				: null;
+				: await updateUserSource(data);
 			onSnackbar(user ? 'Actualización completada exitosamente' : 'Registro creado con éxito');
 			handleCloseDialog();
 		} catch (error: any) {
@@ -80,6 +89,14 @@ const UserForm: React.FC<Props> = ({ user }) => {
 		<form style={{ width: '100%' }} onSubmit={handleSubmit(onSubmit)} autoComplete="off">
 			<Column pt={1}>
 				<InputField
+					label="Usuario"
+					register={register('username', {
+						required: 'Campo requerido',
+					})}
+					error={errors.username}
+					onKeyUp={() => trigger('username')}
+				/>
+				<InputField
 					label="DNI"
 					maxLength={8}
 					register={register('dni', {
@@ -93,16 +110,16 @@ const UserForm: React.FC<Props> = ({ user }) => {
 					onKeyUp={() => trigger('dni')}
 				/>
 				<InputField
-					label="Nombre"
+					label="Nombre(s)"
 					register={register('name', { required: 'Campo requerido' })}
 					error={errors.name}
 					onKeyUp={() => trigger('name')}
 				/>
 				<InputField
 					label="Apellido Paterno"
-					register={register('firtName', { required: 'Campo requerido' })}
-					error={errors.firtName}
-					onKeyUp={() => trigger('firtName')}
+					register={register('firstName', { required: 'Campo requerido' })}
+					error={errors.firstName}
+					onKeyUp={() => trigger('firstName')}
 				/>
 				<InputField
 					label="Apellido Materno"
