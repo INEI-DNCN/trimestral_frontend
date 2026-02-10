@@ -20,7 +20,7 @@ export const TrimestralComment: React.FC<Props> = ({ comment, titleTrimestralID,
 
 	const { onDialog } = useUI()
 	const { currentTheme } = useThemeContext();
-	const { oneUser } = useSelector((state: RootState) => state.perfil)
+	const { employee } = useSelector((state: RootState) => state.perfil)
 
 	const [isHovered, setIsHovered] = useState<boolean>(false);
 	const handleActions = (action: DialogAction, group?: comentarioDTO) => {
@@ -66,7 +66,7 @@ export const TrimestralComment: React.FC<Props> = ({ comment, titleTrimestralID,
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
 		>
-			{isHovered && oneUser.role.name === 'Editor' && (
+			{isHovered && employee.role.name === 'Editor' && (
 				<button onClick={() => handleActions(DialogAction.update, comment)} style={floatingButtonStyle}>
 					<EditIcon />
 				</button>

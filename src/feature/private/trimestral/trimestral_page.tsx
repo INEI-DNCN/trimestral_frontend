@@ -10,7 +10,7 @@ import type { PageProps } from '../../../app/components/interface/router_interfa
 import { formatItem } from '../../../app/utils/util';
 import { Column, Container, Row } from '../../../core/styled_ui/styled_ui';
 import { useUI } from '../../../core/theme/ui_context';
-import { UserDropdown } from '../../perfil/components/perfil_dropdown';
+import { PerfilDropdown } from '../../perfil/components/perfil_dropdown';
 import { getComentarioTrimestralSource, getIndicadoresSource, getMetadatosArchivosSource, getTitleTrimestralSource } from '../trimestral/Trimestral_source';
 import { TrimestralComment } from './components/trimestral_comment';
 import TrimestralSelectTitle from './components/trimestral_select_title';
@@ -22,7 +22,7 @@ import { SectionRinght } from './sections/section_ringht';
 const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 
 	const [anio, __] = useState<any>(2025);
-	const [quarter, _] = useState<any>("III");
+	const [quarter, _] = useState<any>("IV");
 	const [hoja, setHoja] = useState<any>("Cdro1");
 	const [titles, setTitles] = useState<any>(1);
 	const [editorContent1, setEditorContent1] = useState<any>({});
@@ -92,7 +92,7 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 			<header>
 				<Row style={{ marginBottom: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
 					<Header
-						title={"PBI " + PageProps.items?.label + ' ' + anio + '_' + quarter}
+						title={"PBI " + anio + '_' + quarter}
 						subtitle={'Informe Técnico'}
 					/>
 					{
@@ -128,7 +128,7 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 						}
 						onClick={() => setShowRightBar(prev => !prev)}
 					/>
-					<UserDropdown />
+					<PerfilDropdown />
 				</Row>
 			</header>
 			<Row style={{ width: '100%', height: '100%', marginTop: '10px' }}>

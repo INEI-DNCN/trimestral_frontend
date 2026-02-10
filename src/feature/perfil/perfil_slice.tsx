@@ -3,7 +3,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 export interface AplicationUserRol {
 	id?: string;
 	aplication: Aplication;
-	role: Rol;
+	role: Role;
 	user: User;
 }
 
@@ -18,7 +18,7 @@ export interface Aplication {
 	deletedAt?: string;
 }
 
-export interface Rol {
+export interface Role {
 	id?: string;
 	name: string;
 	isActive?: boolean;
@@ -26,13 +26,21 @@ export interface Rol {
 
 export interface User {
 	id?: string;
+	username: string;
+	password?: string;
+	personal?: Personal;
+	isActive?: boolean;
+	isLinked?: boolean;
+}
+
+export interface Personal {
+	id?: string;
 	dni: string;
 	name: string;
-	firtName: string;
+	firstName: string;
 	lastName: string;
 	email: string;
 	birthday: string;
-	password?: string
 }
 
 export interface UserPayload {
@@ -47,12 +55,8 @@ export interface UserPayload {
 }
 
 export const initialUser: User = {
-	dni: "",
-	name: "",
-	firtName: "",
-	lastName: "",
-	email: "",
-	birthday: "",
+	username: "",
+	password: "",
 };
 
 export const initialAplication: Aplication = {
@@ -70,11 +74,11 @@ export const initialAplicationUserRole: AplicationUserRol = {
 };
 
 interface UserState {
-	oneUser: AplicationUserRol;
+	employee: AplicationUserRol;
 }
 
 const initialState: UserState = {
-	oneUser: initialAplicationUserRole
+	employee: initialAplicationUserRole
 };
 
 export const PerfilSlice = createSlice({
@@ -82,7 +86,7 @@ export const PerfilSlice = createSlice({
 	initialState,
 	reducers: {
 		OneUserSlice: (state, action: PayloadAction<AplicationUserRol>) => {
-			state.oneUser = action.payload
+			state.employee = action.payload
 		},
 	}
 })

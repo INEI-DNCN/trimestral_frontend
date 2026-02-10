@@ -1,6 +1,7 @@
 // src/components/sidebar/SidebarPublicComponent.tsx
 import { Typography } from "@mui/material";
-import { useState } from "react";
+import { AppWindow, BadgeCheck, Key, Layers3, List, Users } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import {
   Menu,
   MenuItem,
@@ -9,31 +10,56 @@ import {
   menuClasses,
   type MenuItemStyles
 } from "react-pro-sidebar";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import styled from "styled-components";
-import CardSwagger from "../../../app/components/card/card_swagger";
-import { hexToRgba } from "../../../app/utils/util";
-import { useThemeContext } from "../../theme/ThemeContext";
-import { menuItems } from "./sidebar_config";
-import { SidebarHeader } from "./sidebar_header";
+import CardSwagger from "../../app/components/card/card_swagger";
+import { hexToRgba } from "../../app/utils/util";
+import { useThemeContext } from "../theme/ThemeContext";
+import { useUI } from "../theme/ui_context";
+import { SidebarHeader } from "./components/sidebar_header";
 
-const SidebarPrivate: React.FC = () => {
+interface SidebarProps {
+  menuItems: any[];
+  basePath: string;
+}
+
+const Sidebar_layout: React.FC<SidebarProps> = ({ menuItems, basePath }) => {
   const [collapsed, setCollapsed] = useState(() => JSON.parse(localStorage.getItem("sidebarCollapsed") || "false"));
   const [hasImage] = useState(false);
   const [toggled, setToggled] = useState(false);
+  const { navigate, location } = useUI()
+
   const [openSubMenus, setOpenSubMenus] = useState<{ [key: string]: boolean }>(
     () => JSON.parse(localStorage.getItem("sidebarOpenSubMenus") || "{}")
   );
 
-  const navigate = useNavigate();
-  const location = useLocation();
   const [activeMenu, setActiveMenu] = useState(() => localStorage.getItem("sidebarActiveMenu") || location.pathname);
-  const { theme, themes } = useThemeContext();
+  const { themes, currentTheme } = useThemeContext();
+
+  const iconsMap: Record<string, React.FC<{ size?: number }>> = {
+    AppWindow,
+    Layers3,
+    List,
+    Key,
+    BadgeCheck,
+    Users
+  };
+
+  const getLastPathSegment = (path: string) => {
+    const parts = path.split("/").filter(Boolean); // elimina vacíos
+    return parts[parts.length - 1]; // devuelve el último segmento
+  };
+
+  useEffect(() => {
+    const lastSegment = getLastPathSegment(location.pathname);
+    setActiveMenu(lastSegment);
+    localStorage.setItem("sidebarActiveMenu", lastSegment);
+  }, [location.pathname]);
 
   const handleChange = (menu: string) => {
     setActiveMenu(menu);
     localStorage.setItem("sidebarActiveMenu", menu);
-    navigate(menu);
+    navigate(`${basePath}/${menu}`);
   };
 
   const handleCollapseToggle = () => {
@@ -53,7 +79,6 @@ const SidebarPrivate: React.FC = () => {
   const isSubMenuOpen = (key: string) => !!openSubMenus[key];
 
   const menuItemStyles: MenuItemStyles = {
-
     root: {
       fontSize: "13px", fontWeight: 400,
     },
@@ -63,7 +88,7 @@ const SidebarPrivate: React.FC = () => {
     },
     SubMenuExpandIcon: { color: "#b6b7b9" },
     subMenuContent: ({ level }) => ({
-      backgroundColor: level === 0 ? hexToRgba(themes[theme].menu.backgroundSub, hasImage && !collapsed ? 0.4 : 1) : "transparent",
+      backgroundColor: level === 0 ? hexToRgba(currentTheme.menu.backgroundSub, hasImage && !collapsed ? 0.4 : 1) : "transparent",
     }),
     button: ({ active }) => ({
       [`&.${menuClasses.disabled}`]: { color: themes.colors.disabled },
@@ -71,8 +96,8 @@ const SidebarPrivate: React.FC = () => {
         backgroundColor: hexToRgba(themes.colors.primary, hasImage ? 0.8 : 1),
         color: "#fff",
       },
-      backgroundColor: active ? hexToRgba(themes[theme].menu.backgroundActive, hasImage ? 0.8 : 1) : undefined,
-      color: active ? themes[theme].text : undefined,
+      backgroundColor: active ? hexToRgba(currentTheme.menu.backgroundActive, hasImage ? 0.8 : 1) : undefined,
+      color: active ? currentTheme.text : undefined,
       fontWeight: active ? 700 : undefined,
     }),
     label: ({ open }) => ({
@@ -100,7 +125,7 @@ const SidebarPrivate: React.FC = () => {
         return (
           <SubMenu
             key={item.key}
-            icon={item.icon}
+            icon={iconsMap[item.icon] && React.createElement(iconsMap[item.icon], { size: 18 })}
             label={item.label}
             defaultOpen={isSubMenuOpen(item.key)}
             onOpenChange={() => handleSubMenuToggle(item.key)}
@@ -113,7 +138,7 @@ const SidebarPrivate: React.FC = () => {
       return (
         <MenuItem
           key={item.path}
-          icon={item.icon}
+          icon={iconsMap[item.icon] && React.createElement(iconsMap[item.icon], { size: 18 })}
           onClick={() => handleChange(item.path)}
           active={activeMenu === item.path}
         >
@@ -123,38 +148,39 @@ const SidebarPrivate: React.FC = () => {
     });
 
   return (
-    <WrapperSidebar $backgroundColor={themes[theme].backgroundBase}>
+    <SidebarWrapper $backgroundColor={currentTheme.backgroundBase}>
       <Sidebar
         collapsed={collapsed}
         toggled={toggled}
         onBackdropClick={() => setToggled(false)}
         breakPoint="md"
-        backgroundColor={hexToRgba(themes[theme].backgroundBase, hasImage ? 0.9 : 1)}
+        backgroundColor={hexToRgba(currentTheme.backgroundBase, hasImage ? 0.9 : 1)}
         rootStyles={{
-          color: themes[theme].text,
+          color: currentTheme.text,
           zIndex: 1200,
           borderRight: `0px`,
         }}
       >
         <SidebarHeader onIconClick={handleCollapseToggle} />
-        <WrapperMenu $backgroundColor={themes[theme].background}>
+        <WrapperMenu $backgroundColor={currentTheme.background}>
           <Menu menuItemStyles={menuItemStyles}>
             {renderMenuItems(menuItems)}
           </Menu>
         </WrapperMenu>
         {!collapsed && (<CardSwagger />)}
+
       </Sidebar>
-      <SidebarContent $theme={themes[theme]}>
+      <SidebarContent $theme={currentTheme}>
         <Outlet />
       </SidebarContent>
-    </WrapperSidebar>
+    </SidebarWrapper>
   );
 };
 
-export default SidebarPrivate;
+export default Sidebar_layout;
 
 
-const WrapperSidebar = styled.div<{ $backgroundColor: any }>`
+const SidebarWrapper = styled.div<{ $backgroundColor: any }>`
   display: flex;
   width: 100vw;
   height: 100vh;

@@ -4,7 +4,8 @@ import { OneUserSlice, type User } from "./perfil_slice";
 export const getOneUser = ({ id }: { id: string }) => async (dispatch: any) => {
 	try {
 		const response = await API2.get(`application-users/user/${id}/application/${import.meta.env.VITE_CLIENTE_ID}`);
-		dispatch(OneUserSlice(response.data[0]));
+		console.log("Respuesta de getOneUser:", response.data);
+		dispatch(OneUserSlice(response.data));
 		return response;
 	} catch (error) {
 		console.error('Error en getOneUser:', error);

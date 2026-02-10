@@ -6,14 +6,13 @@ import ButtonAction from "../../app/components/bottons/button_action";
 import ButtonCancel from "../../app/components/bottons/button_cancel";
 import { DialogAction } from "../../app/components/enum/enum";
 import type { PageProps } from "../../app/components/interface/router_interface";
-import { formatDate } from "../../app/utils/util";
-import { SidebarSwitchMode } from "../../core/sidebar/private/sidebar_switch_mode";
 import type { RootState } from "../../core/store/store";
 import { Column, Container, Row } from "../../core/styled_ui/styled_ui";
 import { useThemeContext } from "../../core/theme/ThemeContext";
 import { useUI } from "../../core/theme/ui_context";
 import UserForm from "../private/user/components/user_form";
 import UserFormPassword from "../private/user/components/user_form_password";
+import { SwitchTheme } from "./components/switch_theme";
 import { type User } from "./perfil_slice";
 
 const ProfilePage: React.FC<PageProps> = () => {
@@ -27,7 +26,7 @@ const ProfilePage: React.FC<PageProps> = () => {
     setTheme(newTheme);
     localStorage.setItem("sidebarTheme", newTheme);
   };
-  const { oneUser } = useSelector((state: RootState) => state.perfil)
+  const { employee } = useSelector((state: RootState) => state.perfil)
 
   const handleActions = (action: DialogAction, user?: User) => {
     const dialogContentMap: Record<any, any> = {
@@ -59,7 +58,7 @@ const ProfilePage: React.FC<PageProps> = () => {
               <IconBox><Shield size={18} /></IconBox>
               <Field>
                 <Label>
-                  DNI: {oneUser?.user?.dni}
+                  DNI: {employee?.user?.personal?.dni}
                 </Label>
               </Field>
             </Item>
@@ -67,21 +66,14 @@ const ProfilePage: React.FC<PageProps> = () => {
             <Item>
               <IconBox><UserIcon size={18} /></IconBox>
               <Field>
-                <Label>Nombres y Apellidos: {oneUser?.user?.name + " " + oneUser?.user?.firtName + " " + oneUser?.user?.lastName}</Label>
+                <Label>Nombres y Apellidos: {employee?.user?.personal?.name + " " + employee?.user?.personal?.firstName + " " + employee?.user?.personal?.lastName}</Label>
               </Field>
             </Item>
 
             <Item>
               <IconBox><Calendar size={18} /></IconBox>
               <Field>
-                <Label>Fecha de Nacimiento: {formatDate(oneUser?.user?.birthday)}</Label>
-              </Field>
-            </Item>
-
-            <Item>
-              <IconBox><Calendar size={18} /></IconBox>
-              <Field>
-                <Label> Rol: {oneUser?.role.name}</Label>
+                <Label> Rol: {employee?.role.name}</Label>
               </Field>
             </Item>
 
@@ -92,7 +84,7 @@ const ProfilePage: React.FC<PageProps> = () => {
             <Item>
               <IconBox><Mail size={18} /></IconBox>
               <Field>
-                <Label>Correo Electrónico: {oneUser?.user?.email}</Label>
+                <Label>Correo Electrónico: {employee?.user?.personal?.email}</Label>
               </Field>
             </Item>
           </SectionCard>
@@ -103,7 +95,7 @@ const ProfilePage: React.FC<PageProps> = () => {
                 <IconBox><Shield size={18} /></IconBox>
                 <Label>Modo {theme === "dark" ? "Oscuro" : "Claro"}</Label>
               </Row>
-              <SidebarSwitchMode
+              <SwitchTheme
                 sx={{ m: 1 }}
                 checked={theme === "dark"}
                 onChange={handleThemeChange}
@@ -113,8 +105,8 @@ const ProfilePage: React.FC<PageProps> = () => {
 
           <ActionArea>
             <ButtonCancel onClick={() => navigate(-1)} >Salir</ButtonCancel>
-            <ButtonAction onClick={() => handleActions(DialogAction.password, oneUser.user ?? {})} >Cambiar Contraseña</ButtonAction>
-            <ButtonAction onClick={() => handleActions(DialogAction.update, oneUser.user ?? {})} >Actualizar</ButtonAction>
+            <ButtonAction onClick={() => handleActions(DialogAction.password, employee.user ?? {})} >Cambiar Contraseña</ButtonAction>
+            <ButtonAction onClick={() => handleActions(DialogAction.update, employee.user ?? {})} >Actualizar</ButtonAction>
           </ActionArea>
         </Column>
       </article>

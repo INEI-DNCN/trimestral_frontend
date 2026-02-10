@@ -50,8 +50,7 @@ const LoginPage: React.FC<PageProps> = () => {
 				const value = localStorage.getItem("sidebarActiveMenu");
 				console.log(value)
 				if (value === "trimestral") {
-					console.log("ingrese")
-					navigate("/private/trimestral");
+					navigate("/private/home");
 				} else {
 
 					setTimeout(checkSidebarAndNavigate, 100);

@@ -1,13 +1,15 @@
 import { AppWindow } from "lucide-react";
 import TrimestralPage from "../../../feature/private/trimestral/trimestral_page";
 
+
+
 export const menuItems = [
-	{ sectionTitle: true, label: "Procesamiento" },
+	{ sectionTitle: true, label: "General" },
 	{
-		label: "Trimestral",
+		label: "Aplicaciones",
 		icon: <AppWindow size={18} />,
-		path: "trimestral",
+		path: "aplication",
 		component: TrimestralPage,
-	},
+	}
 ];
 

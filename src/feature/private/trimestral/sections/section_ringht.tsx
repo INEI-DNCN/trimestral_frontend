@@ -62,7 +62,7 @@ export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos
 		return `${dia}/${mes}/${anio} ${horas}:${minutos} ${ampm}`;
 	}
 
-	const { oneUser } = useSelector((state: RootState) => state.perfil)
+	const { employee } = useSelector((state: RootState) => state.perfil)
 
 	const procesar = async (fn: () => Promise<any>, tipo: 'Word' | 'Excel') => {
 		try {
@@ -82,18 +82,17 @@ export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos
 	return (
 		<Column style={{ height: "100%" }}>
 			<Column>
-				{
-					oneUser.role.name == 'Editor' ? <ButtonAction
+				{['Modificar', 'Control total'].includes(employee.role.name) && (
+					<ButtonAction
 						backgroundColor={getColorByType('excel')}
-						children={
-							<Row alignItems='center'>
-								<FaPython style={{ fontSize: "18px" }} />
-								<div>Actualizar Excel</div>
-							</Row>
-						}
 						onClick={() => procesar(UpdateDocumentsSource, "Excel")}
-					/> : null
-				}
+					>
+						<Row alignItems="center">
+							<FaPython style={{ fontSize: "18px" }} />
+							<div>Actualizar Excel</div>
+						</Row>
+					</ButtonAction>
+				)}
 				<FechaInfo tipo="excel">
 					{formatearFecha(metadataArchivos.find((data: any) => data.tipo === "xlsm")?.ultima_actualizacion)}
 				</FechaInfo>
@@ -110,18 +109,17 @@ export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos
 					/>
 				))}
 			<Column>
-				{
-					oneUser.role.name == 'Editor' ? (<ButtonAction
+				{['Modificar', 'Control total'].includes(employee.role.name) && (
+					<ButtonAction
 						backgroundColor={getColorByType('word')}
-						children={
-							<Row alignItems='center'>
-								<FaPython style={{ fontSize: "18px" }} />
-								<div>Actualizar Word</div>
-							</Row>
-						}
 						onClick={() => procesar(ProcessDocumentSource, "Word")}
-					/>) : null
-				}
+					>
+						<Row alignItems="center">
+							<FaPython style={{ fontSize: "18px" }} />
+							<div>Actualizar Word</div>
+						</Row>
+					</ButtonAction>
+				)}
 
 				<FechaInfo tipo="word">
 					{formatearFecha(metadataArchivos.find((data: any) => data.tipo === "docx")?.ultima_actualizacion)}

@@ -1,16 +1,13 @@
-// UserDropdown.tsx
-import { jwtDecode } from "jwt-decode";
+// PerfilDropdown.tsx
 import { LogOut, User2 } from "lucide-react";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { deleteToken, getToken } from "../../../app/utils/utils_localstorage";
+import { deleteToken } from "../../../app/utils/utils_localstorage";
 import type { RootState } from "../../../core/store/store";
 import { useThemeContext } from "../../../core/theme/ThemeContext";
+import { useUI } from "../../../core/theme/ui_context";
 import { logoutSource } from "../../login/login_source";
-import type { UserPayload } from "../perfil_slice";
-import { getOneUser } from "../perfil_source";
 
 const DropdownContainer = styled.div`
 	position: relative;
@@ -74,33 +71,19 @@ const Divider = styled.div<{ $theme: any }>`
 `;
 
 
-export const UserDropdown = () => {
+export const PerfilDropdown = () => {
 	const { theme, themes } = useThemeContext();
-	const dispatch: any = useDispatch()
+	const { navigate } = useUI()
 	const currentTheme = themes[theme];
-	const navigate = useNavigate();
 	const [isOpen, setIsOpen] = React.useState(false);
 	const toggleDropdown = () => setIsOpen(!isOpen);
 
-	const { oneUser } = useSelector((state: RootState) => state.perfil)
-
-	useEffect(() => {
-		const token = getToken();
-		if (token) {
-			try {
-				const decoded = jwtDecode<UserPayload>(token);
-				dispatch(getOneUser({ id: decoded.id }));
-			} catch (err) {
-				console.error("Error al decodificar token", err);
-			}
-		}
-	}, []);
+	const { employee } = useSelector((state: RootState) => state.perfil)
 
 	const handleLogout = async () => {
 		try {
 			await logoutSource();
 			deleteToken()
-			localStorage.removeItem("sidebarActiveMenu");
 			navigate("/login");
 		} catch (error) {
 			console.error('Error en logout:', error);
@@ -108,11 +91,20 @@ export const UserDropdown = () => {
 		}
 	};
 
+	const personal = employee?.user?.personal;
+
+	const fullName =
+		employee?.user?.username === "administrador"
+			? "Administrador"
+			: personal
+				? `${personal?.name ?? ""} ${personal?.firstName ?? ""} ${personal?.lastName ?? ""}`
+				: "Usuario";
+
 	return (
 		<DropdownContainer>
 			<TriggerButton onClick={toggleDropdown} $theme={currentTheme}>
 				<User2 size={18} />
-				{oneUser?.user?.name + " " + oneUser?.user?.firtName + " " + oneUser?.user?.lastName}
+				{fullName}
 			</TriggerButton>
 			{isOpen && (
 				<DropdownContent $theme={currentTheme}>

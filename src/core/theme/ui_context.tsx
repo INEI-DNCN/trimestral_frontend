@@ -12,6 +12,7 @@ import type { AppDispatch } from "../store/store";
 type UIContextType = {
   dispatch: AppDispatch;
   navigate: NavigateFunction;
+  location: Location;
   onSnackbar: (message: string, alertColor?: AlertColor) => void;
   onDialog: (params: OnDialogParams) => void;
   handleCloseDialog: () => void;
@@ -54,7 +55,7 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   };
 
   return (
-    <UIContext.Provider value={{ navigate, dispatch, onSnackbar, onDialog, handleCloseDialog }}>
+    <UIContext.Provider value={{ location, navigate, dispatch, onSnackbar, onDialog, handleCloseDialog }}>
       {children}
 
       {/* Snackbar */}
