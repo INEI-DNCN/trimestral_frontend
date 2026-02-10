@@ -66,7 +66,7 @@ export const TrimestralComment: React.FC<Props> = ({ comment, titleTrimestralID,
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
 		>
-			{isHovered && employee.role.name === 'Editor' && (
+			{isHovered && ['Modificar', 'Control total'].includes(employee.role.name) && (
 				<button onClick={() => handleActions(DialogAction.update, comment)} style={floatingButtonStyle}>
 					<EditIcon />
 				</button>
