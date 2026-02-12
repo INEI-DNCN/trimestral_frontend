@@ -23,7 +23,7 @@ export const SidebarHeader: React.FC<Props> = ({ onIconClick }) => {
           color={theme === 'dark' ? '#e6f0ff' : '#1f1f1f'}
           fontFamily="'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
         >
-          Sistema Integrado de Gestión Trimestral
+          SIGT
         </Typography>
       </Row>
     </Wrapper>
