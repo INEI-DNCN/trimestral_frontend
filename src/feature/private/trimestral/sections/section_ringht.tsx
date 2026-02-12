@@ -116,7 +116,7 @@ export const SectionRinght: React.FC<Props> = ({ year, quarter, metadataArchivos
 					>
 						<Row alignItems="center">
 							<FaPython style={{ fontSize: "18px" }} />
-							<div>Actualizar Word</div>
+							<div>Generar Informe</div>
 						</Row>
 					</ButtonAction>
 				)}
