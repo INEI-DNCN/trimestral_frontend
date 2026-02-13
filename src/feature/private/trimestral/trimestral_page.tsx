@@ -92,7 +92,7 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 			<header>
 				<Row style={{ marginBottom: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
 					<Header
-						title={"PBI " + anio + '_' + quarter}
+						title={"Central de comentarios y datos trimestrales"}
 						subtitle={'Informe Técnico'}
 					/>
 					{
