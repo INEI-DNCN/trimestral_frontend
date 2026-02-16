@@ -24,14 +24,14 @@ const RoutePrivate = ({ children }: { children: JSX.Element }) => {
           if (res?.data?.isValid) {
             setIsValid(true);
           } else {
-            localStorage.removeItem("token");
+            // localStorage.removeItem("token");
             setIsValid(false);
           }
         }, delay);
 
       } catch (error) {
         console.error("Error validando token:", error);
-        localStorage.removeItem("token");
+        // localStorage.removeItem("token");
         setIsValid(false);
       }
     })();
