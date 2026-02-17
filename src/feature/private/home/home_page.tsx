@@ -58,6 +58,8 @@ const HomePage: React.FC<PageProps> = () => {
 
 
 
+
+
 	const procesar = async (fn: () => Promise<any>, tipo: 'Word' | 'Excel') => {
 		try {
 			onDialog({ children: <WrapperLoading color={getColorByType(tipo)} text={"Actualizando " + tipo} />, maxWidth: "sm", title: DialogAction.loadin });
@@ -70,6 +72,23 @@ const HomePage: React.FC<PageProps> = () => {
 			handleCloseDialog()
 		}
 	};
+
+	function formatearFecha(fechaISO: string): string {
+		const fecha = new Date(fechaISO);
+
+
+		const dia = fecha.getDate().toString().padStart(2, '0');
+		const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+		const anio = fecha.getFullYear();
+
+		let horas = fecha.getHours();
+		const minutos = fecha.getMinutes().toString().padStart(2, '0');
+		const ampm = horas >= 12 ? 'pm' : 'am';
+		horas = horas % 12;
+		horas = horas ? horas : 12;
+
+		return `${dia}/${mes}/${anio} ${horas}:${minutos} ${ampm}`;
+	}
 
 	return (
 		<Container>
@@ -138,6 +157,10 @@ const HomePage: React.FC<PageProps> = () => {
 											variant="body2"
 											sx={{ color: "#ccc", fontSize: "0.8rem" }}
 										>Documento que consolida los comentarios, cuadros y gráficos correspondientes a los archivos Anexo 1-3, Anexo 4-22, Cuadros Demanda, Cuadros Desesta Ratios y Cuadros Oferta, presentado de forma estructurada para su difusión.</Typography>
+										<Typography
+											variant="body2"
+											sx={{ color: "#ccc", fontSize: "0.8rem" }}
+										>Documento actualizado al {formatearFecha(metadataArchivos.find((data: any) => data.tipo === "docx")?.ultima_actualizacion)}</Typography>
 									</Column>
 									<Column>
 										{metadataArchivos
@@ -175,6 +198,7 @@ const HomePage: React.FC<PageProps> = () => {
 									>
 										Registro cronológico de actualizaciones por rubro.
 									</Typography>
+
 									<div style={{
 										maxHeight: 400,
 										overflowY: "auto",
@@ -245,6 +269,10 @@ const HomePage: React.FC<PageProps> = () => {
 								variant="body2"
 								sx={{ color: "#ccc", fontSize: "0.8rem" }}
 							>Archivos generados a partir de los documentos fuente, que contienen información procesada y organizada para su presentación.</Typography>
+							<Typography
+								variant="body2"
+								sx={{ color: "#ccc", fontSize: "0.8rem" }}
+							>Documento actualizado al {formatearFecha(metadataArchivos.find((data: any) => data.tipo === "xlsm")?.ultima_actualizacion)}</Typography>
 							{metadataArchivos
 								.filter((data: any) => data.tipo === "xlsm")
 								.map((data: any, index: any) => (
