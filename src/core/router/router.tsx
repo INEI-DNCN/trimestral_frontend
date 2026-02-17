@@ -171,14 +171,6 @@ function Routers() {
 								</RoutePrivate>
 							}
 						>
-							{/* <Route
-								path="home"
-								element={
-									<RoutePrivate>
-										<TrimestralPage basePath="private" items={"ga"} />
-									</RoutePrivate>
-								}
-							></Route> */}
 							{renderRoutesFromMenu({
 								items: menus,
 							})}
