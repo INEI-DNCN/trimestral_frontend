@@ -12,14 +12,12 @@ export interface comentarioDTO {
 }
 
 interface trimestralState {
-	metadataArchivos: [],
 	titleTrimestral: [],
 	comentariosTrimestral: comentarioDTO[],
 	indicadores: [],
 }
 
 const initialState: trimestralState = {
-	metadataArchivos: [],
 	titleTrimestral: [],
 	comentariosTrimestral: [],
 	indicadores: [],
@@ -27,12 +25,9 @@ const initialState: trimestralState = {
 
 
 export const TrimestralSlice = createSlice({
-	name: 'trimestral',
+	name: 'comment',
 	initialState,
 	reducers: {
-		getMetadataArchivosSlice: (state, action) => {
-			state.metadataArchivos = action.payload
-		},
 		getTitleTrimestralSlice: (state, action) => {
 			state.titleTrimestral = action.payload
 		},
@@ -50,7 +45,6 @@ export const {
 	getTitleTrimestralSlice,
 	getComentariosTrimestralYearSlice,
 	getIndicadoresSlice,
-	getMetadataArchivosSlice
 } = TrimestralSlice.actions
 
 export default TrimestralSlice.reducer

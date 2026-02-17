@@ -1,9 +1,9 @@
 
 import { jwtDecode } from "jwt-decode";
-import { API, API2 } from "../../../app/utils/utils_api";
+import { API } from "../../../app/utils/utils_api";
 import { getToken } from "../../../app/utils/utils_localstorage";
 import type { UserPayload } from "../../perfil/perfil_slice";
-import { getComentariosTrimestralYearSlice, getIndicadoresSlice, getMetadataArchivosSlice, getTitleTrimestralSlice, type comentarioDTO } from "./home_slice";
+import { getFechasActualizacionSlice, getMetadataArchivosSlice } from "./home_slice";
 
 export const getMetadatosArchivosSource = () => async (dispatch: any) => {
 	try {
@@ -14,51 +14,20 @@ export const getMetadatosArchivosSource = () => async (dispatch: any) => {
 	}
 };
 
-export const getTitleTrimestralSource = () => async (dispatch: any) => {
-	try {
-		const token = getToken();
-		let decoded;
-		if (token) {
-			decoded = jwtDecode<UserPayload>(token);
-			const responseAuth = await API2.get(`groups-users/user/${decoded?.id}`);
-			const response = await API.get(`titulo`);
+export const getFechasActualizacionSource =
+	(anio: string, trimestre: string) => async (dispatch: any) => {
+		try {
+			const response = await API.get(`comentarios/fechas-actualizacion`, {
+				params: { anio, trimestre },
+			});
 
-			const groupNames = responseAuth.data.map((entry: any) => entry.group.name);
-			const matchedTemas = response.data.filter((tema: any) =>
-				groupNames.includes(tema.nombre)
-			);
-
-			dispatch(getTitleTrimestralSlice(matchedTemas));
+			dispatch(getFechasActualizacionSlice(response.data));
+		} catch (error) {
+			console.error("Error en getFechasActualizacionSource:", error);
 		}
-	} catch (error) {
-		console.error("Error en getSource:", error);
-	}
-};
+	};
 
 
-
-export const getComentarioTrimestralSource = (id_titulo: number, anio: string, trimestre: string) => async (dispatch: any) => {
-	try {
-		const response = await API.get(`comentarios/by-titulo`, {
-			params: { id_titulo, anio, trimestre },
-		});
-		dispatch(getComentariosTrimestralYearSlice(response.data));
-	} catch (error) {
-		console.error("Error en getComentarioTrimestralSource:", error);
-	}
-};
-
-export const updateComentario = async (contenido: comentarioDTO) => {
-	try {
-		const response = await API.put(`comentarios/${contenido.id}`, {
-			contenido: contenido.contenido,
-		});
-		return response.data;
-	} catch (error) {
-		console.error('Error actualizando el comentario:', error);
-		throw error;
-	}
-};
 
 export const UpdateDocumentsSource = async () => {
 	try {
@@ -104,13 +73,3 @@ export const ProcessDocumentSource = async () => {
 	}
 };
 
-export const getIndicadoresSource = (anio: number, trimestre: string, hoja: string) => async (dispatch: any) => {
-	try {
-		const response = await API.get(`idicadores`, {
-			params: { anio, trimestre, hoja },
-		});
-		dispatch(getIndicadoresSlice(response.data));
-	} catch (error) {
-		console.error("Error en getComentarioTrimestralSource:", error);
-	}
-};

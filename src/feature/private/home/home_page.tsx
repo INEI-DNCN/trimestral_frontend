@@ -15,7 +15,7 @@ import { useThemeContext } from '../../../core/theme/ThemeContext';
 import { useUI } from '../../../core/theme/ui_context';
 import { PerfilDropdown } from '../../perfil/components/perfil_dropdown';
 import { TrimestralCard } from './components/trimestral_card';
-import { getMetadatosArchivosSource, ProcessDocumentSource, UpdateDocumentsSource } from './home_source';
+import { getFechasActualizacionSource, getMetadatosArchivosSource, ProcessDocumentSource, UpdateDocumentsSource } from './home_source';
 
 
 const HomePage: React.FC<PageProps> = () => {
@@ -26,7 +26,8 @@ const HomePage: React.FC<PageProps> = () => {
 
 	const { theme, themes } = useThemeContext();
 
-	const { metadataArchivos } = useSelector((state: any) => state.trimestral)
+	const { metadataArchivos, fechasActualizacion } = useSelector((state: any) => state.home)
+
 	function getColorByType(type: string): string {
 		switch (type.toLowerCase()) {
 			case "word":
@@ -41,7 +42,19 @@ const HomePage: React.FC<PageProps> = () => {
 
 	useLayoutEffect(() => {
 		dispatch(getMetadatosArchivosSource());
+		dispatch(getFechasActualizacionSource(anio, quarter));
 	}, []);
+
+	const esHoy = (fecha: string) => {
+		const hoy = new Date();
+		const f = new Date(fecha);
+
+		return (
+			hoy.getDate() === f.getDate() &&
+			hoy.getMonth() === f.getMonth() &&
+			hoy.getFullYear() === f.getFullYear()
+		);
+	};
 
 
 
@@ -63,7 +76,7 @@ const HomePage: React.FC<PageProps> = () => {
 			<Column alignItems='center'>
 				<Row style={{ width: '85%', marginBottom: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
 					<Header
-						title={"Estatus de Gestión"}
+						title={"Home / Consola de Gestión"}
 						subtitle={'Consolidación de cuadros Excel y comentarios por actividad económica.'}
 					/>
 					<PerfilDropdown />
@@ -97,7 +110,7 @@ const HomePage: React.FC<PageProps> = () => {
 										>
 											<Row alignItems="center">
 												<FaArrowsSpin style={{ fontSize: "18px" }} />
-												<div>Sincronizar Datos</div>
+												<div>Sincronizar Archivos consolidados</div>
 											</Row>
 										</ButtonAction>
 										<ButtonAction
@@ -147,6 +160,71 @@ const HomePage: React.FC<PageProps> = () => {
 											))}
 									</Column>
 								</Row>
+							</CardUI>
+							<CardUI >
+								<Column>
+									<Typography
+										variant="h5"
+										sx={{ fontWeight: 400, color: themes[theme].text, mb: 0.25 }}
+									>
+										Comentarios por Actividad
+									</Typography>
+									<Typography
+										variant="body2"
+										sx={{ color: "#ccc", fontSize: "0.8rem" }}
+									>
+										Registro cronológico de actualizaciones por rubro.
+									</Typography>
+									<div style={{
+										maxHeight: 400,
+										overflowY: "auto",
+										paddingRight: 6
+									}}>
+										{fechasActualizacion.map((item: any, index: number) => {
+											const hoy = esHoy(item.fecha_actualizacion);
+
+											return (
+												<Row
+													key={index}
+													justifyContent="space-between"
+													alignItems="center"
+													py={1}
+												>
+
+
+													{/* NOMBRE + PUNTO */}
+													<Row alignItems="center" gap="6px">
+														<span
+															style={{
+																width: 6,
+																height: 6,
+																borderRadius: "50%",
+																background: hoy ? "#22c55e" : "#6b7280",
+																display: "inline-block"
+															}}
+														/>
+
+														<span style={{ fontSize: "0.9rem" }}>
+															{item.nombre}
+														</span>
+													</Row>
+
+													{/* FECHA */}
+													<span
+														style={{
+															color: hoy ? "#22c55e" : "#9ca3af",
+															fontSize: "0.8rem",
+															minWidth: 130
+														}}
+													>
+														{new Date(item.fecha_actualizacion).toLocaleDateString()}
+													</span>
+												</Row>
+											);
+										})}
+									</div>
+								</Column>
+
 							</CardUI>
 						</Column>
 					</section>

@@ -10,7 +10,7 @@ import { formatItem } from '../../../app/utils/util';
 import { Column, Container, Row } from '../../../core/styled_ui/styled_ui';
 import { useUI } from '../../../core/theme/ui_context';
 import { PerfilDropdown } from '../../perfil/components/perfil_dropdown';
-import { getComentarioTrimestralSource, getIndicadoresSource, getMetadatosArchivosSource, getTitleTrimestralSource } from './comment_source';
+import { getComentarioTrimestralSource, getIndicadoresSource, getTitleTrimestralSource } from './comment_source';
 import { TrimestralComment } from './components/trimestral_comment';
 import TrimestralSelectTitle from './components/trimestral_select_title';
 import TrimestralTable from './components/trimestral_table';
@@ -31,7 +31,7 @@ const CommentPage: React.FC<PageProps> = () => {
 
 	const { dispatch } = useUI()
 
-	const { titleTrimestral, comentariosTrimestral, indicadores } = useSelector((state: any) => state.trimestral)
+	const { titleTrimestral, comentariosTrimestral, indicadores } = useSelector((state: any) => state.comment)
 
 	const handleChangeTitles = (event: SelectChangeEvent) => {
 		dispatch(getComentarioTrimestralSource(parseInt(event.target.value as string), anio, quarter));
@@ -42,7 +42,6 @@ const CommentPage: React.FC<PageProps> = () => {
 
 	useLayoutEffect(() => {
 		dispatch(getTitleTrimestralSource());
-		dispatch(getMetadatosArchivosSource());
 	}, []);
 
 	const initialized = useRef(false);
@@ -92,7 +91,7 @@ const CommentPage: React.FC<PageProps> = () => {
 				<Row style={{ width: '85%', marginBottom: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
 					<Header
 						title={"Comentarios"}
-						subtitle={'Informe Técnico'}
+						subtitle={'Consolidación de cuadros Excel y comentarios por actividad económica.'}
 					/>
 					{
 						comentariosTrimestral.length === 2

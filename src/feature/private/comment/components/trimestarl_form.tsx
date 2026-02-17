@@ -1,10 +1,8 @@
 import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
 import ButtonAction from '../../../../app/components/bottons/button_action';
 import ButtonCancel from '../../../../app/components/bottons/button_cancel';
 import { DialogAction, StateMessage } from '../../../../app/components/enum/enum';
 
-import type { RootState } from '../../../../core/store/store';
 
 import { useEffect } from 'react';
 import InputField from '../../../../app/components/wrapper_field';
@@ -12,7 +10,7 @@ import { Column, Row } from '../../../../core/styled_ui/styled_ui';
 import { themes } from '../../../../core/theme/ThemeContext';
 import { useUI } from '../../../../core/theme/ui_context';
 import type { comentarioDTO } from '../../home/home_slice';
-import { getComentarioTrimestralSource, updateComentario } from '../../home/home_source';
+import { getComentarioTrimestralSource, updateComentario } from '../comment_source';
 
 interface Props {
 	action: DialogAction;
@@ -41,7 +39,7 @@ const TrimestralForm: React.FC<Props> = ({ action, coment, titleTrimestralID, ye
 		},
 	});
 
-	const { } = useSelector((state: RootState) => state.trimestral)
+	// const { } = useSelector((state: RootState) => state.trimestral)
 
 	useEffect(() => {
 		if (coment) {

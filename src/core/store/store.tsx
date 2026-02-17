@@ -13,7 +13,7 @@ const store = configureStore({
 		router: routerReducer,
 		general: generalReducer,
 		perfil: perfilReducer,
-		trimestral: homeReducer,
+		home: homeReducer,
 		comment: commentReducer
 	}
 })
