@@ -1,15 +1,16 @@
-import { AppWindow } from "lucide-react";
-import TrimestralPage from "../../../feature/private/trimestral/trimestral_page";
+// import { AppWindow } from "lucide-react";
+// import HomePage from "../../../feature/private/home/home_page";
 
 
 
-export const menuItems = [
-	{ sectionTitle: true, label: "General" },
-	{
-		label: "Aplicaciones",
-		icon: <AppWindow size={18} />,
-		path: "aplication",
-		component: TrimestralPage,
-	}
-];
+
+// export const menuItems = [
+// 	{ sectionTitle: true, label: "General" },
+// 	{
+// 		label: "Home",
+// 		icon: <AppWindow size={18} />,
+// 		path: "home",
+// 		component: HomePage,
+// 	}
+// ];
 

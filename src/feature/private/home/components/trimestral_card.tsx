@@ -1,9 +1,9 @@
 import type { JSX } from "react";
-import { FaFileAlt, FaFileExcel, FaFileWord } from "react-icons/fa";
+import { FaRegFile } from "react-icons/fa6";
 import { HiDownload } from "react-icons/hi";
 import { styled } from "styled-components";
 import { CardUI } from "../../../../app/components/card/card";
-import { Column, Row } from "../../../../core/styled_ui/styled_ui";
+import { Row } from "../../../../core/styled_ui/styled_ui";
 import { useThemeContext } from "../../../../core/theme/ThemeContext";
 
 interface Props {
@@ -44,12 +44,12 @@ export const TrimestralCard: React.FC<Props> = ({ year, quarter, data }) => {
 			case 'xls':
 			case 'xlsx':
 			case 'xlsm':
-				return <FaFileExcel size={20} style={{ color: "#22c55e" }} />;
+				return <FaRegFile size={20} style={{ color: "#22c55e" }} />;
 			case 'doc':
 			case 'docx':
-				return <FaFileWord size={20} style={{ color: "#3b82f6" }} />;
+				return <FaRegFile size={20} style={{ color: "#3b82f6" }} />;
 			default:
-				return <FaFileAlt size={20} style={{ color: "#6b7280" }} />; // gris genérico
+				return <FaRegFile size={20} style={{ color: "#6b7280" }} />; // gris genérico
 		}
 	};
 
@@ -65,18 +65,12 @@ export const TrimestralCard: React.FC<Props> = ({ year, quarter, data }) => {
 	return (
 		<CardUI children={
 			<Row justifyContent="space-between" alignItems="center">
-				<Column>
-					<Row >
-						{getFileIcon(data.tipo)}
-						<div style={{
-							fontSize: '0.8rem',
-							// fontWeight: '700',
-							color: themes[theme].text
-						}}>
-							{limpiarNombreArchivo(data.nombre)}
-						</div>
-					</Row>
-				</Column>
+				<Row >
+					{getFileIcon(data.tipo)}
+					<div style={{ fontSize: '0.8rem', color: themes[theme].text }}>
+						{limpiarNombreArchivo(data.nombre)}
+					</div>
+				</Row>
 				<FileDownloadLink
 					$color={themes[theme].text}
 					href={`http://192.168.201.212:8080/${year + "_" + quarter}/Informatico/1.Informe_Tecnico/${data.nombre}`}

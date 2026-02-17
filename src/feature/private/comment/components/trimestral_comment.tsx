@@ -6,7 +6,7 @@ import { DialogAction } from "../../../../app/components/enum/enum";
 import type { RootState } from "../../../../core/store/store";
 import { useThemeContext } from "../../../../core/theme/ThemeContext";
 import { useUI } from "../../../../core/theme/ui_context";
-import type { comentarioDTO } from "../trimestral_slice";
+import type { comentarioDTO } from "../comment_slice";
 import TrimestralForm from "./trimestarl_form";
 
 interface Props {

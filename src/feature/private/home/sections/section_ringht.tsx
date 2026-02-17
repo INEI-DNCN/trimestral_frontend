@@ -9,8 +9,8 @@ import type { RootState } from "../../../../core/store/store";
 import { Column, Row } from "../../../../core/styled_ui/styled_ui";
 import { useThemeContext } from "../../../../core/theme/ThemeContext";
 import { useUI } from "../../../../core/theme/ui_context";
-import { getIndicadoresSource, getMetadatosArchivosSource, ProcessDocumentSource, UpdateDocumentsSource } from "../Trimestral_source";
 import { TrimestralCard } from "../components/trimestral_card";
+import { getIndicadoresSource, getMetadatosArchivosSource, ProcessDocumentSource, UpdateDocumentsSource } from "../home_source";
 interface Props {
 	year: string;
 	quarter: string;

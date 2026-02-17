@@ -12,7 +12,6 @@ export const getMenusSource =
     async (dispatch: any) => {
       try {
         dispatch(startLoading());
-        console.log("Fetching menus for applicationId:", applicationId, "and userId:", userId);
         const response = await API2.get(
           `menus-users/tree?applicationId=${applicationId}&userId=${userId}`
         );

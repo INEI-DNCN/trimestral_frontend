@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import { API, API2 } from "../../../app/utils/utils_api";
 import { getToken } from "../../../app/utils/utils_localstorage";
 import type { UserPayload } from "../../perfil/perfil_slice";
-import { getComentariosTrimestralYearSlice, getIndicadoresSlice, getMetadataArchivosSlice, getTitleTrimestralSlice, type comentarioDTO } from "./trimestral_slice";
+import { getComentariosTrimestralYearSlice, getIndicadoresSlice, getMetadataArchivosSlice, getTitleTrimestralSlice, type comentarioDTO } from "./comment_slice";
 
 export const getMetadatosArchivosSource = () => async (dispatch: any) => {
 	try {
@@ -93,7 +93,6 @@ export const ProcessDocumentSource = async () => {
 		.trim()
 		.replace(/\s+/g, '_');
 
-	console.log(username)
 	try {
 		const response = await API.get('scrips/generar-documento',
 			{ params: { id: 2, usuario: username } }

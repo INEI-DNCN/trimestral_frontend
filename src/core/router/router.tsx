@@ -10,7 +10,8 @@ import LoginPage from "../../feature/login/login_page";
 import ProfilePage from "../../feature/perfil/perfil_page";
 import type { UserPayload } from "../../feature/perfil/perfil_slice";
 import { getOneUser } from "../../feature/perfil/perfil_source";
-import TrimestralPage from "../../feature/private/trimestral/trimestral_page";
+import CommentPage from "../../feature/private/comment/comment_page";
+import HomePage from "../../feature/private/home/home_page";
 import NotFoundPage from '../404/404_page';
 import Sidebar_layout from "../sidebar/sidebar_layout";
 import type { AppDispatch, RootState } from "../store/store";
@@ -22,7 +23,8 @@ import { getMenusByAplicationSource } from "./router_source";
 function Routers() {
 
 	const componentsMap: Record<string, React.FC<any>> = {
-		TrimestralPage
+		HomePage,
+		CommentPage
 	};
 
 
@@ -67,7 +69,6 @@ function Routers() {
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { menus, loading, error } = useSelector((state: RootState) => state.router);
-	console.log("Menus en router:", menus);
 
 	useEffect(() => {
 		const token = getToken();

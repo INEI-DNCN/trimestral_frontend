@@ -30,7 +30,6 @@ const RoutePrivate = ({ children }: { children: JSX.Element }) => {
         }, delay);
 
       } catch (error) {
-        console.error("Error validando token:", error);
         localStorage.removeItem("token");
         setIsValid(false);
       }

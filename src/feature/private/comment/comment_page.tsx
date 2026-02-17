@@ -1,5 +1,4 @@
 import type { SelectChangeEvent } from '@mui/material';
-import { PanelRightOpen } from 'lucide-react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FaScroll } from "react-icons/fa6";
 import { useSelector } from 'react-redux';
@@ -11,33 +10,33 @@ import { formatItem } from '../../../app/utils/util';
 import { Column, Container, Row } from '../../../core/styled_ui/styled_ui';
 import { useUI } from '../../../core/theme/ui_context';
 import { PerfilDropdown } from '../../perfil/components/perfil_dropdown';
-import { getComentarioTrimestralSource, getIndicadoresSource, getMetadatosArchivosSource, getTitleTrimestralSource } from '../trimestral/Trimestral_source';
+import { getComentarioTrimestralSource, getIndicadoresSource, getMetadatosArchivosSource, getTitleTrimestralSource } from './comment_source';
 import { TrimestralComment } from './components/trimestral_comment';
 import TrimestralSelectTitle from './components/trimestral_select_title';
 import TrimestralTable from './components/trimestral_table';
 import { TrimestralJson } from './json/trimestral_json';
-import { SectionRinght } from './sections/section_ringht';
 
 
-const TrimestralPage: React.FC<PageProps> = (PageProps) => {
+
+
+
+const CommentPage: React.FC<PageProps> = () => {
 
 	const [anio, __] = useState<any>(2025);
 	const [quarter, _] = useState<any>("IV");
-	const [hoja, setHoja] = useState<any>("Cdro1");
+	// const [hoja, setHoja] = useState<any>("Cdro1");
 	const [titles, setTitles] = useState<any>(1);
 	const [editorContent1, setEditorContent1] = useState<any>({});
 	const [editorContent2, setEditorContent2] = useState<any>({});
-	const [showRightBar, setShowRightBar] = useState(false);
 
 	const { dispatch } = useUI()
 
-	const { titleTrimestral, comentariosTrimestral, metadataArchivos, indicadores } = useSelector((state: any) => state.trimestral)
+	const { titleTrimestral, comentariosTrimestral, indicadores } = useSelector((state: any) => state.trimestral)
 
 	const handleChangeTitles = (event: SelectChangeEvent) => {
 		dispatch(getComentarioTrimestralSource(parseInt(event.target.value as string), anio, quarter));
 		dispatch(getIndicadoresSource(anio, quarter, titleTrimestral.find((element: any) => element.id === parseInt(event.target.value as string))?.id_hoja));
-		setHoja(titleTrimestral.find((element: any) => element.id === parseInt(event.target.value as string))?.id_hoja)
-		console.log(hoja)
+		// setHoja(titleTrimestral.find((element: any) => element.id === parseInt(event.target.value as string))?.id_hoja)
 		setTitles(event.target.value as string);
 	};
 
@@ -89,10 +88,10 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 
 	return (
 		<Container>
-			<header>
-				<Row style={{ marginBottom: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
+			<Column alignItems='center'>
+				<Row style={{ width: '85%', marginBottom: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
 					<Header
-						title={"Central de comentarios y datos trimestrales"}
+						title={"Comentarios"}
 						subtitle={'Informe Técnico'}
 					/>
 					{
@@ -119,95 +118,69 @@ const TrimestralPage: React.FC<PageProps> = (PageProps) => {
 							</Row>
 							: null
 					}
-					<ButtonAction
-						children={
-							<Row alignItems='center'>
-								<PanelRightOpen style={{ fontSize: "18px" }} />
-								<div>{showRightBar ? "Ocultar" : "Mostrar"}</div>
-							</Row>
-						}
-						onClick={() => setShowRightBar(prev => !prev)}
-					/>
 					<PerfilDropdown />
 				</Row>
-			</header>
-			<Row style={{ width: '100%', height: '100%', marginTop: '10px' }}>
-				<section style={{
-					width: showRightBar ? '80%' : '100%',
-					height: 'calc(100vh - 100px)',
-					overflow: 'hidden',
-				}}
-				>
-					<Column gap='0px' style={{ width: '100%', height: '100%', padding: '0px 0px', boxSizing: 'border-box' }}>
-						<TrimestralSelectTitle
-							handleChange={handleChangeTitles}
-							item={titles}
-							items={[
-								...titleTrimestral.map((item: any) => ({
-									id: item.id,
-									descripcion: item.nombre
-								}))
-							]}
-						/>
-						<ScrollableContainer ref={scrollableRef}>
-							<Column gap='20px' style={{ padding: '0px ', paddingTop: '13px ' }}>
-								<TrimestralComment
-									titleTrimestralID={titles}
-									quarter={quarter}
-									year={anio}
-									comment={editorContent1}
-								/>
-								<div
-									style={{
-										width: '100%',
-										padding: '0px 40px',
-										boxSizing: 'border-box' // Cambiado de 'content-box' a 'border-box'
-									}}
-								>
-									<TrimestralTable
-										data={(indicadores || []).map((e: any) => formatItem({ originalItem: e, decimal: 1 }))}
-										structureHeadeJson={TrimestralJson(anio, quarter)}
-										columnWidths={{ "Actividad": "150px" }}
-										columnAligns={{ "Actividad": "left" }}
-									/>
-								</div>
-								{
-									titles === 1 || titles === 5 ?
-										<TrimestralComment
-											titleTrimestralID={titles}
-											quarter={quarter}
-											year={anio}
-											comment={editorContent2}
-										/>
-										: null
-								}
-								<div style={{ height: '200px' }}></div>
-							</Column>
-						</ScrollableContainer>
-					</Column>
-				</section>
-				{showRightBar && (
+				<Row style={{ width: '85%', height: '100%', marginTop: '10px' }}>
 					<section style={{
-						width: '20%',
-						height: '100%',
-						display: 'flex',
-						flexDirection: 'column',
-						gap: '8px',
-					}}>
-						<SectionRinght
-							year={anio}
-							quarter={quarter}
-							metadataArchivos={metadataArchivos}
-							hoja={hoja}
-							pageProps={PageProps}
-						/>
+						width: '100%',
+						height: 'calc(100vh - 100px)',
+						overflow: 'hidden',
+					}}
+					>
+						<Column gap='0px' style={{ width: '100%', height: '100%', padding: '0px 0px', boxSizing: 'border-box' }}>
+							<TrimestralSelectTitle
+								handleChange={handleChangeTitles}
+								item={titles}
+								items={[
+									...titleTrimestral.map((item: any) => ({
+										id: item.id,
+										descripcion: item.nombre
+									}))
+								]}
+							/>
+							<ScrollableContainer ref={scrollableRef}>
+								<Column gap='20px' style={{ padding: '0px ', paddingTop: '13px ' }}>
+									<TrimestralComment
+										titleTrimestralID={titles}
+										quarter={quarter}
+										year={anio}
+										comment={editorContent1}
+									/>
+									<div
+										style={{
+											width: '100%',
+											padding: '0px 40px',
+											boxSizing: 'border-box' // Cambiado de 'content-box' a 'border-box'
+										}}
+									>
+										<TrimestralTable
+											data={(indicadores || []).map((e: any) => formatItem({ originalItem: e, decimal: 1 }))}
+											structureHeadeJson={TrimestralJson(anio, quarter)}
+											columnWidths={{ "Actividad": "150px" }}
+											columnAligns={{ "Actividad": "left" }}
+										/>
+									</div>
+									{
+										titles === 1 || titles === 5 ?
+											<TrimestralComment
+												titleTrimestralID={titles}
+												quarter={quarter}
+												year={anio}
+												comment={editorContent2}
+											/>
+											: null
+									}
+									<div style={{ height: '200px' }}></div>
+								</Column>
+							</ScrollableContainer>
+						</Column>
 					</section>
-				)}
-			</Row>
+				</Row>
+			</Column>
 		</Container>
 	)
 }
-export default TrimestralPage
+export default CommentPage
 
 const ScrollableContainer = styled.div`
 	width: 100%;
