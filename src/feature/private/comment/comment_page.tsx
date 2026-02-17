@@ -33,6 +33,8 @@ const CommentPage: React.FC<PageProps> = () => {
 
 	const { titleTrimestral, comentariosTrimestral, indicadores } = useSelector((state: any) => state.comment)
 
+	console.log("comentariosTrimestral", indicadores)
+
 	const handleChangeTitles = (event: SelectChangeEvent) => {
 		dispatch(getComentarioTrimestralSource(parseInt(event.target.value as string), anio, quarter));
 		dispatch(getIndicadoresSource(anio, quarter, titleTrimestral.find((element: any) => element.id === parseInt(event.target.value as string))?.id_hoja));
