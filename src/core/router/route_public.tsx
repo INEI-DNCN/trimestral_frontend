@@ -8,7 +8,6 @@ const RoutePublic = ({ children }: { children: JSX.Element }) => {
   const token = getToken();
   const { menus } = useSelector((state: RootState) => state.router);
 
-  console.log("RoutePublic - menus:", menus);
 
   if (token && (!menus || menus.length === 0)) {
     return null;
