@@ -16,6 +16,7 @@ import { SwitchTheme } from "./components/switch_theme";
 import { type User } from "./perfil_slice";
 
 const ProfilePage: React.FC<PageProps> = () => {
+
   const { theme, setTheme, themes } = useThemeContext();
   const { navigate, onDialog } = useUI()
 

@@ -17,13 +17,10 @@ import TrimestralTable from './components/trimestral_table';
 import { TrimestralJson } from './json/trimestral_json';
 
 
-
-
-
 const CommentPage: React.FC<PageProps> = () => {
 
-	const [anio, __] = useState<any>(2025);
-	const [quarter, _] = useState<any>("IV");
+	const [anio, __] = useState<any>(2026);
+	const [quarter, _] = useState<any>("I");
 	// const [hoja, setHoja] = useState<any>("Cdro1");
 	const [titles, setTitles] = useState<any>(1);
 	const [editorContent1, setEditorContent1] = useState<any>({});
@@ -151,7 +148,7 @@ const CommentPage: React.FC<PageProps> = () => {
 										style={{
 											width: '100%',
 											padding: '0px 40px',
-											boxSizing: 'border-box' // Cambiado de 'content-box' a 'border-box'
+											boxSizing: 'border-box'
 										}}
 									>
 										<TrimestralTable
