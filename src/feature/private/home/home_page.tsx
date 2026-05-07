@@ -32,7 +32,7 @@ const HomePage: React.FC<PageProps> = () => {
 		switch (type.toLowerCase()) {
 			case "word":
 				return "#2f80ed";
-			case "Comentarios":
+			case "comentarios":
 				return "#7B61FF";
 			case "excel":
 				return "#27ae60";
@@ -57,10 +57,6 @@ const HomePage: React.FC<PageProps> = () => {
 			hoy.getFullYear() === f.getFullYear()
 		);
 	};
-
-
-
-
 
 	const procesar = async (fn: () => Promise<any>, tipo: 'Word' | 'Excel' | 'Comentarios') => {
 		try {
