@@ -32,6 +32,8 @@ const HomePage: React.FC<PageProps> = () => {
 		switch (type.toLowerCase()) {
 			case "word":
 				return "#2f80ed";
+			case "Comentarios":
+				return "#7B61FF";
 			case "excel":
 				return "#27ae60";
 			default:
@@ -60,7 +62,7 @@ const HomePage: React.FC<PageProps> = () => {
 
 
 
-	const procesar = async (fn: () => Promise<any>, tipo: 'Word' | 'Excel') => {
+	const procesar = async (fn: () => Promise<any>, tipo: 'Word' | 'Excel' | 'Comentarios') => {
 		try {
 			onDialog({ children: <WrapperLoading color={getColorByType(tipo)} text={"Actualizando " + tipo} />, maxWidth: "sm", title: DialogAction.loadin });
 			const response = await fn();
@@ -133,8 +135,8 @@ const HomePage: React.FC<PageProps> = () => {
 											</Row>
 										</ButtonAction>
 										<ButtonAction
-											backgroundColor={'#7B61FF'}
-											onClick={() => procesar(SynchronizeCommentsSource, "Excel")}
+											backgroundColor={getColorByType('comentarios')}
+											onClick={() => procesar(SynchronizeCommentsSource, "Comentarios")}
 										>
 											<Row alignItems="center">
 												<FaArrowsSpin style={{ fontSize: "18px" }} />
