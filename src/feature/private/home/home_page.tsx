@@ -15,7 +15,7 @@ import { useThemeContext } from '../../../core/theme/ThemeContext';
 import { useUI } from '../../../core/theme/ui_context';
 import { PerfilDropdown } from '../../perfil/components/perfil_dropdown';
 import { TrimestralCard } from './components/trimestral_card';
-import { getFechasActualizacionSource, getMetadatosArchivosSource, ProcessDocumentSource, UpdateDocumentsSource } from './home_source';
+import { getFechasActualizacionSource, getMetadatosArchivosSource, ProcessDocumentSource, SynchronizeCommentsSource, UpdateDocumentsSource } from './home_source';
 
 
 const HomePage: React.FC<PageProps> = () => {
@@ -134,7 +134,7 @@ const HomePage: React.FC<PageProps> = () => {
 										</ButtonAction>
 										<ButtonAction
 											backgroundColor={'#7B61FF'}
-											onClick={() => procesar(UpdateDocumentsSource, "Excel")}
+											onClick={() => procesar(SynchronizeCommentsSource, "Excel")}
 										>
 											<Row alignItems="center">
 												<FaArrowsSpin style={{ fontSize: "18px" }} />
