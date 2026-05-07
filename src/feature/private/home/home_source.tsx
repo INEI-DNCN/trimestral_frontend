@@ -29,6 +29,28 @@ export const getFechasActualizacionSource =
 
 
 
+export const SynchronizeCommentsSource = async () => {
+	try {
+
+		const token = getToken();
+		let decoded;
+		if (token) {
+			decoded = jwtDecode<UserPayload>(token);
+		}
+		const username = `${decoded?.name || ''} ${decoded?.firtName || ''} ${decoded?.lastName || ''}`
+			.trim()
+			.replace(/\s+/g, '_');
+		const response = await API.get(
+			`scrips/synchronize-comment`,
+			{ params: { id: 3, usuario: username } }
+		);
+		return response;
+	} catch (error) {
+		console.error("Error en SynchronizeCommentsSource:", error);
+		throw error;
+	}
+};
+
 export const UpdateDocumentsSource = async () => {
 	try {
 

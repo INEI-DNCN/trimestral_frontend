@@ -133,6 +133,15 @@ const HomePage: React.FC<PageProps> = () => {
 											</Row>
 										</ButtonAction>
 										<ButtonAction
+											backgroundColor={'#7B61FF'}
+											onClick={() => procesar(UpdateDocumentsSource, "Excel")}
+										>
+											<Row alignItems="center">
+												<FaArrowsSpin style={{ fontSize: "18px" }} />
+												<div>Sincronizar Comentarios</div>
+											</Row>
+										</ButtonAction>
+										<ButtonAction
 											backgroundColor={getColorByType('word')}
 											onClick={() => procesar(ProcessDocumentSource, "Word")}
 										>
