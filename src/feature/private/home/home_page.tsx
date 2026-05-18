@@ -20,8 +20,8 @@ import { getFechasActualizacionSource, getMetadatosArchivosSource, ProcessDocume
 
 const HomePage: React.FC<PageProps> = () => {
 
-	const [anio, __] = useState<any>(2025);
-	const [quarter, _] = useState<any>("IV");
+	const [anio, __] = useState<any>(2026);
+	const [quarter, _] = useState<any>("I");
 	const { dispatch, onSnackbar, onDialog, handleCloseDialog } = useUI()
 
 	const { theme, themes } = useThemeContext();
