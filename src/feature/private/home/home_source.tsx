@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import { API } from "../../../app/utils/utils_api";
 import { getToken } from "../../../app/utils/utils_localstorage";
 import type { UserPayload } from "../../perfil/perfil_slice";
-import { getFechasActualizacionSlice, getMetadataArchivosSlice } from "./home_slice";
+import { getMetadataArchivosSlice } from "./home_slice";
 
 export const getMetadatosArchivosSource = () => async (dispatch: any) => {
 	try {
@@ -13,21 +13,6 @@ export const getMetadatosArchivosSource = () => async (dispatch: any) => {
 		console.error("Error en getSource:", error);
 	}
 };
-
-export const getFechasActualizacionSource =
-	(anio: string, trimestre: string) => async (dispatch: any) => {
-		try {
-			const response = await API.get(`comentarios/fechas-actualizacion`, {
-				params: { anio, trimestre },
-			});
-
-			dispatch(getFechasActualizacionSlice(response.data));
-		} catch (error) {
-			console.error("Error en getFechasActualizacionSource:", error);
-		}
-	};
-
-
 
 export const SynchronizeCommentsSource = async () => {
 	try {

@@ -16,7 +16,6 @@ interface trimestralState {
 	titleTrimestral: [],
 	comentariosTrimestral: comentarioDTO[],
 	indicadores: [],
-	fechasActualizacion: { nombre: string; fecha_actualizacion: string }[]
 }
 
 const initialState: trimestralState = {
@@ -24,7 +23,6 @@ const initialState: trimestralState = {
 	titleTrimestral: [],
 	comentariosTrimestral: [],
 	indicadores: [],
-	fechasActualizacion: [],
 };
 
 
@@ -35,15 +33,11 @@ export const TrimestralSlice = createSlice({
 		getMetadataArchivosSlice: (state, action) => {
 			state.metadataArchivos = action.payload
 		},
-		getFechasActualizacionSlice: (state, action) => {
-			state.fechasActualizacion = action.payload
-		},
 	}
 })
 
 
 export const {
-	getFechasActualizacionSlice,
 	getMetadataArchivosSlice
 } = TrimestralSlice.actions
 
