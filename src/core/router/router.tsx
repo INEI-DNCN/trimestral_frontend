@@ -18,7 +18,7 @@ import type { AppDispatch, RootState } from "../store/store";
 import { UIProvider } from "../theme/ui_context";
 import RoutePrivate from "./route_private";
 import RoutePublic from "./route_public";
-import { getMenusByAplicationSource } from "./router_source";
+import { getMenusByAplicationSource, getMenusSource } from "./router_source";
 
 function Routers() {
 
@@ -77,7 +77,9 @@ function Routers() {
 			try {
 				const decoded = jwtDecode<UserPayload>(token);
 				dispatch(getOneUser({ id: decoded.id }));
-				dispatch(getMenusByAplicationSource());
+				dispatch(getMenusSource({
+					userId: decoded?.id,
+				}));
 
 			} catch (err) {
 				console.error("Error al decodificar token", err);

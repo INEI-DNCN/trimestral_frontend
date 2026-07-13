@@ -8,12 +8,13 @@ export interface Props {
 }
 
 export const getMenusSource =
-  ({ applicationId, userId }: Props) =>
+  ({ userId }: Props) =>
     async (dispatch: any) => {
       try {
         dispatch(startLoading());
+        const clientId = import.meta.env.VITE_CLIENTE_ID;
         const response = await API2.get(
-          `menus-users/tree?applicationId=${applicationId}&userId=${userId}`
+          `menus-users/tree?clientId=${clientId}&userId=${userId}`
         );
 
         const cleanedData = cleanMenus(response.data);
