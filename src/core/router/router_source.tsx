@@ -5,13 +5,16 @@ import { menusError, menusSuccess, startLoading } from "./router_slice";
 export interface Props {
   applicationId?: string;
   userId?: string;
+  showLoading?: boolean;
 }
 
 export const getMenusSource =
-  ({ userId }: Props) =>
+  ({ userId, showLoading = true }: Props) =>
     async (dispatch: any) => {
       try {
-        dispatch(startLoading());
+        if (showLoading) {
+          dispatch(startLoading());
+        }
         const clientId = import.meta.env.VITE_CLIENTE_ID;
         const response = await API2.get(
           `menus-users/tree?clientId=${clientId}&userId=${userId}`

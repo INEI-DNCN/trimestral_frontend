@@ -1,4 +1,3 @@
-import { jwtDecode } from "jwt-decode";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -9,12 +8,9 @@ import type { PageProps } from "../../app/components/interface/router_interface"
 import InputField from "../../app/components/wrapper_field";
 import { setToken } from "../../app/utils/utils_localstorage";
 import Logo from "../../core/logo/logo";
-import { getMenusSource } from "../../core/router/router_source";
 import { Column, Row } from "../../core/styled_ui/styled_ui";
 import { useThemeContext } from "../../core/theme/ThemeContext";
 import { useUI } from "../../core/theme/ui_context";
-import type { UserPayload } from "../perfil/perfil_slice";
-import { getOneUser } from "../perfil/perfil_source";
 import { signupSource } from "./login_source";
 
 
@@ -22,14 +18,9 @@ const LoginPage: React.FC<PageProps> = () => {
 
 	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
-	const { onSnackbar, dispatch } = useUI()
+	const { onSnackbar } = useUI()
 
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-		trigger,
-	} = useForm({
+	const { register, handleSubmit, formState: { errors }, trigger, } = useForm({
 		defaultValues: {
 			usuario: '',
 			password: '',
@@ -45,24 +36,11 @@ const LoginPage: React.FC<PageProps> = () => {
 		}
 		try {
 			const response = await signupSource(data);
-			localStorage.setItem("sidebarActiveMenu", 'trimestral');
 			const token = response?.data.accessToken;
-			const decoded = jwtDecode<UserPayload>(token);
 			setToken(token);
 			onSnackbar("Acceso concedido", StateMessage.success);
-			dispatch(getMenusSource({ userId: decoded?.id }));
-			dispatch(getOneUser({ id: decoded.id }));
-			const checkSidebarAndNavigate = () => {
-				const value = localStorage.getItem("sidebarActiveMenu");
-				if (value === "trimestral") {
-					navigate("/private/home");
-				} else {
+			navigate("/private/home");
 
-					setTimeout(checkSidebarAndNavigate, 100);
-				}
-			};
-
-			checkSidebarAndNavigate();
 		} catch (error: any) {
 			onSnackbar(error.response?.data?.message || "Error desconocido", StateMessage.warning);
 		} finally {

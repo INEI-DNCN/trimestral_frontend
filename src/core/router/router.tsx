@@ -32,6 +32,7 @@ function Routers() {
 		items,
 		basePath = ""
 	}: PageProps): JSX.Element[] {
+
 		return items.flatMap((item: any) => {
 			if (item.sectionTitle) return [];
 
@@ -77,15 +78,13 @@ function Routers() {
 			try {
 				const decoded = jwtDecode<UserPayload>(token);
 				dispatch(getOneUser({ id: decoded.id }));
-				dispatch(getMenusSource({
-					userId: decoded?.id,
-				}));
+				dispatch(getMenusSource({ userId: decoded?.id }));
 
 			} catch (err) {
 				console.error("Error al decodificar token", err);
 			}
 		} else {
-			localStorage.setItem("sidebarActiveMenu", 'aplication');
+			localStorage.setItem("sidebarActiveMenu", 'home');
 			dispatch(getMenusByAplicationSource());
 		}
 	}, []);
