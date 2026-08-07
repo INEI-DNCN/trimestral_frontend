@@ -157,7 +157,7 @@ const CommentPage: React.FC<PageProps> = () => {
 										/>
 									</div>
 									{
-										titles === 1 || titles === 5 ?
+										comentariosTrimestral.length > 1 ?
 											<TrimestralComment
 												titleTrimestralID={titles}
 												quarter={quarter}

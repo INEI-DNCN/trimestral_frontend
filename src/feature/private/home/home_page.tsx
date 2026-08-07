@@ -1,4 +1,3 @@
-
 import { Typography } from '@mui/material';
 import { useLayoutEffect, useState } from 'react';
 import { FaArrowsSpin, FaFileContract, FaWandMagicSparkles } from 'react-icons/fa6';
