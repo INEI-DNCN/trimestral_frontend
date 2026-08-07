@@ -20,7 +20,7 @@ import { TrimestralJson } from './json/trimestral_json';
 const CommentPage: React.FC<PageProps> = () => {
 
 	const [anio, __] = useState<any>(2026);
-	const [quarter, _] = useState<any>("I");
+	const [quarter, _] = useState<any>("II");
 	// const [hoja, setHoja] = useState<any>("Cdro1");
 	const [titles, setTitles] = useState<any>(1);
 	const [editorContent1, setEditorContent1] = useState<any>({});

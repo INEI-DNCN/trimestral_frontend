@@ -21,7 +21,7 @@ import { getMetadatosArchivosSource, ProcessDocumentSource, SynchronizeCommentsS
 const HomePage: React.FC<PageProps> = () => {
 
 	const [anio, __] = useState<any>(2026);
-	const [quarter, _] = useState<any>("I");
+	const [quarter, _] = useState<any>("II");
 	const { dispatch, onSnackbar, onDialog, handleCloseDialog } = useUI()
 
 	const { theme, themes } = useThemeContext();
