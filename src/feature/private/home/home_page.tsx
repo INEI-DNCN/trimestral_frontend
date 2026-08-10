@@ -82,8 +82,8 @@ const HomePage: React.FC<PageProps> = () => {
 			<Column alignItems='center'>
 				<Row style={{ width: '85%', marginBottom: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
 					<Header
-						title={"Home / Consola de Gestión"}
-						subtitle={'Consolidación de cuadros Excel y comentarios por actividad económica.'}
+						title={"Home / Consola de Gestión " + anio + "-" + quarter}
+						subtitle={'Panel de sincronizacion de archivos y generación de documentos consolidados.'}
 					/>
 					<PerfilDropdown />
 				</Row>
