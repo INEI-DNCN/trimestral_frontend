@@ -79,7 +79,7 @@ const LoginPage: React.FC<PageProps> = () => {
 									textAlign: 'center',
 								}}
 							>
-								Sistema de Procesamiento de Cuantas Nacionales - SPCN
+								Sistema de Procesamiento de Cuentas Nacionales - SPCN
 							</div>
 						</Column>
 

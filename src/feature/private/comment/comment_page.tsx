@@ -87,8 +87,8 @@ const CommentPage: React.FC<PageProps> = () => {
 			<Column alignItems='center'>
 				<Row style={{ width: '85%', marginBottom: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
 					<Header
-						title={"Comentarios"}
-						subtitle={'Consolidación de cuadros Excel y comentarios por actividad económica.'}
+						title={"Comentarios / Informe Técnico " + anio + "-" + quarter}
+						subtitle={'Consolidación Comentarios'}
 					/>
 					{
 						comentariosTrimestral.length === 2
