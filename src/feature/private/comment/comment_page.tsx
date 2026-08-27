@@ -4,18 +4,20 @@ import { FaScroll } from "react-icons/fa6";
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import ButtonAction from '../../../app/components/bottons/button_action';
+import { StateMessage } from '../../../app/components/enum/enum';
 import Header from '../../../app/components/header';
+import HighlightEditor from '../../../app/components/highlightEditor';
 import type { PageProps } from '../../../app/components/interface/router_interface';
 import { formatItem } from '../../../app/utils/util';
 import { Column, Container, Row } from '../../../core/styled_ui/styled_ui';
 import { useUI } from '../../../core/theme/ui_context';
 import { PerfilDropdown } from '../../perfil/components/perfil_dropdown';
-import { getComentarioTrimestralSource, getIndicadoresSource, getTitleTrimestralSource } from './comment_source';
+import type { comentarioDTO } from './comment_slice';
+import { getComentarioTrimestralSource, getIndicadoresSource, getTitleTrimestralSource, updateComentario } from './comment_source';
 import { TrimestralComment } from './components/trimestral_comment';
 import TrimestralSelectTitle from './components/trimestral_select_title';
 import TrimestralTable from './components/trimestral_table';
 import { TrimestralJson } from './json/trimestral_json';
-
 
 const CommentPage: React.FC<PageProps> = () => {
 
@@ -26,7 +28,7 @@ const CommentPage: React.FC<PageProps> = () => {
 	const [editorContent1, setEditorContent1] = useState<any>({});
 	const [editorContent2, setEditorContent2] = useState<any>({});
 
-	const { dispatch } = useUI()
+	const { dispatch, onSnackbar } = useUI()
 
 	const { titleTrimestral, comentariosTrimestral, indicadores } = useSelector((state: any) => state.comment)
 
@@ -79,6 +81,28 @@ const CommentPage: React.FC<PageProps> = () => {
 	const handleScrollBottom = () => {
 		if (scrollableRef.current) {
 			scrollableRef.current.scrollTo({ top: scrollableRef.current.scrollHeight, behavior: "smooth" });
+		}
+	};
+
+	const onChangeComentario = async (contenido: any, comentario: any) => {
+
+		try {
+			console.log("b", comentario.id)
+
+			const data: comentarioDTO = {
+				...comentario,
+				contenido
+			};
+
+			await updateComentario(data)
+			onSnackbar('Actualización completada exitosamente', StateMessage.success);
+
+		} catch (error: any) {
+			if (error.response?.status === 400) {
+				onSnackbar(error.response.data.message, StateMessage.warning);
+			} else {
+				onSnackbar(error.response?.data?.message || 'Error desconocido', StateMessage.error);
+			}
 		}
 	};
 
@@ -136,6 +160,14 @@ const CommentPage: React.FC<PageProps> = () => {
 							/>
 							<ScrollableContainer ref={scrollableRef}>
 								<Column gap='20px' style={{ padding: '0px ', paddingTop: '13px ' }}>
+
+									<HighlightEditor
+										value={editorContent1.contenido || ''}
+										onUpdate={(content) => {
+											onChangeComentario(content, editorContent1);
+										}}
+									/>
+
 									<TrimestralComment
 										titleTrimestralID={titles}
 										quarter={quarter}
@@ -168,6 +200,7 @@ const CommentPage: React.FC<PageProps> = () => {
 									}
 									<div style={{ height: '200px' }}></div>
 								</Column>
+
 							</ScrollableContainer>
 						</Column>
 					</section>

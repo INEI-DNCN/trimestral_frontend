@@ -71,7 +71,9 @@ export const TrimestralComment: React.FC<Props> = ({ comment, titleTrimestralID,
 					<EditIcon />
 				</button>
 			)}
+
 			<div>{comment.contenido}</div>
+
 		</div>
 	);
 };
