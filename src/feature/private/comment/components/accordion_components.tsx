@@ -55,7 +55,7 @@ export default function AccordionComponents({ item }: { item: comentario }) {
 				contenido,
 			};
 
-			await putComentario(employee, data);
+			await putComentario(employee, data, "CONTENIDO");
 			dispatch(getComentarioSource('2026', 'II'));
 			onSnackbar('Actualización completada exitosamente', StateMessage.success);
 
@@ -68,17 +68,17 @@ export default function AccordionComponents({ item }: { item: comentario }) {
 		}
 	};
 
-	const onSubmit = async (data: { estado: string | null }) => {
+	const onSubmit = async (e: { estado: string | null }) => {
 
-		if (!data.estado) return;
-		const estadoId = Number(data.estado);
-		const comentarioActualizado: comentario = {
+		if (!e.estado) return;
+		const estadoId = Number(e.estado);
+		const data: comentario = {
 			...item,
 			estado_id: estadoId,
 		};
 
 		try {
-			await putComentario(employee, comentarioActualizado);
+			await putComentario(employee, data, "ESTADO");
 			dispatch(getComentarioSource('2026', 'II'));
 			onSnackbar('Estado actualizado exitosamente', StateMessage.success);
 		} catch (error: any) {

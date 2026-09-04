@@ -32,6 +32,7 @@ export interface comentarioHistorico {
 	estado_descripcion?: string | null;
 	usuario?: string;
 	fecha_cambio?: string;
+	tipo_cambio?: string;
 }
 
 interface InitialState {

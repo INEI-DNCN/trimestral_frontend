@@ -55,7 +55,7 @@ export const getComentarioSource =
 export const putComentario = async (
 	employee: AplicationUserRol,
 	comentario: comentario,
-	estado_id?: number
+	tipo_cambio?: string,
 ) => {
 	const usuario =
 		`${employee.user.personal?.name ?? ''} ` +
@@ -64,14 +64,13 @@ export const putComentario = async (
 			.trim()
 			.replace(/\s+/g, ' ');
 
-	const estadoActual = estado_id ?? comentario.estado_id;
-
 	const response = await API.put(
 		`comentarios/${comentario.id}`,
 		{
 			contenido: comentario.contenido,
 			usuario,
-			estado_id: estadoActual,
+			estado_id: comentario.estado_id,
+			tipo_cambio
 		}
 	);
 	return response.data;
