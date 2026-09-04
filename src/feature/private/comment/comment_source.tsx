@@ -85,10 +85,6 @@ export const getComentariosEstadosSource =
 
 				const rolId = employee.role?.id?.toUpperCase();
 
-				console.log('employee:', employee);
-				console.log('rolId:', rolId);
-				console.log('estados:', response.data);
-
 				const estadosPorRol: Record<string, number[]> = {
 					'3794260D-0EA7-F111-B6D5-000C29490DA3': [1, 2, 3],
 					'FC494214-0EA7-F111-B6D5-000C29490DA3': [3, 4, 5],
@@ -97,13 +93,9 @@ export const getComentariosEstadosSource =
 
 				const estadosPermitidos = estadosPorRol[rolId ?? ''] ?? [];
 
-				console.log('estadosPermitidos:', estadosPermitidos);
-
 				const estadosFiltrados = response.data.filter(
 					(estado: comentarioEstado) => estadosPermitidos.includes(estado.id!)
 				);
-
-				console.log('estadosFiltrados:', estadosFiltrados);
 
 				dispatch(getComentarioEstadoSlice(estadosFiltrados));
 			} catch (error) {

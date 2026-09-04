@@ -155,9 +155,7 @@ export const PerfilDropdown = () => {
 						<User2 size={16} />
 						Editar Perfil
 					</DropdownItem>
-
 					<Divider $theme={currentTheme} />
-
 					<DropdownItem $theme={currentTheme} onClick={handleLogout}>
 						<LogOut size={16} />
 						Cerrar Sesión

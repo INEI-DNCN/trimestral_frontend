@@ -7,7 +7,7 @@ import ButtonCancel from '../../../../app/components/bottons/button_cancel';
 import InputField from '../../../../app/components/wrapper_field';
 import { useUI } from '../../../../core/theme/ui_context';
 import type { User } from '../../../perfil/perfil_slice';
-import { updateUserSource } from '../../../perfil/perfil_source';
+import { changePasswordUserSource } from '../../../perfil/perfil_source';
 
 interface Props {
 	user?: User;
@@ -28,13 +28,8 @@ const UserFormPassword: React.FC<Props> = ({ user }) => {
 
 	const onSubmit = async (e: any) => {
 		if (!user) return;
-		const data: User = {
-			...user,
-			password: e.password,
-		};
-
 		try {
-			await updateUserSource(data)
+			await changePasswordUserSource(user.id, e.password || '');
 			onSnackbar('Contraseña modificada con éxito.');
 			handleCloseDialog();
 		} catch (error: any) {

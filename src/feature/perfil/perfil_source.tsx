@@ -20,16 +20,8 @@ export async function updateUserSource(user: User) {
 	}
 }
 
-export async function changePasswordUserSource(payload: any) {
-
-	try {
-		const response = await API2.put(`usuario/change-password/${payload.dni}`, {
-			params: {
-				password: payload.password,
-			},
-		});
-		return response
-	} catch (error) {
-		console.error("Error en updateUserSource:", error);
-	}
+export async function changePasswordUserSource(userId: string | undefined, password: string) {
+	const response = await API2.patch(`users/${userId}`, { password });
+	return response
 }
+
