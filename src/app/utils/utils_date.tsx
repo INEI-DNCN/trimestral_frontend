@@ -33,3 +33,21 @@ export const toDateTimeDay = (date: Date) => {
 }
 
 
+export function formatFechaAmPm(fechaString: string): string {
+	const fecha = new Date(fechaString);
+	const dia = fecha.getDate().toString().padStart(2, '0');
+	const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+	const anio = fecha.getFullYear();
+	let horas = fecha.getHours();
+	const minutos = fecha.getMinutes().toString().padStart(2, '0');
+	const amPm = horas >= 12 ? 'p. m.' : 'a. m.';
+
+	// Formato 12 horas
+	horas = horas % 12;
+	horas = horas === 0 ? 12 : horas;
+	const horasStr = horas.toString().padStart(2, '0');
+
+	return `${dia}-${mes}-${anio} ${horasStr}:${minutos} ${amPm}`;
+}
+
+

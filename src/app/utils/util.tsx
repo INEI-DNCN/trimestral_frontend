@@ -1,3 +1,5 @@
+import { BadgeCheck, CheckCircle, Clock, Eye, FileText } from "lucide-react";
+
 export const sleep = (ms: any) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -86,4 +88,45 @@ export function hexToARGB(hexColor: any, alpha = 'FF') {
   const cleanHex = hexColor.replace('#', '');
   return alpha + cleanHex.toUpperCase();
 }
+
+export const getEstadoConfig = (estado?: string | null) => {
+  switch (estado?.toLowerCase()) {
+    case 'pendiente':
+      return {
+        icon: <Clock size={16} />,
+        color: '#FF9800',
+      };
+
+    case 'preliminar':
+      return {
+        icon: <FileText size={16} />,
+        color: '#1976D2',
+      };
+
+    case 'revisión':
+    case 'revision':
+      return {
+        icon: <Eye size={16} />,
+        color: '#7E57C2',
+      };
+
+    case 'definitivo':
+      return {
+        icon: <BadgeCheck size={16} />,
+        color: '#43A047',
+      };
+
+    case 'culminado':
+      return {
+        icon: <CheckCircle size={16} />,
+        color: '#009688',
+      };
+
+    default:
+      return {
+        icon: <FileText size={16} />,
+        // color: currentTheme.text,
+      };
+  }
+};
 

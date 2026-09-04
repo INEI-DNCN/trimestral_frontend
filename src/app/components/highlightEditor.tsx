@@ -16,31 +16,15 @@ export interface HighlightEditorProps {
   colors?: HighlightColor[]
   placeholder?: string
 
-  /*
-   * Se ejecuta cada vez que cambia el contenido.
-   * Sirve para mantener el borrador en React.
-   */
   onChange?: (html: string) => void
 
-  /*
-   * Se ejecuta ÚNICAMENTE cuando se pulsa
-   * el botón "Actualizar".
-   *
-   * Aquí puedes llamar a tu API.
-   */
   onUpdate?: (html: string) => void | Promise<void>
 
   className?: string
   disabled?: boolean
 
-  /*
-   * Mostrar u ocultar el botón Actualizar.
-   */
   showUpdateButton?: boolean
 
-  /*
-   * Texto del botón.
-   */
   updateLabel?: string
 }
 
@@ -72,99 +56,116 @@ const DEFAULT_COLORS: HighlightColor[] = [
 ]
 
 /* =========================================================
-   Editor
+   CONTENEDOR PRINCIPAL
 ========================================================= */
-
 const EditorContainer = styled.div<{
   $disabled: boolean
+  $isDirty: boolean
 }>`
   position: relative;
 
-  width: 100%;
+  width: calc(100% - 60px);
 
-  border: 1px solid #d9dee7;
-  border-radius: 10px;
+  margin: 15px 30px;
+
+  border-radius: 16px;
 
   background: #ffffff;
 
-  transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
+  /*
+   * Permite que el pseudo-elemento pueda
+   * quedar detrás del contenido pero visible.
+   */
+  isolation: isolate;
 
-  &:focus-within {
-    border-color: #7c8aa5;
+  z-index: 0;
 
-    box-shadow:
-      0 0 0 3px rgba(124, 138, 165, 0.12);
+  /*
+   * ========================================================
+   * DIFUMINADO DE COLORES
+   * ========================================================
+   */
+
+  &::before {
+    content: '';
+
+    position: absolute;
+
+    z-index: -1;
+
+    /*
+     * Sacamos bastante el efecto hacia afuera
+     * para que realmente se pueda apreciar.
+     */
+    inset: -12px;
+
+    border-radius: 28px;
+
+    background:
+      radial-gradient(
+        circle at 10% 50%,
+        rgba(59, 130, 246, 0.85),
+        transparent 42%
+      ),
+
+      radial-gradient(
+        circle at 35% 0%,
+        rgba(126, 87, 194, 0.75),
+        transparent 45%
+      ),
+
+      radial-gradient(
+        circle at 65% 100%,
+        rgba(251, 140, 0, 0.65),
+        transparent 45%
+      ),
+
+      radial-gradient(
+        circle at 90% 50%,
+        rgba(16, 185, 129, 0.80),
+        transparent 42%
+      );
+
+    filter: blur(22px);
+
+    opacity: ${({ $isDirty }) =>
+    $isDirty ? 1 : 0};
+
+    transition:
+      opacity 0.35s ease;
   }
+
+  /*
+   * ========================================================
+   * HALO ADICIONAL
+   * ========================================================
+   */
+
+  box-shadow: ${({ $isDirty }) =>
+    $isDirty
+      ? `
+        0 0 12px rgba(59, 130, 246, 0.18),
+        0 0 25px rgba(126, 87, 194, 0.15),
+        0 0 40px rgba(16, 185, 129, 0.12),
+        0 0 55px rgba(251, 140, 0, 0.08);
+      `
+      : 'none'};
+
+  transition:
+    box-shadow 0.35s ease;
+
+  overflow: visible;
 
   ${({ $disabled }) =>
     $disabled &&
     `
-      background: #f6f7f9;
       cursor: not-allowed;
+      opacity: 0.8;
     `}
 `
 
 /* =========================================================
-   Botón lápiz
-========================================================= */
-
-const EditButton = styled.button<{
-  $active: boolean
-}>`
-  position: absolute;
-
-  top: 10px;
-  right: 10px;
-
-  z-index: 10;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 34px;
-  height: 34px;
-
-  padding: 0;
-
-  border: 1px solid #d0d5dd;
-  border-radius: 8px;
-
-  background: ${({ $active }) =>
-    $active ? '#f2f4f7' : '#ffffff'};
-
-  color: ${({ $active }) =>
-    $active ? '#344054' : '#667085'};
-
-  cursor: pointer;
-
-  box-shadow:
-    0 1px 2px rgba(16, 24, 40, 0.05);
-
-  transition:
-    background 0.15s ease,
-    color 0.15s ease,
-    transform 0.15s ease;
-
-  &:hover {
-    background: #f2f4f7;
-    color: #344054;
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
-
-  svg {
-    width: 17px;
-    height: 17px;
-  }
-`
-
-/* =========================================================
-   Toolbar flotante
+   TOOLBAR FLOTANTE
 ========================================================= */
 
 const HighlightToolbar = styled.div`
@@ -175,10 +176,11 @@ const HighlightToolbar = styled.div`
   display: flex;
   align-items: center;
 
-  padding: 6px 8px;
+  padding: 7px 9px;
 
   border: 1px solid #d0d5dd;
-  border-radius: 9px;
+
+  border-radius: 10px;
 
   background: #ffffff;
 
@@ -193,24 +195,36 @@ const HighlightToolbar = styled.div`
   @keyframes toolbarAppear {
     from {
       opacity: 0;
-      transform: translate(-50%, calc(-100% + 5px));
+
+      transform:
+        translate(
+          -50%,
+          calc(-100% + 5px)
+        );
     }
 
     to {
       opacity: 1;
-      transform: translate(-50%, -100%);
+
+      transform:
+        translate(
+          -50%,
+          -100%
+        );
     }
   }
 `
 
 const ColorsContainer = styled.div`
   display: flex;
+
   align-items: center;
-  gap: 6px;
+
+  gap: 7px;
 `
 
 /* =========================================================
-   Color
+   BOTÓN DE COLOR
 ========================================================= */
 
 const ColorButton = styled.button<{
@@ -223,9 +237,11 @@ const ColorButton = styled.button<{
   padding: 0;
 
   border: 1px solid rgba(0, 0, 0, 0.14);
+
   border-radius: 50%;
 
-  background-color: ${({ $color }) => $color};
+  background-color: ${({ $color }) =>
+    $color};
 
   cursor: pointer;
 
@@ -247,11 +263,12 @@ const ColorButton = styled.button<{
 `
 
 /* =========================================================
-   Quitar resaltado
+   QUITAR RESALTADO
 ========================================================= */
 
 const RemoveHighlightButton = styled.button`
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -261,6 +278,7 @@ const RemoveHighlightButton = styled.button`
   padding: 0;
 
   border: 1px solid #d0d5dd;
+
   border-radius: 50%;
 
   background: #ffffff;
@@ -268,28 +286,43 @@ const RemoveHighlightButton = styled.button`
   color: #667085;
 
   font-size: 16px;
+
   line-height: 1;
 
   cursor: pointer;
 
   &:hover {
     background: #f2f4f7;
+
     color: #344054;
   }
 `
 
 /* =========================================================
-   Contenido
+   CONTENIDO DEL EDITOR
 ========================================================= */
 
 const EditorContentWrapper = styled.div`
+  
   width: 100%;
+
+  background: #ffffff;
+
+  border-radius: 16px 16px 0px 0px;
+
+  /*
+   * ========================================================
+   * TEXTO
+   * ========================================================
+   */
 
   .ProseMirror {
     min-height: 180px;
 
-    padding: 16px;
-    padding-right: 55px;
+    /*
+     * Más espacio interno.
+     */
+    padding: 28px 30px;
 
     outline: none;
 
@@ -303,26 +336,50 @@ const EditorContentWrapper = styled.div`
       sans-serif;
 
     font-size: 15px;
-    line-height: 1.65;
+
+    /*
+     * Un poco más de aire entre líneas.
+     */
+    line-height: 1.7;
 
     color: #1d2939;
 
     white-space: pre-wrap;
+
     word-break: break-word;
   }
 
+  /*
+   * ========================================================
+   * PÁRRAFOS
+   * ========================================================
+   */
+
   .ProseMirror p {
-    margin: 0 0 10px;
+    margin: 0 0 18px;
   }
 
   .ProseMirror p:last-child {
     margin-bottom: 0;
   }
 
+  /*
+   * ========================================================
+   * RESALTADO
+   * ========================================================
+   */
+
   .ProseMirror mark {
     padding: 1px 2px;
+
     border-radius: 3px;
   }
+
+  /*
+   * ========================================================
+   * PLACEHOLDER
+   * ========================================================
+   */
 
   .ProseMirror p.is-editor-empty:first-child::before {
     content: attr(data-placeholder);
@@ -337,70 +394,229 @@ const EditorContentWrapper = styled.div`
   }
 
   @media (max-width: 600px) {
+
     .ProseMirror {
       min-height: 150px;
 
-      padding: 12px;
-      padding-right: 50px;
+      padding: 20px;
 
       font-size: 14px;
+
+      line-height: 1.65;
+    }
+
+    .ProseMirror p {
+      margin-bottom: 14px;
     }
   }
 `
 
 /* =========================================================
-   Footer
+   FOOTER
 ========================================================= */
 
 const EditorFooter = styled.div`
   display: flex;
+
   align-items: center;
-  justify-content: flex-end;
 
-  min-height: 50px;
+  justify-content: space-between;
 
-  padding: 8px 12px;
+  min-height: 64px;
+
+  padding: 12px 24px;
 
   border-top: 1px solid #e5e7eb;
 
   background: #fafbfc;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+
+  border-bottom-left-radius: 16px;
+
+  border-bottom-right-radius: 16px;
+
+  /*
+   * Separación entre los botones.
+   */
+  gap: 12px;
 `
+
 /* =========================================================
-   Component
+   ESTADO DE CAMBIOS
+========================================================= */
+
+const ChangesIndicator = styled.div`
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  color: #667085;
+
+  font-size: 13px;
+
+  font-weight: 500;
+
+  user-select: none;
+`
+
+const ChangesDot = styled.span`
+  width: 8px;
+
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #f59e0b;
+
+  box-shadow:
+    0 0 0 3px rgba(245, 158, 11, 0.12);
+`
+
+/* =========================================================
+   CONTENEDOR DE BOTONES
+========================================================= */
+
+const ActionsContainer = styled.div`
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+`
+
+/* =========================================================
+   BOTÓN RESTAURAR
+========================================================= */
+
+const RestoreButton = styled(ButtonAction)`
+  min-height: 38px;
+
+  padding: 0 18px;
+
+  border: 1px solid #d0d5dd;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #475467;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: #f9fafb;
+
+    border-color: #98a2b3;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+  }
+`
+
+/* =========================================================
+   BOTÓN APLICAR
+========================================================= */
+
+const ApplyButton = styled(ButtonAction)`
+  min-height: 38px;
+
+  padding: 0 20px;
+
+  border-radius: 8px;
+
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+  }
+`
+
+/* =========================================================
+   COMPONENTE
 ========================================================= */
 
 export default function HighlightEditor({
   value = '<p></p>',
+
   defaultHighlightColor = '#FFF59D',
+
   colors = DEFAULT_COLORS,
+
   onChange,
+
   onUpdate,
+
   className,
+
   disabled = false,
+
   showUpdateButton = true,
+
+  updateLabel = 'Aplicar',
+
 }: HighlightEditorProps) {
-  /*
-   * Indica si el usuario activó el modo edición.
-   */
-  const [isEditing, setIsEditing] = useState(false)
 
   /*
-   * Indica si existe texto seleccionado.
+   * ========================================================
+   * CONTENIDO ORIGINAL
+   * ========================================================
    */
+
+  const [originalContent, setOriginalContent] =
+    useState(value)
+
+  /*
+   * ========================================================
+   * CONTENIDO MODIFICADO
+   * ========================================================
+   */
+
+  const [isDirty, setIsDirty] =
+    useState(false)
+
+  /*
+   * ========================================================
+   * ESTADO DE ACTUALIZACIÓN
+   * ========================================================
+   */
+
+  const [isUpdating, setIsUpdating] =
+    useState(false)
+
+  /*
+   * ========================================================
+   * SELECCIÓN
+   * ========================================================
+   */
+
   const [hasSelection, setHasSelection] =
     useState(false)
 
   /*
-   * Color actualmente seleccionado.
+   * ========================================================
+   * COLOR ACTIVO
+   * ========================================================
    */
+
   const [activeColor, setActiveColor] =
     useState(defaultHighlightColor)
 
   /*
-   * Posición de la paleta.
+   * ========================================================
+   * POSICIÓN TOOLBAR
+   * ========================================================
    */
+
   const [toolbarPosition, setToolbarPosition] =
     useState({
       left: 0,
@@ -408,249 +624,356 @@ export default function HighlightEditor({
     })
 
   /*
-   * Estado del botón actualizar.
+   * ========================================================
+   * COLORES
+   * ========================================================
    */
-  const [isUpdating, setIsUpdating] =
-    useState(false)
 
-  /*
-   * Colores configurados.
-   */
   const configuredColors = useMemo(() => {
+
     return colors.length > 0
       ? colors
       : DEFAULT_COLORS
+
   }, [colors])
 
   /*
-   * Editor Tiptap.
+   * ========================================================
+   * EDITOR
+   * ========================================================
    */
+
   const editor = useEditor({
+
     extensions: [
+
       StarterKit,
 
       Highlight.configure({
         multicolor: true,
       }),
+
     ],
 
     content: value,
 
-    editable: !disabled && isEditing,
+    editable: !disabled,
 
     onCreate({ editor }) {
+
       setHasSelection(
-        !editor.state.selection.empty,
+        !editor.state.selection.empty
       )
+
     },
 
     /*
-     * IMPORTANTE:
-     *
-     * onChange NO actualiza la BD.
-     *
-     * Solo devuelve el HTML al padre.
+     * ======================================================
+     * CAMBIO DEL CONTENIDO
+     * ======================================================
      */
+
     onUpdate({ editor }) {
-      const html = editor.getHTML()
+
+      const html =
+        editor.getHTML()
 
       onChange?.(html)
+
+      /*
+       * Determinamos si el contenido
+       * es diferente al original.
+       */
+
+      setIsDirty(
+        html !== originalContent
+      )
+
     },
 
     /*
-     * Cada vez que cambia la selección.
+     * ======================================================
+     * SELECCIÓN
+     * ======================================================
      */
+
     onSelectionUpdate({ editor }) {
-      const selection = editor.state.selection
 
-      const selected = !selection.empty
+      const selection =
+        editor.state.selection
 
-      setHasSelection(selected)
+      const selected =
+        !selection.empty
 
-      /*
-       * Detectar el color actual.
-       */
+      setHasSelection(
+        selected
+      )
+
       const currentColor =
-        editor.getAttributes('highlight').color
+        editor.getAttributes(
+          'highlight'
+        ).color
 
       if (currentColor) {
-        setActiveColor(currentColor)
+
+        setActiveColor(
+          currentColor
+        )
+
       }
 
-      /*
-       * Actualizar posición de la paleta.
-       */
-      if (selected && isEditing) {
-        updateToolbarPosition(editor)
+      if (selected) {
+
+        updateToolbarPosition(
+          editor
+        )
+
       }
+
     },
+
   })
 
   /*
-   * ========================================================
-   * Posicionar toolbar
-   * ========================================================
+   * =========================================================
+   * POSICIÓN DE TOOLBAR
+   * =========================================================
    */
+
   const updateToolbarPosition = (
     currentEditor = editor,
   ) => {
+
     if (!currentEditor) {
       return
     }
 
-    const { from, to } =
+    const {
+      from,
+      to,
+    } =
       currentEditor.state.selection
 
     const start =
-      currentEditor.view.coordsAtPos(from)
+      currentEditor.view.coordsAtPos(
+        from
+      )
 
     const end =
-      currentEditor.view.coordsAtPos(to)
+      currentEditor.view.coordsAtPos(
+        to
+      )
 
-    /*
-     * Centro horizontal de la selección.
-     */
     const centerX =
       (start.left + end.right) / 2
 
-    /*
-     * Posición vertical.
-     */
-    let top = Math.min(
-      start.top,
-      end.top,
-    ) - 10
+    let top =
+      Math.min(
+        start.top,
+        end.top
+      ) - 10
 
-    /*
-     * Si la selección está demasiado cerca
-     * del borde superior, colocamos la barra
-     * debajo de la selección.
-     */
     if (top < 70) {
+
       top =
         Math.max(
           start.bottom,
-          end.bottom,
+          end.bottom
         ) + 10
+
     }
 
     setToolbarPosition({
       left: centerX,
       top,
     })
+
   }
 
   /*
-   * ========================================================
-   * Cargar HTML desde BD
-   * ========================================================
+   * =========================================================
+   * CAMBIO DEL VALUE DESDE EL PADRE
+   * =========================================================
    */
+
   useEffect(() => {
-    if (!editor || value === undefined) {
+
+    if (
+      !editor ||
+      value === undefined
+    ) {
       return
     }
 
-    const currentHTML = editor.getHTML()
+    const currentHTML =
+      editor.getHTML()
 
-    if (value !== currentHTML) {
-      editor.commands.setContent(value, {
-        emitUpdate: false,
-      })
+    /*
+     * Cuando llega un nuevo contenido
+     * desde el padre, lo consideramos
+     * como el nuevo original.
+     */
+
+    if (
+      value !== originalContent
+    ) {
+
+      setOriginalContent(
+        value
+      )
+
+      setIsDirty(false)
+
+      if (
+        value !== currentHTML
+      ) {
+
+        editor.commands.setContent(
+          value,
+          {
+            emitUpdate: false,
+          }
+        )
+
+      }
+
     }
-  }, [editor, value])
+
+  }, [
+    editor,
+    value,
+  ])
 
   /*
-   * ========================================================
-   * Cambiar modo edición
-   * ========================================================
+   * =========================================================
+   * DISABLED
+   * =========================================================
    */
+
   useEffect(() => {
+
     if (!editor) {
       return
     }
 
     editor.setEditable(
-      !disabled && isEditing,
+      !disabled
     )
 
     if (disabled) {
-      setIsEditing(false)
+
       setHasSelection(false)
+
     }
-  }, [editor, disabled, isEditing])
+
+  }, [
+    editor,
+    disabled,
+  ])
 
   /*
-   * ========================================================
-   * Recalcular posición cuando cambia el modo
-   * ========================================================
+   * =========================================================
+   * TOOLBAR
+   * =========================================================
    */
+
   useEffect(() => {
+
     if (!editor) {
       return
     }
 
-    if (isEditing && hasSelection) {
+    if (hasSelection) {
+
       requestAnimationFrame(() => {
-        updateToolbarPosition(editor)
+
+        updateToolbarPosition(
+          editor
+        )
+
       })
+
     }
-  }, [editor, isEditing, hasSelection])
+
+  }, [
+    editor,
+    hasSelection,
+  ])
 
   /*
-   * ========================================================
-   * Reposicionar al hacer scroll
-   * ========================================================
+   * =========================================================
+   * SCROLL
+   * =========================================================
    */
+
   useEffect(() => {
+
     if (!editor) {
       return
     }
 
     const handleScroll = () => {
+
       if (
-        isEditing &&
         !editor.state.selection.empty
       ) {
-        updateToolbarPosition(editor)
+
+        updateToolbarPosition(
+          editor
+        )
+
       }
+
     }
 
     window.addEventListener(
       'scroll',
       handleScroll,
-      true,
+      true
     )
 
     window.addEventListener(
       'resize',
-      handleScroll,
+      handleScroll
     )
 
     return () => {
+
       window.removeEventListener(
         'scroll',
         handleScroll,
-        true,
+        true
       )
 
       window.removeEventListener(
         'resize',
-        handleScroll,
+        handleScroll
       )
+
     }
-  }, [editor, isEditing])
+
+  }, [editor])
 
   /*
-   * ========================================================
-   * Aplicar resaltado
-   * ========================================================
+   * =========================================================
+   * APLICAR RESALTADO
+   * =========================================================
    */
-  const applyHighlight = (color: string) => {
-    if (!editor || !hasSelection) {
+
+  const applyHighlight = (
+    color: string
+  ) => {
+
+    if (
+      !editor ||
+      !hasSelection
+    ) {
       return
     }
 
-    setActiveColor(color)
+    setActiveColor(
+      color
+    )
 
     editor
       .chain()
@@ -661,17 +984,27 @@ export default function HighlightEditor({
       .run()
 
     requestAnimationFrame(() => {
-      updateToolbarPosition(editor)
+
+      updateToolbarPosition(
+        editor
+      )
+
     })
+
   }
 
   /*
-   * ========================================================
-   * Quitar resaltado
-   * ========================================================
+   * =========================================================
+   * QUITAR RESALTADO
+   * =========================================================
    */
+
   const removeHighlight = () => {
-    if (!editor || !hasSelection) {
+
+    if (
+      !editor ||
+      !hasSelection
+    ) {
       return
     }
 
@@ -682,66 +1015,96 @@ export default function HighlightEditor({
       .run()
 
     requestAnimationFrame(() => {
-      updateToolbarPosition(editor)
+
+      updateToolbarPosition(
+        editor
+      )
+
     })
+
   }
 
   /*
-   * ========================================================
-   * Activar/desactivar edición
-   * ========================================================
+   * =========================================================
+   * RESTAURAR CONTENIDO ORIGINAL
+   * =========================================================
    */
-  const toggleEditing = () => {
-    if (!editor) {
+
+  const handleReset = () => {
+
+    if (
+      !editor ||
+      !isDirty
+    ) {
       return
     }
 
-    const nextValue = !isEditing
+    editor.commands.setContent(
+      originalContent,
+      {
+        emitUpdate: false,
+      }
+    )
 
-    setIsEditing(nextValue)
+    setIsDirty(false)
 
-    if (!nextValue) {
-      setHasSelection(false)
-
-      editor.commands.blur()
-    } else {
-      editor.commands.focus()
-    }
   }
 
   /*
-   * ========================================================
-   * Actualizar BD
-   * ========================================================
+   * =========================================================
+   * ACTUALIZAR
+   * =========================================================
    */
+
   const handleUpdate = async () => {
-    if (!editor || !onUpdate) {
+
+    if (
+      !editor ||
+      !onUpdate ||
+      !isDirty
+    ) {
       return
     }
 
     try {
+
       setIsUpdating(true)
 
-      /*
-       * Obtener el HTML directamente de Tiptap.
-       */
-      const html = editor.getHTML()
+      const html =
+        editor.getHTML()
 
       /*
-       * Aquí se ejecuta la función del padre.
-       *
-       * Ejemplo:
-       *
-       * onUpdate={(html) => {
-       *   axios.put(...)
-       * }}
+       * Enviamos el contenido.
        */
-      await onUpdate(html)
+
+      await onUpdate(
+        html
+      )
+
+      /*
+       * El contenido guardado
+       * pasa a ser el nuevo original.
+       */
+
+      setOriginalContent(
+        html
+      )
+
+      setIsDirty(false)
 
     } finally {
+
       setIsUpdating(false)
+
     }
+
   }
+
+  /*
+   * =========================================================
+   * RENDER
+   * =========================================================
+   */
 
   if (!editor) {
     return null
@@ -749,141 +1112,204 @@ export default function HighlightEditor({
 
   return (
     <>
-      {/* ===================================================
-          Editor
-      =================================================== */}
-
       <EditorContainer
         className={className}
-        $disabled={disabled}
+
+        $disabled={
+          disabled
+        }
+
+        $isDirty={
+          isDirty
+        }
       >
+
         {/* =================================================
-            Barra contextual de colores
+            TOOLBAR DE COLORES
         ================================================= */}
 
-        {isEditing &&
-          hasSelection &&
+        {hasSelection &&
           !disabled && (
+
             <HighlightToolbar
+
               style={{
-                left: toolbarPosition.left,
-                top: toolbarPosition.top,
+                left:
+                  toolbarPosition.left,
+
+                top:
+                  toolbarPosition.top,
               }}
+
               onMouseDown={(event) => {
-                /*
-                 * MUY IMPORTANTE.
-                 *
-                 * Evita que el navegador pierda
-                 * la selección antes de ejecutar
-                 * el comando de Tiptap.
-                 */
                 event.preventDefault()
+
               }}
             >
-              <ColorsContainer>
-                {configuredColors.map((item) => {
-                  const isActive =
-                    activeColor.toLowerCase() ===
-                    item.color.toLowerCase()
 
-                  return (
-                    <ColorButton
-                      key={item.color}
-                      type="button"
-                      $color={item.color}
-                      $active={isActive}
-                      title={`Resaltar con ${item.name}`}
-                      aria-label={`Resaltar con ${item.name}`}
-                      onClick={() => {
-                        applyHighlight(item.color)
-                      }}
-                    />
-                  )
-                })}
+              <ColorsContainer>
+
+                {configuredColors.map(
+                  (item) => {
+
+                    const isActive =
+                      activeColor.toLowerCase() ===
+                      item.color.toLowerCase()
+
+                    return (
+
+                      <ColorButton
+
+                        key={
+                          item.color
+                        }
+
+                        type="button"
+
+                        $color={
+                          item.color
+                        }
+
+                        $active={
+                          isActive
+                        }
+
+                        title={
+                          `Resaltar con ${item.name}`
+                        }
+
+                        aria-label={
+                          `Resaltar con ${item.name}`
+                        }
+
+                        onClick={() => {
+
+                          applyHighlight(
+                            item.color
+                          )
+
+                        }}
+
+                      />
+
+                    )
+
+                  }
+                )}
 
                 <RemoveHighlightButton
+
                   type="button"
+
                   title="Quitar resaltado"
+
                   aria-label="Quitar resaltado"
-                  onClick={removeHighlight}
+
+                  onClick={
+                    removeHighlight
+                  }
+
                 >
                   ×
                 </RemoveHighlightButton>
+
               </ColorsContainer>
+
             </HighlightToolbar>
+
           )}
 
         {/* =================================================
-            Lápiz
-        ================================================= */}
-
-        {!disabled && (
-          <EditButton
-            type="button"
-            $active={isEditing}
-            onClick={toggleEditing}
-            title={
-              isEditing
-                ? 'Salir del modo edición'
-                : 'Editar texto'
-            }
-            aria-label={
-              isEditing
-                ? 'Salir del modo edición'
-                : 'Editar texto'
-            }
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path
-                d="M4 20H8L19.5 8.5C20.3284 7.67157 20.3284 6.32843 19.5 5.5C18.6716 4.67157 17.3284 4.67157 16.5 5.5L5 17V20Z"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-
-              <path
-                d="M14.5 7.5L17.5 10.5"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-              />
-            </svg>
-          </EditButton>
-        )}
-
-        {/* =================================================
-            Editor Tiptap
+            CONTENIDO
         ================================================= */}
 
         <EditorContentWrapper>
-          <EditorContent editor={editor} />
+
+          <EditorContent
+            editor={editor}
+          />
+
         </EditorContentWrapper>
 
         {/* =================================================
-            Botón actualizar
+            FOOTER
         ================================================= */}
 
         {showUpdateButton &&
-          !disabled &&
-          isEditing && (
+          !disabled && (
+
             <EditorFooter>
-              <ButtonAction
-                disabled={isUpdating}
-                onClick={handleUpdate}
-                type="button"
-              >
-                {isUpdating
-                  ? 'Actualizando...'
-                  : 'Aplicar'}
-              </ButtonAction>
+
+              {/* ===========================================
+                  INDICADOR
+              =========================================== */}
+
+              <div>
+
+                {isDirty && (
+
+                  <ChangesIndicator>
+
+                    <ChangesDot />
+
+                    <span>
+                      Cambios sin guardar
+                    </span>
+
+                  </ChangesIndicator>
+
+                )}
+
+              </div>
+
+              {/* ===========================================
+                  ACCIONES
+              =========================================== */}
+
+              <ActionsContainer>
+
+                <RestoreButton
+
+                  disabled={
+                    !isDirty ||
+                    isUpdating
+                  }
+
+                  onClick={
+                    handleReset
+                  }
+
+                  type="button"
+                >
+                  Restaurar
+                </RestoreButton>
+
+                <ApplyButton
+
+                  disabled={
+                    !isDirty ||
+                    isUpdating
+                  }
+
+                  onClick={
+                    handleUpdate
+                  }
+
+                  type="button"
+                >
+
+                  {isUpdating
+                    ? 'Actualizando...'
+                    : updateLabel}
+
+                </ApplyButton>
+
+              </ActionsContainer>
+
             </EditorFooter>
+
           )}
+
       </EditorContainer>
     </>
   )

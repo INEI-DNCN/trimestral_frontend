@@ -1,243 +1,113 @@
-import type { SelectChangeEvent } from '@mui/material';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { FaScroll } from "react-icons/fa6";
+import { Box, Skeleton } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import styled from 'styled-components';
-import ButtonAction from '../../../app/components/bottons/button_action';
-import { StateMessage } from '../../../app/components/enum/enum';
 import Header from '../../../app/components/header';
-import HighlightEditor from '../../../app/components/highlightEditor';
 import type { PageProps } from '../../../app/components/interface/router_interface';
-import { formatItem } from '../../../app/utils/util';
+import type { RootState } from '../../../core/store/store';
 import { Column, Container, Row } from '../../../core/styled_ui/styled_ui';
+import { useThemeContext } from '../../../core/theme/ThemeContext';
 import { useUI } from '../../../core/theme/ui_context';
 import { PerfilDropdown } from '../../perfil/components/perfil_dropdown';
-import type { comentarioDTO } from './comment_slice';
-import { getComentarioTrimestralSource, getIndicadoresSource, getTitleTrimestralSource, updateComentario } from './comment_source';
-import { TrimestralComment } from './components/trimestral_comment';
-import TrimestralSelectTitle from './components/trimestral_select_title';
-import TrimestralTable from './components/trimestral_table';
-import { TrimestralJson } from './json/trimestral_json';
+import type { comentario } from './comment_slice';
+import { getComentariosEstadosSource, getComentarioSource } from './comment_source';
+import AccordionComponents from './components/accordion_components';
 
 const CommentPage: React.FC<PageProps> = () => {
 
 	const [anio, __] = useState<any>(2026);
 	const [quarter, _] = useState<any>("II");
-	// const [hoja, setHoja] = useState<any>("Cdro1");
-	const [titles, setTitles] = useState<any>(1);
-	const [editorContent1, setEditorContent1] = useState<any>({});
-	const [editorContent2, setEditorContent2] = useState<any>({});
+	const { currentTheme } = useThemeContext();
 
-	const { dispatch, onSnackbar } = useUI()
+	const { dispatch } = useUI()
+	const { comentario, loading } = useSelector((state: RootState) => state.comment)
+	const { employee } = useSelector((state: RootState) => state.perfil)
 
-	const { titleTrimestral, comentariosTrimestral, indicadores } = useSelector((state: any) => state.comment)
-
-	const handleChangeTitles = (event: SelectChangeEvent) => {
-		dispatch(getComentarioTrimestralSource(parseInt(event.target.value as string), anio, quarter));
-		dispatch(getIndicadoresSource(anio, quarter, titleTrimestral.find((element: any) => element.id === parseInt(event.target.value as string))?.id_hoja));
-		// setHoja(titleTrimestral.find((element: any) => element.id === parseInt(event.target.value as string))?.id_hoja)
-		setTitles(event.target.value as string);
-	};
-
-	useLayoutEffect(() => {
-		dispatch(getTitleTrimestralSource());
+	useEffect(() => {
+		dispatch(getComentarioSource(anio, quarter, true));
+		dispatch(getComentariosEstadosSource({ employee }));
 	}, []);
-
-	const initialized = useRef(false);
-
-	useEffect(() => {
-		if (!initialized.current && titleTrimestral.length > 0) {
-			initialized.current = true;
-			setTitles(titleTrimestral[0].id);
-			dispatch(getComentarioTrimestralSource(titleTrimestral[0].id, anio, quarter));
-			dispatch(getIndicadoresSource(anio, quarter, titleTrimestral[0].id_hoja));
-		}
-	}, [titleTrimestral]);
-
-	useEffect(() => {
-		if (comentariosTrimestral) {
-			if (Array.isArray(comentariosTrimestral)) {
-				setEditorContent1(comentariosTrimestral[0] || {});
-				setEditorContent2(comentariosTrimestral[1] || {});
-			} else if (typeof comentariosTrimestral === "object") {
-				setEditorContent1(comentariosTrimestral || {});
-				setEditorContent2({});
-			} else {
-				setEditorContent1({});
-				setEditorContent2({});
-			}
-		}
-	}, [comentariosTrimestral]);
-
-
-	const scrollableRef = useRef<HTMLDivElement>(null);
-
-	const handleScrollTop = () => {
-		if (scrollableRef.current) {
-			scrollableRef.current.scrollTo({ top: 0, behavior: "smooth" });
-		}
-	};
-
-	const handleScrollBottom = () => {
-		if (scrollableRef.current) {
-			scrollableRef.current.scrollTo({ top: scrollableRef.current.scrollHeight, behavior: "smooth" });
-		}
-	};
-
-	const onChangeComentario = async (contenido: any, comentario: any) => {
-
-		try {
-			console.log("b", comentario.id)
-
-			const data: comentarioDTO = {
-				...comentario,
-				contenido
-			};
-
-			await updateComentario(data)
-			onSnackbar('Actualización completada exitosamente', StateMessage.success);
-
-		} catch (error: any) {
-			if (error.response?.status === 400) {
-				onSnackbar(error.response.data.message, StateMessage.warning);
-			} else {
-				onSnackbar(error.response?.data?.message || 'Error desconocido', StateMessage.error);
-			}
-		}
-	};
 
 	return (
 		<Container>
 			<Column alignItems='center'>
-				<Row style={{ width: '85%', marginBottom: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
+				<Row style={{ width: '100%', marginBottom: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
 					<Header
-						title={"Comentarios / Informe Técnico " + anio + "-" + quarter}
-						subtitle={'Consolidación Comentarios'}
+						title={"Informe Técnico " + anio + "-" + quarter}
+						subtitle={'Elaboración de comentarios trimestrales de los indicadores de desempeño de la empresa '}
 					/>
-					{
-						comentariosTrimestral.length === 2
-							? <Row>
-								<ButtonAction
-									children={
-										<Row alignItems='center'>
-											<FaScroll style={{ fontSize: "18px" }} />
-											<div>Texto 1</div>
-										</Row>
-									}
-									onClick={handleScrollTop}
-								/>
-								<ButtonAction
-									children={
-										<Row alignItems='center'>
-											<FaScroll style={{ fontSize: "18px" }} />
-											<div>Texto 2</div>
-										</Row>
-									}
-									onClick={handleScrollBottom}
-								/>
-							</Row>
-							: null
-					}
 					<PerfilDropdown />
 				</Row>
-				<Row style={{ width: '85%', height: '100%', marginTop: '10px' }}>
-					<section style={{
-						width: '100%',
-						height: 'calc(100vh - 100px)',
-						overflow: 'hidden',
-					}}
-					>
-						<Column gap='0px' style={{ width: '100%', height: '100%', padding: '0px 0px', boxSizing: 'border-box' }}>
-							<TrimestralSelectTitle
-								handleChange={handleChangeTitles}
-								item={titles}
-								items={[
-									...titleTrimestral.map((item: any) => ({
-										id: item.id,
-										descripcion: item.nombre
-									}))
-								]}
-							/>
-							<ScrollableContainer ref={scrollableRef}>
-								<Column gap='20px' style={{ padding: '0px ', paddingTop: '13px ' }}>
-
-									<HighlightEditor
-										value={editorContent1.contenido || ''}
-										onUpdate={(content) => {
-											onChangeComentario(content, editorContent1);
-										}}
-									/>
-
-									<TrimestralComment
-										titleTrimestralID={titles}
-										quarter={quarter}
-										year={anio}
-										comment={editorContent1}
-									/>
-									<div
-										style={{
+				<section style={{ width: '100%', height: 'calc(100vh - 100px)', overflowY: 'auto' }}>
+					<Column gap='0px' style={{ width: '100%', height: '100%', padding: '0px 0px', boxSizing: 'border-box' }}>
+						{loading.comentario ? (
+							<Box sx={{ width: '100%', padding: '0 0 10px' }}>
+								{Array.from({ length: 10 }).map((_, index) => (
+									<Box
+										key={index}
+										sx={{
 											width: '100%',
-											padding: '0px 40px',
-											boxSizing: 'border-box'
+											height: '52px',
+											display: 'grid',
+											gridTemplateColumns: '42% 38% 20%',
+											alignItems: 'center',
+											padding: '0 20px',
+											marginBottom: '8px',
+											boxSizing: 'border-box',
+											backgroundColor: currentTheme.background,
+											border: `1px solid ${currentTheme.borderColor}`,
+											borderRadius: '6px',
 										}}
 									>
-										<TrimestralTable
-											data={(indicadores || []).map((e: any) => formatItem({ originalItem: e, decimal: 1 }))}
-											structureHeadeJson={TrimestralJson(anio, quarter)}
-											columnWidths={{ "Actividad": "150px" }}
-											columnAligns={{ "Actividad": "left" }}
+										<Skeleton
+											variant="text"
+											width="65%"
+											height={22}
+											sx={{ backgroundColor: 'rgba(255,255,255,0.10)' }}
 										/>
-									</div>
-									{
-										comentariosTrimestral.length > 1 ?
-											<TrimestralComment
-												titleTrimestralID={titles}
-												quarter={quarter}
-												year={anio}
-												comment={editorContent2}
-											/>
-											: null
-									}
-									<div style={{ height: '200px' }}></div>
-								</Column>
 
-							</ScrollableContainer>
-						</Column>
-					</section>
-				</Row>
+										<Skeleton
+											variant="text"
+											width="70%"
+											height={20}
+											sx={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
+										/>
+
+										<Box
+											sx={{
+												display: 'flex',
+												alignItems: 'center',
+												gap: '8px',
+											}}
+										>
+											<Skeleton
+												variant="circular"
+												width={16}
+												height={16}
+												sx={{ backgroundColor: 'rgba(255,255,255,0.10)' }}
+											/>
+
+											<Skeleton
+												variant="text"
+												width="55%"
+												height={20}
+												sx={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
+											/>
+										</Box>
+									</Box>
+								))}
+							</Box>
+						) : (
+							comentario.map((item: comentario) => (
+								<AccordionComponents
+									key={item.id}
+									item={item}
+								/>
+							))
+						)}
+					</Column>
+				</section>
 			</Column>
 		</Container>
 	)
 }
 export default CommentPage
-
-const ScrollableContainer = styled.div`
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	scrollbar-width: none;
-	-ms-overflow-style: none;
-
-	&::-webkit-scrollbar {
-		width: 6px;
-		opacity: 0;
-		transition: opacity 0.3s ease;
-	}
-
-	&::-webkit-scrollbar-thumb {
-		background: rgba(0, 0, 0, 0.3);
-		border-radius: 10px;
-	}
-
-	&::-webkit-scrollbar-thumb:hover {
-		background: rgba(0, 0, 0, 0.5);
-	}
-
-	&::-webkit-scrollbar-track {
-		background: transparent;
-	}
-
-	&:hover::-webkit-scrollbar {
-		opacity: 1;
-	}
-`;

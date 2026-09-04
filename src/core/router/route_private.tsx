@@ -46,7 +46,6 @@ const RoutePrivate = ({ children }: { children: JSX.Element }) => {
     })();
   }, []);
 
-  // ⏳ mientras esperamos la validación
   if (isValid === null) {
     return <AnimatePresence>
       <motion.div

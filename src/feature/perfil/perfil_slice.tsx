@@ -45,10 +45,12 @@ export interface Personal {
 
 export interface UserPayload {
 	id: string;
-	dni: string;
-	name: string;
+	username: string;
+	personalId: string;
 	firtName: string;
 	lastName: string;
+	dni: string;
+	name: string;
 	clientId: string;
 	iat: number;
 	exp: number;

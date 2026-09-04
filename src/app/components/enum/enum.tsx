@@ -33,6 +33,7 @@ export enum DialogAction {
 	validate = 'Validar',
 	modulo = 'modulo',
 	loadin = 'Loadig',
+	historial = 'Historial',
 }
 
 export enum StateMessage {
