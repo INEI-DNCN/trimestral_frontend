@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { DialogAction, StateMessage } from '../../../../app/components/enum/enum';
 import HighlightEditor from '../../../../app/components/highlightEditor';
 import SelectField from '../../../../app/components/select/select_field';
-import { formatItem, getEstadoConfig } from '../../../../app/utils/util';
+import { formatItem, getEstadoConfig, handleApiError } from '../../../../app/utils/util';
 import { getAccordionStyles, getAccordionSummaryStyles, getbuttonHistorialStyles, getSectionDescriptionSxStyles, getSectionTitleSx, sectionBorder, sectionHeaderSx } from '../../../../app/utils/util_mui';
 import { formatFechaAmPm } from '../../../../app/utils/utils_date';
 import type { RootState } from '../../../../core/store/store';
@@ -54,17 +54,13 @@ export default function AccordionComponents({ item }: { item: comentario }) {
 				...comentario,
 				contenido,
 			};
-
 			await putComentario(employee, data, "CONTENIDO");
 			dispatch(getComentarioSource('2026', 'II'));
 			onSnackbar('Actualización completada exitosamente', StateMessage.success);
 
 		} catch (error: any) {
-			if (error.response?.status === 400) {
-				onSnackbar(error.response.data.message, StateMessage.warning);
-			} else {
-				onSnackbar(error.response?.data?.message || 'Error desconocido', StateMessage.error);
-			}
+			handleApiError(error, onSnackbar, () => dispatch(getComentarioSource('2026', 'II')),
+			);
 		}
 	};
 

@@ -1,4 +1,5 @@
 import { BadgeCheck, CheckCircle, Clock, Eye, FileText } from "lucide-react";
+import { StateMessage } from '../components/enum/enum';
 
 export const sleep = (ms: any) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -127,6 +128,31 @@ export const getEstadoConfig = (estado?: string | null) => {
         icon: <FileText size={16} />,
         // color: currentTheme.text,
       };
+  }
+};
+
+
+export const handleApiError = (
+  error: any,
+  onSnackbar: (message: string, type: StateMessage) => void,
+  onConflict?: () => void,
+) => {
+  const status = error.response?.status;
+  const message = error.response?.data?.message || 'Error desconocido';
+
+  switch (status) {
+    case 400:
+      onSnackbar(message, StateMessage.warning);
+      break;
+
+    case 409:
+      onSnackbar(message, StateMessage.info);
+      onConflict?.();
+      break;
+
+    default:
+      onSnackbar(message, StateMessage.error);
+      break;
   }
 };
 
