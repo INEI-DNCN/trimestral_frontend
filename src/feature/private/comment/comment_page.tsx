@@ -8,9 +8,11 @@ import { Column, Container, Row } from '../../../core/styled_ui/styled_ui';
 import { useThemeContext } from '../../../core/theme/ThemeContext';
 import { useUI } from '../../../core/theme/ui_context';
 import { PerfilDropdown } from '../../perfil/components/perfil_dropdown';
-import type { comentario } from './comment_slice';
-import { getComentariosEstadosSource, getComentarioSource } from './comment_source';
+import type { comentario, yearsInterface } from './comment_slice';
+import { getComentariosEstadosSource, getComentarioSource, getPeriodsSource, getYearsSource } from './comment_source';
 import AccordionComponents from './components/accordion_components';
+import { useForm } from 'react-hook-form';
+import SelectField from '../../../app/components/select/select_field';
 
 const CommentPage: React.FC<PageProps> = () => {
 
@@ -18,23 +20,65 @@ const CommentPage: React.FC<PageProps> = () => {
 	const [quarter, _] = useState<any>("II");
 	const { currentTheme } = useThemeContext();
 
+	const { control, handleSubmit, formState: { errors }, } = useForm<{
+		years: string | null,
+		periods: string | null,
+
+	}>({
+		defaultValues: { years: '2026', periods: 'III' },
+	});
+
 	const { dispatch } = useUI()
-	const { comentario, loading } = useSelector((state: RootState) => state.comment)
+	const { comentario, loading, years, periods } = useSelector((state: RootState) => state.comment)
 	const { employee } = useSelector((state: RootState) => state.perfil)
 
 	useEffect(() => {
+		dispatch(getPeriodsSource());
+		dispatch(getYearsSource());
 		dispatch(getComentarioSource(anio, quarter, true));
 		dispatch(getComentariosEstadosSource({ employee }));
 	}, []);
+
+	const onSubmit = async (e: { years: string | null, periods: string | null }) => { };
 
 	return (
 		<Container>
 			<Column alignItems='center'>
 				<Row style={{ width: '100%', marginBottom: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
 					<Header
-						title={"Informe Técnico " + anio + "-" + quarter}
-						subtitle={'Elaboración de comentarios trimestrales de los indicadores de desempeño de la empresa '}
+						title={"Informe Técnico "}
+						subtitle={' Elaboración de comentarios, cuadros y graficos '}
 					/>
+					<Row>
+						<Box sx={{ width: { xs: '100%', sm: '220px' }, flexShrink: 0 }}>
+							<SelectField
+								name="years"
+								label="Año"
+								control={control}
+								options={years.map((prop: any) => ({
+									value: prop.anio?.toString() || '',
+									label: prop.anio?.toString(),
+								})
+								)}
+								error={errors.years}
+								onChange={() => handleSubmit(onSubmit)()}
+							/>
+						</Box>
+						<Box sx={{ width: { xs: '100%', sm: '240px' }, flexShrink: 0 }}>
+							<SelectField
+								name="Period"
+								label="Periodo"
+								control={control}
+								options={periods.map((prop: any) => ({
+									value: prop.trimestre || '',
+									label: prop.trimestre,
+								})
+								)}
+								error={errors.periods}
+								onChange={() => handleSubmit(onSubmit)()}
+							/>
+						</Box>
+					</Row>
 					<PerfilDropdown />
 				</Row>
 				<section style={{ width: '100%', height: 'calc(100vh - 100px)', overflowY: 'auto' }}>

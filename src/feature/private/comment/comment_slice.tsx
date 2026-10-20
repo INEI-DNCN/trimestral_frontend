@@ -23,6 +23,15 @@ export interface comentarioEstado {
 	activo?: boolean
 }
 
+export interface yearsInterface {
+	anio?: number
+}
+
+
+export interface periodsInterface {
+	trimestre?: string
+}
+
 export interface comentarioHistorico {
 	id?: number;
 	id_comentario?: number;
@@ -40,6 +49,8 @@ interface InitialState {
 	comentarioEstado: comentarioEstado[],
 	comentarioHistorico: comentarioHistorico[],
 	loading: LoadingState;
+	years: yearsInterface[],
+	periods: periodsInterface[]
 }
 
 interface LoadingState {
@@ -55,6 +66,8 @@ const initialState: InitialState = {
 		comentario: false,
 		comentarioHistorico: false,
 	},
+	periods: [],
+	years: []
 };
 
 export const TrimestralSlice = createSlice({
@@ -75,7 +88,13 @@ export const TrimestralSlice = createSlice({
 		},
 		setComentarioHistoricoLoading: (state, action) => {
 			state.loading.comentarioHistorico = action.payload;
-		}
+		},
+		getPeriodsSlice: (state, action) => {
+			state.periods = action.payload
+		},
+		getYearsSlice: (state, action) => {
+			state.years = action.payload
+		},
 	}
 })
 
@@ -86,6 +105,8 @@ export const {
 	getComentarioHistoricoSlice,
 	setComentarioLoading,
 	setComentarioHistoricoLoading,
+	getPeriodsSlice,
+	getYearsSlice
 } = TrimestralSlice.actions
 
 export default TrimestralSlice.reducer

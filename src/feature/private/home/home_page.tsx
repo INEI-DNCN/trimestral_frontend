@@ -14,7 +14,7 @@ import { useThemeContext } from '../../../core/theme/ThemeContext';
 import { useUI } from '../../../core/theme/ui_context';
 import { PerfilDropdown } from '../../perfil/components/perfil_dropdown';
 import { TrimestralCard } from './components/trimestral_card';
-import { getMetadatosArchivosSource, ProcessDocumentSource, SynchronizeCommentsSource, UpdateDocumentsSource } from './home_source';
+import { getMetadatosArchivosSource, ProcessDocumentSource, UpdateDocumentsSource } from './home_source';
 
 
 const HomePage: React.FC<PageProps> = () => {
@@ -119,7 +119,7 @@ const HomePage: React.FC<PageProps> = () => {
 												<div>Sincronizar Archivos consolidados</div>
 											</Row>
 										</ButtonAction>
-										<ButtonAction
+										{/* <ButtonAction
 											backgroundColor={getColorByType('comentarios')}
 											onClick={() => procesar(SynchronizeCommentsSource, "Comentarios")}
 										>
@@ -127,7 +127,7 @@ const HomePage: React.FC<PageProps> = () => {
 												<FaArrowsSpin style={{ fontSize: "18px" }} />
 												<div>Sincronizar Comentarios</div>
 											</Row>
-										</ButtonAction>
+										</ButtonAction> */}
 										<ButtonAction
 											backgroundColor={getColorByType('word')}
 											onClick={() => procesar(ProcessDocumentSource, "Word")}

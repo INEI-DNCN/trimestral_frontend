@@ -24,4 +24,3 @@ export async function changePasswordUserSource(userId: string | undefined, passw
 	const response = await API2.patch(`users/${userId}`, { password });
 	return response
 }
-

@@ -2,7 +2,7 @@ import { jwtDecode } from "jwt-decode";
 import { API, API2 } from "../../../app/utils/utils_api";
 import { getToken } from "../../../app/utils/utils_localstorage";
 import type { AplicationUserRol, UserPayload } from "../../perfil/perfil_slice";
-import { getComentarioEstadoSlice, getComentarioHistoricoSlice, getComentarioSlice, setComentarioHistoricoLoading, setComentarioLoading, type comentario, type comentarioEstado } from "./comment_slice";
+import { getComentarioEstadoSlice, getComentarioHistoricoSlice, getComentarioSlice, getPeriodsSlice, getYearsSlice, setComentarioHistoricoLoading, setComentarioLoading, type comentario, type comentarioEstado } from "./comment_slice";
 
 export const getComentarioSource =
 	(anio: string, trimestre: string, isloading: boolean = false) =>
@@ -10,27 +10,20 @@ export const getComentarioSource =
 			if (isloading) {
 				dispatch(setComentarioLoading(true));
 			}
-
 			const token = getToken();
-
 			try {
 				if (!token) throw new Error('Token not found');
-
 				const decoded = jwtDecode<UserPayload>(token);
-
 				const clientId = import.meta.env.VITE_CLIENTE_ID;
-
 				const responseAuth = await API2.get('groups-users/user', {
 					params: {
 						clientId,
 						userId: decoded?.id,
 					},
 				});
-
 				const ids = responseAuth.data
 					.map((item: { name: string }) => Number(item.name))
 					.filter((id: number) => !Number.isNaN(id));
-
 				const response = await API.get(
 					'comentarios/comentarios-trimestrales',
 					{
@@ -41,7 +34,6 @@ export const getComentarioSource =
 						},
 					}
 				);
-
 				dispatch(getComentarioSlice(response.data));
 			} catch (error) {
 				console.error('Error en getComentarioSource:', error);
@@ -114,7 +106,23 @@ export const getComentarioHistoricoSource = (idComentario: number) => async (dis
 	}
 };
 
+export const getPeriodsSource = () => async (dispatch: any) => {
+	try {
+		const response = await API.get(`comentarios/get-periodos`);
+		dispatch(getPeriodsSlice(response.data));
+	} catch (error) {
+		console.error('Error en getPeriodsSource:', error);
+	}
+};
 
+export const getYearsSource = () => async (dispatch: any) => {
+	try {
+		const response = await API.get(`comentarios/get-year`);
+		dispatch(getYearsSlice(response.data));
+	} catch (error) {
+		console.error('Error en getPeriodsSource:', error);
+	}
+};
 
 export const puedeVisualizarComponente = (rolId: string, estadoId: number): boolean => {
 	const ANALISTA = '3794260D-0EA7-F111-B6D5-000C29490DA3';
