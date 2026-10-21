@@ -215,56 +215,56 @@ const HomePage: React.FC<PageProps> = () => {
 								transition={{ duration: 0.3, ease: 'easeInOut' }}
 								style={{ overflow: 'hidden' }}
 							>
-					<CardUI>
-						<Column gap='16px'>
-							<Row justifyContent='space-between' alignItems='center'>
-								<div>
-									<Typography variant="h5" sx={{ fontWeight: 500, color: themes[theme].text, mb: 0.25 }}>
-										Archivos Excel
-									</Typography>
-									<Typography variant="body2" sx={{ color: "#aeb7c2", fontSize: "0.8rem" }}>
-										Cuadros y Graficos
-									</Typography>
-								</div>
-								<LastUpdateLabel>
-									<FaRegClock aria-hidden="true" />
-									<span>Última actualización: {formatearUltimaActualizacion(metadataArchivos.find((data: any) => data.tipo === "xlsm")?.ultima_actualizacion)}</span>
-								</LastUpdateLabel>
-								<ButtonAction
-									backgroundColor={getColorByType('excel')}
-									onClick={actualizarExcel}
-									disabled={actualizandoExcel}
-									style={{
-										width: '140px',
-										minWidth: '140px',
-										height: '44px',
-										padding: '0 12px',
-										boxSizing: 'border-box',
-										...(actualizandoExcel ? { backgroundColor: '#6b7280', color: '#fff' } : {}),
-									}}
-								>
-									<Row alignItems="center">
-										<FaArrowsSpin style={{ fontSize: "18px" }} />
-										<div>Actualizar</div>
-									</Row>
-								</ButtonAction>
-							</Row>
-							<FilesGrid>
-								{actualizandoExcel
-									? Array.from({ length: Math.max(excelFiles.length, 1) }).map((_, index) => (
-										<FileCardSkeleton key={`excel-loading-${index}`} />
-									))
-									: anio && quarter && excelFiles.map((data: any, index: number) => (
-										<TrimestralCard
-											key={index}
-											year={anio ?? ''}
-											quarter={quarter ?? ''}
-											data={data}
-										/>
-									))}
-							</FilesGrid>
-						</Column>
-					</CardUI>
+								<CardUI>
+									<Column gap='16px'>
+										<Row justifyContent='space-between' alignItems='center'>
+											<div>
+												<Typography variant="h5" sx={{ fontWeight: 500, color: themes[theme].text, mb: 0.25 }}>
+													Archivos Excel
+												</Typography>
+												<Typography variant="body2" sx={{ color: "#aeb7c2", fontSize: "0.8rem" }}>
+													Cuadros y Gráficos.
+												</Typography>
+											</div>
+											<LastUpdateLabel>
+												<FaRegClock aria-hidden="true" />
+												<span>Última actualización: {formatearUltimaActualizacion(metadataArchivos.find((data: any) => data.tipo === "xlsm")?.ultima_actualizacion)}</span>
+											</LastUpdateLabel>
+											<ButtonAction
+												backgroundColor={getColorByType('excel')}
+												onClick={actualizarExcel}
+												disabled={actualizandoExcel}
+												style={{
+													width: '140px',
+													minWidth: '140px',
+													height: '44px',
+													padding: '0 12px',
+													boxSizing: 'border-box',
+													...(actualizandoExcel ? { backgroundColor: '#6b7280', color: '#fff' } : {}),
+												}}
+											>
+												<Row alignItems="center">
+													<FaArrowsSpin style={{ fontSize: "18px" }} />
+													<div>Actualizar</div>
+												</Row>
+											</ButtonAction>
+										</Row>
+										<FilesGrid>
+											{actualizandoExcel
+												? Array.from({ length: Math.max(excelFiles.length, 1) }).map((_, index) => (
+													<FileCardSkeleton key={`excel-loading-${index}`} />
+												))
+												: anio && quarter && excelFiles.map((data: any, index: number) => (
+													<TrimestralCard
+														key={index}
+														year={anio ?? ''}
+														quarter={quarter ?? ''}
+														data={data}
+													/>
+												))}
+										</FilesGrid>
+									</Column>
+								</CardUI>
 							</motion.div>
 						)}
 					</AnimatePresence>
@@ -279,61 +279,61 @@ const HomePage: React.FC<PageProps> = () => {
 								transition={{ duration: 0.3, ease: 'easeInOut' }}
 								style={{ overflow: 'hidden' }}
 							>
-					<CardUI>
-						<Column>
-							<Row justifyContent='space-between' alignItems='center'>
-								<div>
-									<Typography
-										variant="h5"
-										sx={{ fontWeight: 400, color: themes[theme].text, mb: 0.25 }}
-									>
-										Archivos Word
-									</Typography>
-									<Typography variant="body2" sx={{ color: "#ccc", fontSize: "0.8rem" }}>
-										Documento consolidado de comentarios, cuadros y graficos.
-									</Typography>
-								</div>
-								<LastUpdateLabel>
-									<FaRegClock aria-hidden="true" />
-									<span>Última actualización: {formatearFecha(metadataArchivos.find((data: any) => data.tipo === "docx")?.ultima_actualizacion)}</span>
-								</LastUpdateLabel>
-								<ButtonAction
-									backgroundColor={getColorByType('word')}
-									onClick={actualizarWord}
-									disabled={actualizandoWord}
-									style={{
-										width: '140px',
-										minWidth: '140px',
-										height: '44px',
-										padding: '0 12px',
-										boxSizing: 'border-box',
-										...(actualizandoWord ? { backgroundColor: '#6b7280', color: '#fff' } : {}),
-									}}
-								>
-									<Row alignItems="center">
-										<FaWandMagicSparkles style={{ fontSize: "18px" }} />
-										<div>Actualizar</div>
-									</Row>
-								</ButtonAction>
+								<CardUI>
+									<Column>
+										<Row justifyContent='space-between' alignItems='center'>
+											<div>
+												<Typography
+													variant="h5"
+													sx={{ fontWeight: 400, color: themes[theme].text, mb: 0.25 }}
+												>
+													Archivos Word
+												</Typography>
+												<Typography variant="body2" sx={{ color: "#ccc", fontSize: "0.8rem" }}>
+													Consolidado de comentarios, cuadros y gráficos.
+												</Typography>
+											</div>
+											<LastUpdateLabel>
+												<FaRegClock aria-hidden="true" />
+												<span>Última actualización: {formatearFecha(metadataArchivos.find((data: any) => data.tipo === "docx")?.ultima_actualizacion)}</span>
+											</LastUpdateLabel>
+											<ButtonAction
+												backgroundColor={getColorByType('word')}
+												onClick={actualizarWord}
+												disabled={actualizandoWord}
+												style={{
+													width: '140px',
+													minWidth: '140px',
+													height: '44px',
+													padding: '0 12px',
+													boxSizing: 'border-box',
+													...(actualizandoWord ? { backgroundColor: '#6b7280', color: '#fff' } : {}),
+												}}
+											>
+												<Row alignItems="center">
+													<FaWandMagicSparkles style={{ fontSize: "18px" }} />
+													<div>Actualizar</div>
+												</Row>
+											</ButtonAction>
 
-							</Row>
-							<WordFilesGrid>
-								{actualizandoWord
-									? Array.from({ length: Math.max(wordFiles.length, 1) }).map((_, index) => (
-										<FileCardSkeleton key={`word-loading-${index}`} />
-									))
-									: wordFiles.map((data: any, index: number) => (
-										<TrimestralCard
-											key={index}
-											year={anio ?? ''}
-											quarter={quarter ?? ''}
-											data={data}
-											icon={<FaFileWord size={52} style={{ color: '#2f80ed', flexShrink: 0 }} />}
-										/>
-									))}
-							</WordFilesGrid>
-						</Column>
-					</CardUI>
+										</Row>
+										<WordFilesGrid>
+											{actualizandoWord
+												? Array.from({ length: Math.max(wordFiles.length, 1) }).map((_, index) => (
+													<FileCardSkeleton key={`word-loading-${index}`} />
+												))
+												: wordFiles.map((data: any, index: number) => (
+													<TrimestralCard
+														key={index}
+														year={anio ?? ''}
+														quarter={quarter ?? ''}
+														data={data}
+														icon={<FaFileWord size={52} style={{ color: '#2f80ed', flexShrink: 0 }} />}
+													/>
+												))}
+										</WordFilesGrid>
+									</Column>
+								</CardUI>
 							</motion.div>
 						)}
 					</AnimatePresence>
