@@ -1,84 +1,100 @@
-import type { JSX } from "react";
-import { FaRegFile } from "react-icons/fa6";
+import type { ReactNode } from "react";
+import { FaFileExcel } from "react-icons/fa6";
 import { HiDownload } from "react-icons/hi";
 import { styled } from "styled-components";
 import { CardUI } from "../../../../app/components/card/card";
-import { Row } from "../../../../core/styled_ui/styled_ui";
+import { Column } from "../../../../core/styled_ui/styled_ui";
 import { useThemeContext } from "../../../../core/theme/ThemeContext";
 
 interface Props {
 	year: string;
 	quarter: string;
-	themes: any;
-	data: any
+	data: any;
+	icon?: ReactNode;
 }
 
+export const TrimestralCard: React.FC<Props> = ({ year, quarter, data, icon }) => {
+	const { theme, themes } = useThemeContext();
+	const fileName = data.nombre.split('.')[0].replace(/_/g, ' ');
+	const downloadUrl = year && quarter
+		? `http://192.168.201.212:8080/${year}_${quarter}/Informatico/1.Informe_Tecnico/${data.nombre}`
+		: undefined;
 
-export const FileDownloadLink = styled.a<{ $color: string }>`
-	width: 34px;
-	height: 34px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border-radius: 10px;
-	font-size: 1rem;
-	font-weight: 500;
-	color: ${({ $color }) => $color + "cc"};
+	return (
+		<CardLink
+			href={downloadUrl}
+			aria-label={`Descargar archivo ${fileName}`}
+			aria-disabled={!downloadUrl}
+			tabIndex={downloadUrl ? undefined : -1}
+			rel="noopener noreferrer"
+		>
+			<CardUI style={{ height: '150px', boxSizing: 'border-box', position: 'relative' }}>
+				<Column style={{ alignItems: 'center', gap: '14px' }}>
+					{icon ?? <FaFileExcel size={52} style={{ color: '#22c55e', flexShrink: 0 }} />}
+					<FileName $color={themes[theme].text}>{fileName}</FileName>
+				</Column>
+				<DownloadIndicator aria-hidden="true">
+					<HiDownload size={18} />
+				</DownloadIndicator>
+			</CardUI>
+		</CardLink>
+	);
+};
+
+const CardLink = styled.a`
+	display: block;
+	color: inherit;
 	text-decoration: none;
-	transition: background 0.2s ease-in-out, transform 0.15s ease-in-out;
+	cursor: pointer;
+	border-radius: 12px;
 
 	&:hover {
-		transform: scale(1.05);
-		color: #3b82f6 ;
+		color: inherit;
+	}
+
+	&:hover > div {
+		filter: brightness(1.06);
+		border-color: rgba(148, 163, 184, 0.45);
+	}
+
+	&:focus-visible {
+		outline: 2px solid #60a5fa;
+		outline-offset: 3px;
+	}
+
+	&:hover > div > div:last-child,
+	&:focus-visible > div > div:last-child {
+		opacity: 1;
+		transform: translateY(0);
 	}
 `;
 
+const FileName = styled.div<{ $color: string }>`
+	width: 100%;
+	color: ${({ $color }) => $color};
+	font-size: 0.75rem;
+	line-height: 1.35;
+	text-align: center;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
+	overflow-wrap: anywhere;
+`;
 
-export const TrimestralCard: React.FC<Props> = ({ year, quarter, data }) => {
-
-
-	const getFileIcon = (filename: string): JSX.Element => {
-		const extension = filename.split('.').pop()?.toLowerCase();
-
-		switch (extension) {
-			case 'xls':
-			case 'xlsx':
-			case 'xlsm':
-				return <FaRegFile size={20} style={{ color: "#22c55e" }} />;
-			case 'doc':
-			case 'docx':
-				return <FaRegFile size={20} style={{ color: "#3b82f6" }} />;
-			default:
-				return <FaRegFile size={20} style={{ color: "#6b7280" }} />; // gris genérico
-		}
-	};
-
-	const limpiarNombreArchivo = (nombreArchivo: string): string => {
-		// Elimina desde el punto hacia el final
-		const sinExtension = nombreArchivo.split('.')[0];
-		// Reemplaza _ por espacio
-		return sinExtension.replace(/_/g, ' ');
-	};
-
-	const { theme, themes } = useThemeContext();
-
-	return (
-		<CardUI children={
-			<Row justifyContent="space-between" alignItems="center">
-				<Row >
-					{getFileIcon(data.tipo)}
-					<div style={{ fontSize: '0.8rem', color: themes[theme].text }}>
-						{limpiarNombreArchivo(data.nombre)}
-					</div>
-				</Row>
-				<FileDownloadLink
-					$color={themes[theme].text}
-					href={`http://192.168.201.212:8080/${year + "_" + quarter}/Informatico/1.Informe_Tecnico/${data.nombre}`}
-					rel="noopener noreferrer"
-				>
-					<HiDownload style={{ fontSize: 20 }} />
-				</FileDownloadLink>
-			</Row>
-		} />
-	);
-};
+const DownloadIndicator = styled.div`
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	width: 32px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	background: rgba(15, 23, 42, 0.72);
+	color: #fff;
+	opacity: 0;
+	transform: translateY(-3px);
+	transition: opacity 0.18s ease, transform 0.18s ease;
+`;

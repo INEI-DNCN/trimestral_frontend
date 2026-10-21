@@ -1,5 +1,5 @@
 import { Box, Skeleton } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Header from '../../../app/components/header';
 import type { PageProps } from '../../../app/components/interface/router_interface';
@@ -8,25 +8,57 @@ import { Column, Container, Row } from '../../../core/styled_ui/styled_ui';
 import { useThemeContext } from '../../../core/theme/ThemeContext';
 import { useUI } from '../../../core/theme/ui_context';
 import { PerfilDropdown } from '../../perfil/components/perfil_dropdown';
-import type { comentario, yearsInterface } from './comment_slice';
+import type { comentario } from './comment_slice';
 import { getComentariosEstadosSource, getComentarioSource, getPeriodsSource, getYearsSource } from './comment_source';
 import AccordionComponents from './components/accordion_components';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import SelectField from '../../../app/components/select/select_field';
+
+const getInitialPublicationPeriod = () => {
+	const today = new Date();
+	const currentYear = today.getFullYear();
+	const publicationSchedule = [
+		{ month: 1, period: 'IV', yearOffset: -1 },
+		{ month: 4, period: 'I', yearOffset: 0 },
+		{ month: 7, period: 'II', yearOffset: 0 },
+		{ month: 10, period: 'III', yearOffset: 0 },
+	];
+
+	const availablePeriods = [-1, 0, 1].flatMap((yearOffset) =>
+		publicationSchedule.map(({ month, period, yearOffset: reportYearOffset }) => {
+			const publicationDate = new Date(currentYear + yearOffset, month, 23);
+			const activationDate = new Date(publicationDate);
+			activationDate.setDate(activationDate.getDate() - 40);
+
+			return {
+				year: publicationDate.getFullYear() + reportYearOffset,
+				period,
+				activationDate,
+			};
+		})
+	);
+
+	const activePeriod = availablePeriods
+		.filter(({ activationDate }) => activationDate <= today)
+		.sort((a, b) => b.activationDate.getTime() - a.activationDate.getTime())[0];
+
+	return activePeriod
+		? { years: String(activePeriod.year), periods: activePeriod.period }
+		: { years: '', periods: '' };
+};
 
 const CommentPage: React.FC<PageProps> = () => {
 
-	const [anio, __] = useState<any>(2026);
-	const [quarter, _] = useState<any>("II");
 	const { currentTheme } = useThemeContext();
 
-	const { control, handleSubmit, formState: { errors }, } = useForm<{
+	const { control, setValue, formState: { errors }, } = useForm<{
 		years: string | null,
 		periods: string | null,
 
 	}>({
-		defaultValues: { years: '2026', periods: 'III' },
+		defaultValues: getInitialPublicationPeriod(),
 	});
+	const [selectedYear, selectedPeriod] = useWatch({ control, name: ['years', 'periods'] });
 
 	const { dispatch } = useUI()
 	const { comentario, loading, years, periods } = useSelector((state: RootState) => state.comment)
@@ -35,21 +67,27 @@ const CommentPage: React.FC<PageProps> = () => {
 	useEffect(() => {
 		dispatch(getPeriodsSource());
 		dispatch(getYearsSource());
-		dispatch(getComentarioSource(anio, quarter, true));
-		dispatch(getComentariosEstadosSource({ employee }));
 	}, []);
 
-	const onSubmit = async (e: { years: string | null, periods: string | null }) => { };
+	useEffect(() => {
+		if (!selectedYear || !selectedPeriod) return;
+		dispatch(getComentarioSource(selectedYear, selectedPeriod, true));
+	}, [dispatch, selectedYear, selectedPeriod]);
+
+	useEffect(() => {
+		if (!employee?.role?.id) return;
+		dispatch(getComentariosEstadosSource({ employee }));
+	}, [dispatch, employee]);
 
 	return (
 		<Container>
 			<Column alignItems='center'>
-				<Row style={{ width: '100%', marginBottom: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
+				<Row style={{ width: '100%', marginBottom: '1rem', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
 					<Header
 						title={"Informe Técnico "}
 						subtitle={' Elaboración de comentarios, cuadros y graficos '}
 					/>
-					<Row>
+					<Row style={{ flexWrap: 'wrap', gap: '8px' }}>
 						<Box sx={{ width: { xs: '100%', sm: '220px' }, flexShrink: 0 }}>
 							<SelectField
 								name="years"
@@ -61,12 +99,12 @@ const CommentPage: React.FC<PageProps> = () => {
 								})
 								)}
 								error={errors.years}
-								onChange={() => handleSubmit(onSubmit)()}
+								onChange={() => setValue('periods', null)}
 							/>
 						</Box>
 						<Box sx={{ width: { xs: '100%', sm: '240px' }, flexShrink: 0 }}>
 							<SelectField
-								name="Period"
+								name="periods"
 								label="Periodo"
 								control={control}
 								options={periods.map((prop: any) => ({
@@ -75,7 +113,6 @@ const CommentPage: React.FC<PageProps> = () => {
 								})
 								)}
 								error={errors.periods}
-								onChange={() => handleSubmit(onSubmit)()}
 							/>
 						</Box>
 					</Row>

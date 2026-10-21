@@ -11,8 +11,14 @@ export interface comentarioDTO {
 	trimestre?: string
 }
 
+export interface metadataArchivoDTO {
+	tipo: string;
+	nombre: string;
+	ultima_actualizacion?: string;
+}
+
 interface trimestralState {
-	metadataArchivos: [],
+	metadataArchivos: metadataArchivoDTO[],
 	titleTrimestral: [],
 	comentariosTrimestral: comentarioDTO[],
 	indicadores: [],

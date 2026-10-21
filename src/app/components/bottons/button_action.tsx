@@ -29,6 +29,7 @@ const ButtonAction: React.FC<Props> = ({ type = 'button', children, startIcon, b
 				boxShadow: 'none',
 				'&:hover': {
 					backgroundColor: backgroundColor ? backgroundColor : themes.colors.primaryHover,
+					color: '#fff',
 				},
 			}}
 			{...rest}
