@@ -178,10 +178,12 @@ const CommentPage: React.FC<PageProps> = () => {
 								))}
 							</Box>
 						) : (
-							comentario.map((item: comentario) => (
+							selectedYear && selectedPeriod && comentario.map((item: comentario) => (
 								<AccordionComponents
 									key={item.id}
 									item={item}
+									year={selectedYear!}
+									period={selectedPeriod!}
 								/>
 							))
 						)}

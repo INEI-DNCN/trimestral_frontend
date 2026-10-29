@@ -23,7 +23,7 @@ import { TrimestralJson } from '../json/trimestral_json';
 import CuadroComponents, { default as TrimestralTable } from './cuadro_components';
 import HistorialComentario from './historial_components';
 
-export default function AccordionComponents({ item }: { item: comentario }) {
+export default function AccordionComponents({ item, year, period }: { item: comentario; year: string; period: string }) {
 	const id = React.useId();
 	const { currentTheme } = useThemeContext();
 	const { onSnackbar, dispatch, onDialog } = useUI();
@@ -55,11 +55,11 @@ export default function AccordionComponents({ item }: { item: comentario }) {
 				contenido,
 			};
 			await putComentario(employee, data, "CONTENIDO");
-			dispatch(getComentarioSource('2026', 'II'));
+			dispatch(getComentarioSource(year, period));
 			onSnackbar('Actualización completada exitosamente', StateMessage.success);
 
 		} catch (error: any) {
-			handleApiError(error, onSnackbar, () => dispatch(getComentarioSource('2026', 'II')),
+			handleApiError(error, onSnackbar, () => dispatch(getComentarioSource(year, period)),
 			);
 		}
 	};
@@ -75,7 +75,7 @@ export default function AccordionComponents({ item }: { item: comentario }) {
 
 		try {
 			await putComentario(employee, data, "ESTADO");
-			dispatch(getComentarioSource('2026', 'II'));
+			dispatch(getComentarioSource(year, period));
 			onSnackbar('Estado actualizado exitosamente', StateMessage.success);
 		} catch (error: any) {
 			if (error.response?.status === 400) {
@@ -86,7 +86,8 @@ export default function AccordionComponents({ item }: { item: comentario }) {
 		}
 	};
 
-	const estadoConfig = getEstadoConfig(item.estado);
+	const estadoNombre = item.estado ?? comentarioEstado.find((estado) => estado.id === item.estado_id)?.nombre;
+	const estadoConfig = getEstadoConfig(estadoNombre);
 
 	const puedeEditarComentario = puedeVisualizarComponente(
 		employee?.role?.id ?? '',
@@ -118,7 +119,7 @@ export default function AccordionComponents({ item }: { item: comentario }) {
 					<Box sx={{ display: 'flex', alignItems: 'center', gap: '7px', minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', color: estadoConfig.color, fontSize: '13px', fontWeight: 600, }} >
 						{estadoConfig.icon}
 						<Typography component="span" sx={{ color: 'inherit', fontSize: '13px', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', }} >
-							Estado: {item.estado ?? 'Sin estado'}
+							Estado: {estadoNombre ?? 'Sin estado'}
 						</Typography>
 					</Box>
 				</AccordionSummary>
@@ -152,11 +153,11 @@ export default function AccordionComponents({ item }: { item: comentario }) {
 											/>
 										</Box>
 										<Typography sx={{ display: { xs: 'none', sm: 'block' }, color: currentTheme.text, opacity: 0.65, fontSize: '13px', }}>
-											{item.estado
+												{estadoNombre
 												? comentarioEstado.find(
 													(e: any) =>
 														e.nombre?.toLowerCase() ===
-														item.estado?.toLowerCase()
+														estadoNombre.toLowerCase()
 												)?.descripcion || ''
 												: 'Selecciona el estado del comentario.'}
 										</Typography>
