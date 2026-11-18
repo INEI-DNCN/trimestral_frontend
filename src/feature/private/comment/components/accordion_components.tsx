@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { DialogAction, StateMessage } from '../../../../app/components/enum/enum';
 import HighlightEditor from '../../../../app/components/highlightEditor';
 import SelectField from '../../../../app/components/select/select_field';
-import { formatItem, getEstadoConfig, handleApiError } from '../../../../app/utils/util';
+import { getEstadoConfig, handleApiError } from '../../../../app/utils/util';
 import { getAccordionStyles, getAccordionSummaryStyles, getbuttonHistorialStyles, getSectionDescriptionSxStyles, getSectionTitleSx, sectionBorder, sectionHeaderSx } from '../../../../app/utils/util_mui';
 import { formatFechaAmPm } from '../../../../app/utils/utils_date';
 import type { RootState } from '../../../../core/store/store';
@@ -19,8 +19,8 @@ import { useThemeContext } from '../../../../core/theme/ThemeContext';
 import { useUI } from '../../../../core/theme/ui_context';
 import type { comentario, comentarioEstado } from '../comment_slice';
 import { getComentarioHistoricoSource, getComentarioSource, puedeVisualizarComponente, putComentario } from '../comment_source';
-import { TrimestralJson } from '../json/trimestral_json';
-import CuadroComponents, { default as TrimestralTable } from './cuadro_components';
+// import { TrimestralJson } from '../json/trimestral_json';
+// import CuadroComponents, { default as TrimestralTable } from './cuadro_components';
 import HistorialComentario from './historial_components';
 
 export default function AccordionComponents({ item, year, period }: { item: comentario; year: string; period: string }) {
