@@ -153,7 +153,7 @@ export default function AccordionComponents({ item, year, period }: { item: come
 											/>
 										</Box>
 										<Typography sx={{ display: { xs: 'none', sm: 'block' }, color: currentTheme.text, opacity: 0.65, fontSize: '13px', }}>
-												{estadoNombre
+											{estadoNombre
 												? comentarioEstado.find(
 													(e: any) =>
 														e.nombre?.toLowerCase() ===
@@ -210,7 +210,7 @@ export default function AccordionComponents({ item, year, period }: { item: come
 								</Typography>
 							</Box>
 
-							<Box sx={{ width: '100%' }}>
+							{/* <Box sx={{ width: '100%' }}>
 								<CuadroComponents
 									data={
 										(item.indicadores || []).map((e: any) => formatItem({ originalItem: e, decimal: 1 })
@@ -223,7 +223,7 @@ export default function AccordionComponents({ item, year, period }: { item: come
 									columnWidths={{ Actividad: '150px' }}
 									columnAligns={{ Actividad: 'left' }}
 								/>
-							</Box>
+							</Box> */}
 						</Column>
 					</Column>
 				</AccordionDetails>
