@@ -95,32 +95,32 @@ export const getEstadoConfig = (estado?: string | null) => {
     case 'pendiente':
       return {
         icon: <Clock size={16} />,
-        color: '#FF9800',
+        color: '#DC3545',
       };
 
     case 'preliminar':
       return {
         icon: <FileText size={16} />,
-        color: '#1976D2',
+        color: '#E67E22',
       };
 
     case 'revisión':
     case 'revision':
       return {
         icon: <Eye size={16} />,
-        color: '#7E57C2',
+        color: '#F1C40F',
       };
 
     case 'definitivo':
       return {
         icon: <BadgeCheck size={16} />,
-        color: '#43A047',
+        color: '#3498DB',
       };
 
     case 'culminado':
       return {
         icon: <CheckCircle size={16} />,
-        color: '#009688',
+        color: '#27AE60',
       };
 
     default:
