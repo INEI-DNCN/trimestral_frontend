@@ -108,13 +108,13 @@ export const getEstadoConfig = (estado?: string | null) => {
     case 'revision':
       return {
         icon: <Eye size={16} />,
-        color: '#F1C40F',
+        color: '#3498DB',
       };
 
     case 'definitivo':
       return {
         icon: <BadgeCheck size={16} />,
-        color: '#3498DB',
+        color: '#F1C40F',
       };
 
     case 'culminado':
