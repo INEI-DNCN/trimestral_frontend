@@ -297,7 +297,7 @@ const HomePage: React.FC<PageProps> = () => {
 												<FaRegClock aria-hidden="true" />
 												<span>Última actualización: {formatearFecha(metadataArchivos.find((data: any) => data.tipo === "docx")?.ultima_actualizacion)}</span>
 											</LastUpdateLabel>
-											{/* <ButtonAction
+											<ButtonAction
 												backgroundColor={getColorByType('word')}
 												onClick={actualizarWord}
 												disabled={actualizandoWord}
@@ -314,7 +314,7 @@ const HomePage: React.FC<PageProps> = () => {
 													<FaWandMagicSparkles style={{ fontSize: "18px" }} />
 													<div>Actualizar</div>
 												</Row>
-											</ButtonAction> */}
+											</ButtonAction>
 
 										</Row>
 										<WordFilesGrid>
