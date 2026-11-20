@@ -17,7 +17,15 @@ export const TrimestralCard: React.FC<Props> = ({ year, quarter, data, icon }) =
 	const { theme, themes } = useThemeContext();
 	const fileName = data.nombre.split('.')[0].replace(/_/g, ' ');
 	const downloadUrl = year && quarter
-		? `http://192.168.201.212:8080/${year}_${quarter}/Informatico/1.Informe_Tecnico/${data.nombre}`
+		? (() => {
+			const url = new URL(`http://192.168.201.212:8080/${year}_${quarter}/Informatico/1.Informe_Tecnico/${encodeURIComponent(data.nombre)}`);
+			// La ruta del archivo no cambia al regenerarlo; usar la fecha del metadato
+			// como versión evita que el navegador entregue una copia cacheada anterior.
+			if (data.ultima_actualizacion) {
+				url.searchParams.set('v', data.ultima_actualizacion);
+			}
+			return url.toString();
+		})()
 		: undefined;
 
 	return (
